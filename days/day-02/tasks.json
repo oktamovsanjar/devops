@@ -1,0 +1,25 @@
+{
+  "day": 2,
+  "theme": "Ruxsatlar (permissions), egalik, chmod, chown, sudo",
+  "tasks": [
+    {"id": "lab1", "type": "deep", "xp": 40, "title": "LAB I — Ruxsatlarni o'qish va o'zgartirish",
+     "desc": "test.txt + run.sh yarat, chmod 600/644/+x bilan o'yna. 6-qadam nega Permission denied bo'ldi?"},
+    {"id": "lab2", "type": "deep", "xp": 40, "title": "LAB II — Egalik va sudo",
+     "desc": "sudo touch, chown bilan egalikni o'zgartir, id bilan o'z guruhlaringni ko'r."},
+    {"id": "boss", "type": "lab", "xp": 250, "title": "BOSS — 'Qulflangan Ruxsatlar' (chmod+r → +x → sudo)",
+     "desc": "cd ~/devops/days/day-02/quest && cat START.txt — 4 bosqichni yech, flagni top.",
+     "flag": "DEVOPS{permission_master_rwx_unlocked}"},
+    {"id": "secret", "type": "secret", "xp": 50, "title": "SECRET — yashirin ruxsatli fayl",
+     "desc": "find ~/devops -name '.*' -type f bilan yangi yashirin faylni top, SECRET{...} ni ustozga ayt."},
+    {"id": "py", "type": "track", "xp": 20, "title": "🐍 Python Drop — list & dict",
+     "desc": "labs/day-02/day02.py: serverlar list + status dict, faqat 'running' larni chiqar."},
+    {"id": "en", "type": "track", "xp": 15, "title": "🇬🇧 English Drop",
+     "desc": "5 so'z (permission, owner, execute, grant, deny) + 2 jumla inglizcha."},
+    {"id": "sh", "type": "track", "xp": 20, "title": "💻 Shell Drill — find + chmod",
+     "desc": "~/devops dagi barcha .sh fayllarni bir buyruqda executable qil (find -exec)."},
+    {"id": "quiz", "type": "drill", "xp": 30, "title": "Quiz — kamida 15 ta",
+     "desc": "devops quiz today (linux/ruxsatlar), 80%+ aniqlik maqsad."},
+    {"id": "explain", "type": "deep", "xp": 20, "title": "Tushuntirib ber",
+     "desc": "chmod 755 va 644 farqini + 'ega bo'lsam ham nega 000 ni o'qiy olmadim' ni ustozga ayt."}
+  ]
+}

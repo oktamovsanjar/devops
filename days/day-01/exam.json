@@ -1,0 +1,23 @@
+{
+  "title": "Day-01: Linux navigatsiya",
+  "workspace": "exams/day-01",
+  "pass_score": 70,
+  "time_limit_min": 15,
+  "tasks": [
+    {"id": "t1", "points": 20,
+     "prompt": "Ish papkangда (exams/day-01/) 'notes.txt' fayl yarat va ichida AYNAN 'devops' so'zi (boshqa hech narsa) bo'lsin.",
+     "check": "grep -qx devops $EXAM/notes.txt 2>/dev/null"},
+    {"id": "t2", "points": 20,
+     "prompt": "Ish papkangда 'data' nomli papka yarat.",
+     "check": "[ -d $EXAM/data ]"},
+    {"id": "t3", "points": 20,
+     "prompt": "'data/report.txt' fayl yarat — ichida bu serverdagi CPU yadrolar SONI bo'lsin (faqat raqam). Buyruq bilan ol, qo'lda yozma.",
+     "check": "grep -qx $(nproc) $EXAM/data/report.txt 2>/dev/null"},
+    {"id": "t4", "points": 20,
+     "prompt": "/etc ichida 'nameserver' so'zi bor faylni top. Uning TO'LIQ yo'lini (path) 'found.txt' ga yoz.",
+     "check": "grep -qx /etc/resolv.conf $EXAM/found.txt 2>/dev/null"},
+    {"id": "t5", "points": 20,
+     "prompt": "'notes.txt' faylini 'data/' papkasiga KO'CHIR (move) — endi u faqat data/ ichida bo'lsin.",
+     "check": "[ -f $EXAM/data/notes.txt ] && [ ! -f $EXAM/notes.txt ]"}
+  ]
+}

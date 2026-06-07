@@ -1,0 +1,62 @@
+[
+  {
+    "q": "Qaysi buyruq hozir qaysi papkada turganingni ko'rsatadi?",
+    "options": ["pwd", "cwd", "dir", "whereami"],
+    "correct": 0,
+    "explanation": "pwd = print working directory. Qayerdaligingni doim shu bilan tekshirasan."
+  },
+  {
+    "q": "Yashirin (nuqta bilan boshlanadigan) fayllarni ko'rsatish uchun ls'ga qaysi flag?",
+    "options": ["-l", "-a", "-h", "-r"],
+    "correct": 1,
+    "explanation": "ls -a (all). -l batafsil, -h o'qiladigan hajm, -r teskari tartib."
+  },
+  {
+    "q": "Servislarning konfiguratsiya fayllari odatda qaysi papkada turadi?",
+    "options": ["/var", "/etc", "/home", "/bin"],
+    "correct": 1,
+    "explanation": "/etc = konfiguratsiya. /var = o'zgaruvchan (loglar), /bin = buyruqlar."
+  },
+  {
+    "q": "Tizim loglari odatda qayerda saqlanadi?",
+    "options": ["/etc/log", "/var/log", "/tmp", "/proc"],
+    "correct": 1,
+    "explanation": "/var/log — loglarning uyi. Servis ishlamasa, birinchi shu yerga qaraysan."
+  },
+  {
+    "q": "cd - buyrug'i nima qiladi?",
+    "options": ["Uy papkasiga", "Bitta yuqoriga", "Oldingi papkaga qaytadi", "Ildizga (/)"],
+    "correct": 2,
+    "explanation": "cd - = oldingi papka. cd ~ uyga, cd .. bitta yuqoriga, cd / ildizga."
+  },
+  {
+    "q": "Faylga 'executable' (ishga tushiriladigan) ruxsat berish uchun?",
+    "options": ["chmod +x fayl", "chown +x fayl", "chexec fayl", "run fayl"],
+    "correct": 0,
+    "explanation": "chmod +x — ruxsat (permission) o'zgartiradi. chown egasini o'zgartiradi."
+  },
+  {
+    "q": "~ (tilda) belgisi nimani bildiradi?",
+    "options": ["Ildiz /", "Hozirgi papka", "Uy papkasi (/home/foydalanuvchi)", "Oldingi papka"],
+    "correct": 2,
+    "explanation": "~ = uy papkang. ubuntu uchun /home/ubuntu."
+  },
+  {
+    "q": "Butun papka ichidan (rekursiv) matn qidirish uchun?",
+    "options": ["find matn", "grep -r matn .", "locate matn", "which matn"],
+    "correct": 1,
+    "explanation": "grep -r matn matnni fayllar ichidan qidiradi. find esa fayl NOMINI qidiradi."
+  },
+  {
+    "q": "Ishlab turgan jarayonlarni real-time (jonli) kuzatish uchun?",
+    "options": ["ls", "top", "cat", "df"],
+    "correct": 1,
+    "explanation": "top (yoki htop) — jonli jarayonlar. ps bir martalik suratga oladi."
+  },
+  {
+    "q": "Bitta fayl haqida batafsil ma'lumot (hajm, sana, ruxsat) ko'rish uchun?",
+    "options": ["stat fayl", "file fayl", "du fayl", "wc fayl"],
+    "correct": 0,
+    "explanation": "stat — to'liq metadata. file — tur, du — disk hajmi, wc — qatorlar soni."
+  }
+]

@@ -1,0 +1,17 @@
+[
+  {"q": "\"directory\" so'zining ma'nosi?", "options": ["fayl", "papka", "buyruq", "disk"], "correct": 1, "difficulty": 1, "explanation": "directory = papka. 'Change to the /var directory.'"},
+  {"q": "\"permission\" nimani bildiradi?", "options": ["ruxsat", "egasi", "hajm", "nom"], "correct": 0, "difficulty": 1, "explanation": "permission = ruxsat. 'Permission denied' = ruxsat yo'q."},
+  {"q": "\"owner\" so'zi?", "options": ["foydalanuvchi", "egasi", "guruh", "fayl"], "correct": 1, "difficulty": 1, "explanation": "owner = egasi. 'The file owner is ubuntu.'"},
+  {"q": "Error: \"command not found\" nima degani?", "options": ["Fayl yo'q", "Buyruq topilmadi", "Ruxsat yo'q", "Tarmoq yo'q"], "correct": 1, "difficulty": 1, "explanation": "Buyruq topilmadi — noto'g'ri yozilgan yoki o'rnatilmagan."},
+  {"q": "\"to deploy\" fe'li DevOps'da?", "options": ["o'chirish", "ishga joylashtirish (chiqarish)", "tekshirish", "yuklab olish"], "correct": 1, "difficulty": 2, "explanation": "deploy = ilovani serverга chiqarish/joylashtirish."},
+  {"q": "\"failed\" so'zi log'da nimani anglatadi?", "options": ["muvaffaqiyatli", "muvaffaqiyatsiz", "kutilmoqda", "tugadi"], "correct": 1, "difficulty": 1, "explanation": "failed = muvaffaqiyatsiz tugadi. Loglarda ogohlantiruvchi belgi."},
+  {"q": "\"request\" va \"response\" — to'g'ri jufti?", "options": ["so'rov / javob", "javob / so'rov", "kirish / chiqish", "boshlash / tugatish"], "correct": 0, "difficulty": 2, "explanation": "request = so'rov, response = javob. HTTP'ning asosi."},
+  {"q": "\"to merge\" (Git'da) nima?", "options": ["o'chirish", "birlashtirish", "nusxalash", "bekor qilish"], "correct": 1, "difficulty": 2, "explanation": "merge = ikki branch'ni birlashtirish."},
+  {"q": "\"available\" so'zi?", "options": ["band", "mavjud/foydalanish mumkin", "buzilgan", "yashirin"], "correct": 1, "difficulty": 1, "explanation": "available = mavjud. 'The service is available.'"},
+  {"q": "\"to restart\" fe'li?", "options": ["to'xtatish", "qayta ishga tushirish", "o'rnatish", "yangilash"], "correct": 1, "difficulty": 1, "explanation": "restart = qayta ishga tushirish. 'Restart the service.'"},
+  {"q": "\"latency\" texnik atamasi?", "options": ["hajm", "kechikish (vaqt)", "xato", "tezlik soni"], "correct": 1, "difficulty": 3, "explanation": "latency = kechikish, so'rov-javob orasidagi vaqt."},
+  {"q": "\"to troubleshoot\" nima?", "options": ["muammoni topib hal qilish", "o'rnatish", "o'chirish", "saqlash"], "correct": 0, "difficulty": 2, "explanation": "troubleshoot = muammoni aniqlab, tuzatish. DevOps'ning yuragi."},
+  {"q": "\"deprecated\" so'zi (docs'da)?", "options": ["yangi", "eskirgan/tavsiya etilmaydigan", "majburiy", "xavfsiz"], "correct": 1, "difficulty": 3, "explanation": "deprecated = eskirgan, kelajakda olib tashlanadi. Ishlatmaslik tavsiya etiladi."},
+  {"q": "\"rollback\" nimani anglatadi?", "options": ["oldingi holatga qaytarish", "yangilash", "o'chirish", "nusxa olish"], "correct": 0, "difficulty": 2, "explanation": "rollback = oldingi (ishlovchi) versiyaga qaytish."},
+  {"q": "Interview: \"Tell me about a time you fixed an issue.\" — nima so'ralyapti?", "options": ["Sevimli rang", "Muammoni qanday hal qilganing haqida hikoya", "Ish haqi", "Ta'tilingiz"], "correct": 1, "difficulty": 3, "explanation": "Behavioral savol: muammoni qanday topib, hal qilganingni so'rayapti."}
+]

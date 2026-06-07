@@ -1,0 +1,74 @@
+[
+  {"n": 1, "theme": "🐧 Linux poydevori", "days": [
+    {"day": 1, "title": "Fayl tizimi va navigatsiya"},
+    {"day": 2, "title": "Ruxsatlar va egalik (chmod/chown)"},
+    {"day": 3, "title": "Jarayonlar, signallar, systemd"},
+    {"day": 4, "title": "Paketlar (apt) va matn (grep/sed/awk)"},
+    {"day": 5, "title": "Tarmoq asoslari (ip, ss, dns, ssh)"},
+    {"day": 6, "title": "Bash skripting I"},
+    {"day": 7, "title": "🏁 1-hafta BOSS + review"}
+  ]},
+  {"n": 2, "theme": "🔧 Avtomatlashtirish", "days": [
+    {"day": 8, "title": "Bash skripting II (getopts, trap)"},
+    {"day": 9, "title": "Cron, log rotation, maintenance"},
+    {"day": 10, "title": "Git asoslari (commit, branch, merge)"},
+    {"day": 11, "title": "Git jamoa (GitHub, PR, conflict)"},
+    {"day": 12, "title": "Tarmoq chuqur (TCP/IP, TLS, HTTP)"},
+    {"day": 13, "title": "Nginx (reverse proxy, TLS)"},
+    {"day": 14, "title": "🏁 2-hafta BOSS"}
+  ]},
+  {"n": 3, "theme": "📦 Docker", "days": [
+    {"day": 15, "title": "Konteyner tushunchasi"},
+    {"day": 16, "title": "Dockerfile va image qurish"},
+    {"day": 17, "title": "Volume, network, debug"},
+    {"day": 18, "title": "Docker Compose"},
+    {"day": 19, "title": "Multi-stage, registry, scan"},
+    {"day": 20, "title": "Real ilovani konteynerlash"},
+    {"day": 21, "title": "🏁 3-hafta BOSS"}
+  ]},
+  {"n": 4, "theme": "🚀 CI/CD (GitHub Actions)", "days": [
+    {"day": 22, "title": "GitHub Actions asoslari"},
+    {"day": 23, "title": "Build + test pipeline"},
+    {"day": 24, "title": "CI'da Docker + GHCR"},
+    {"day": 25, "title": "Secrets, matrix, cache"},
+    {"day": 26, "title": "CD — avtomatik deploy"},
+    {"day": 27, "title": "To'liq CI/CD loyihasi"},
+    {"day": 28, "title": "🏁 4-hafta BOSS"}
+  ]},
+  {"n": 5, "theme": "☸️ Kubernetes I", "days": [
+    {"day": 29, "title": "K8s arxitektura + kind o'rnatish"},
+    {"day": 30, "title": "Pod, ReplicaSet, Deployment"},
+    {"day": 31, "title": "Service va k8s tarmog'i"},
+    {"day": 32, "title": "ConfigMap, Secret, volume"},
+    {"day": 33, "title": "Ingress"},
+    {"day": 34, "title": "Ilovani klasterga deploy"},
+    {"day": 35, "title": "🏁 5-hafta BOSS"}
+  ]},
+  {"n": 6, "theme": "⎈ Kubernetes II + Helm", "days": [
+    {"day": 36, "title": "Probes, resource limits"},
+    {"day": 37, "title": "Namespace, RBAC"},
+    {"day": 38, "title": "StatefulSet, PersistentVolume"},
+    {"day": 39, "title": "Helm asoslari"},
+    {"day": 40, "title": "Helm chart yaratish"},
+    {"day": 41, "title": "CI/CD → k8s (GitOps)"},
+    {"day": 42, "title": "🏁 6-hafta BOSS"}
+  ]},
+  {"n": 7, "theme": "🏗️ IaC + Cloud (Terraform/Ansible/AWS)", "days": [
+    {"day": 43, "title": "AWS asoslari (IAM, EC2, S3)"},
+    {"day": 44, "title": "Terraform asoslari"},
+    {"day": 45, "title": "Terraform modullar"},
+    {"day": 46, "title": "Terraform state, backend"},
+    {"day": 47, "title": "Ansible asoslari"},
+    {"day": 48, "title": "Ansible rollar"},
+    {"day": 49, "title": "🏁 7-hafta BOSS"}
+  ]},
+  {"n": 8, "theme": "📡 Observability + Capstone", "days": [
+    {"day": 50, "title": "Prometheus (metrics, PromQL)"},
+    {"day": 51, "title": "Grafana (dashboard)"},
+    {"day": 52, "title": "Alerting + SLO/SLI"},
+    {"day": 53, "title": "Logging (Loki)"},
+    {"day": 54, "title": "🏆 Capstone I — qurish"},
+    {"day": 55, "title": "🏆 Capstone II — pipeline+k8s"},
+    {"day": 56, "title": "🏆 Capstone III + portfolio"}
+  ]}
+]

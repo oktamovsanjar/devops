@@ -1,0 +1,23 @@
+{
+  "title": "Day-02: Ruxsatlar va egalik",
+  "workspace": "exams/day-02",
+  "pass_score": 70,
+  "time_limit_min": 15,
+  "tasks": [
+    {"id": "t1", "points": 20,
+     "prompt": "Ish papkangда 'secret.txt' fayl yarat va ruxsatini AYNAN 600 qil (faqat ega o'qiydi/yozadi).",
+     "check": "[ -f $EXAM/secret.txt ] && [ $(stat -c %a $EXAM/secret.txt) = 600 ]"},
+    {"id": "t2", "points": 20,
+     "prompt": "'hello.sh' skript yarat va uni BAJARILADIGAN (executable) qil.",
+     "check": "[ -x $EXAM/hello.sh ]"},
+    {"id": "t3", "points": 20,
+     "prompt": "'public.txt' fayl yarat, ruxsati AYNAN 644 bo'lsin (ega rw, qolganlar r).",
+     "check": "[ -f $EXAM/public.txt ] && [ $(stat -c %a $EXAM/public.txt) = 644 ]"},
+    {"id": "t4", "points": 20,
+     "prompt": "'private' nomli papka yarat, ruxsati AYNAN 700 bo'lsin (faqat ega kira oladi).",
+     "check": "[ -d $EXAM/private ] && [ $(stat -c %a $EXAM/private) = 700 ]"},
+    {"id": "t5", "points": 20,
+     "prompt": "'locked.txt' fayl yarat va 'boshqalar' (others) uchun BARCHA ruxsatlarni olib tashla (o-rwx).",
+     "check": "[ -f $EXAM/locked.txt ] && ! find $EXAM/locked.txt -perm /007 -print 2>/dev/null | grep -q ."}
+  ]
+}

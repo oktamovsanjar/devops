@@ -1,0 +1,69 @@
+{
+  "day": 1,
+  "theme": "Linux navigatsiya — ish maydoni, hujjatlash, log triage",
+  "tasks": [
+    {"id": "ws", "type": "real", "xp": 20, "title": "Ish maydonini tayyorla",
+     "why": "Har real loyiha tartibli papka tuzilmasidan boshlanadi — keyin chalkashmaysan.",
+     "steps": ["Ishchi papkangga o't:  cd ~/devops/labs/day-01  (yo'q bo'lsa: devops lab)",
+               "Bitta buyruqda 'project' va uning ichida src, logs, config papkalarini yarat (mkdir -p)"],
+     "expect": "labs/day-01/project/{src,logs,config} mavjud",
+     "check": "[ -d $LAB/project/src ] && [ -d $LAB/project/logs ] && [ -d $LAB/project/config ]"},
+
+    {"id": "host", "type": "real", "xp": 25, "title": "Serverni hujjatlashtir (inventory)",
+     "why": "Ops'da birinchi ish — serverni hujjatlash: kim, qancha resurs, qaysi OS.",
+     "steps": ["project/config/host.txt fayl yarat",
+               "Ichiga BUYRUQ orqali yoz (qo'lda emas): hostname, CPU yadrolar soni (nproc), OS (cat /etc/os-release | head -1)",
+               "Maslahat:  hostname >> ...  va  nproc >> ...  (>> qo'shib yozadi)"],
+     "expect": "host.txt ichida shu serverning hostname'i va yadrolar soni bor",
+     "check": "grep -q \"$(hostname)\" $LAB/project/config/host.txt && grep -q \"$(nproc)\" $LAB/project/config/host.txt"},
+
+    {"id": "logs", "type": "real", "xp": 25, "title": "Loglardan xatolarni ajrat (triage)",
+     "why": "Tunda servis yiqildi — minglab logdan faqat ERROR'larni ajratib olish kunlik ish.",
+     "steps": ["Namuna logni ko'r:  cat ~/devops/days/day-01/fixtures/app.log",
+               "Undagi faqat ERROR qatorlarini ajratib, project/logs/errors.txt ga yoz (grep + > )"],
+     "expect": "errors.txt — fixturedagi ERROR qatorlari (boshqa hech narsa)",
+     "check": "diff -q <(grep ERROR \"$DAY/fixtures/app.log\") \"$LAB/project/logs/errors.txt\""},
+
+    {"id": "audit", "type": "real", "xp": 25, "title": "Audit — fayllarni sana",
+     "why": "Inventarizatsiya: tizimda nechta shu turdagi fayl bor? find + wc — audit asbobi.",
+     "steps": ["~/devops ichidagi BARCHA .md fayllar SONINI top (find + wc -l)",
+               "Natijani (faqat raqam) project/report.txt ga yoz"],
+     "expect": "report.txt = ~/devops dagi .md fayllar soni",
+     "check": "[ \"$(cat $LAB/project/report.txt 2>/dev/null)\" = \"$(find $HOME/devops -name '*.md' | wc -l)\" ]"},
+
+    {"id": "disk", "type": "real", "xp": 20, "title": "Disk holatini hujjatla",
+     "why": "Disk to'lib qolsa servis o'ladi — disk holatini kuzatish kunlik ops ishi.",
+     "steps": ["root fayl tizimi holatini ko'r:  df -h /",
+               "Oxirgi (ma'lumot) qatorini project/config/disk.txt ga yoz"],
+     "expect": "disk.txt ichida foydalanish foizi (% bor)",
+     "check": "grep -qE '[0-9]+%' $LAB/project/config/disk.txt"},
+
+    {"id": "biggest", "type": "real", "xp": 20, "title": "Eng katta loglarni top",
+     "why": "Disk to'lganda — qaysi log eng katta? Hajm bo'yicha saralash asosiy ko'nikma.",
+     "steps": ["/var/log ni HAJM bo'yicha sarala:  ls -S /var/log",
+               "Eng katta 3 ta nomni project/logs/biggest.txt ga yoz"],
+     "expect": "biggest.txt — /var/log dagi haqiqiy fayl nomlari",
+     "check": "f=$(head -1 $LAB/project/logs/biggest.txt 2>/dev/null); [ -n \"$f\" ] && [ -e \"/var/log/$f\" ]"},
+
+    {"id": "script", "type": "real", "xp": 25, "title": "Birinchi skript",
+     "why": "DevOps = avtomatlashtirish. Hammasi kichik skriptdan boshlanadi.",
+     "steps": ["project/src/greet.sh fayl yarat",
+               "Ichiga matn chiqaradigan echo yoz (masalan: echo 'Salom, agent')",
+               "Sinab ko'r:  bash project/src/greet.sh"],
+     "expect": "greet.sh ishga tushganda matn chiqaradi",
+     "check": "[ -f $LAB/project/src/greet.sh ] && [ -n \"$(bash $LAB/project/src/greet.sh 2>/dev/null)\" ]"},
+
+    {"id": "boss", "type": "lab", "xp": 250, "title": "BOSS — 'Yashirin Arxiv' xazina ovi",
+     "why": "Navigatsiya mahoratini to'liq sinash: ls -a → grep -r → find → tail.",
+     "steps": ["cd ~/devops/days/day-01/quest && cat START.txt",
+               "Zanjirni yech, DEVOPS{...} flagni top",
+               "Topshir:  devops flag <kod>"],
+     "expect": "DEVOPS{...} flag topiladi va topshiriladi",
+     "flag": "DEVOPS{linux_explorer_unlocked__sen_endi_haqiqiy_navigatorsan}"},
+
+    {"id": "explain", "type": "deep", "xp": 20, "title": "Tushuntirib ber",
+     "why": "Tushuntira olish — haqiqatan tushunganingning yagona isboti.",
+     "steps": ["Bugun o'rganganingni (navigatsiya, grep, find) 2 jumlada ustozga ayt"],
+     "expect": "O'z so'zlaring bilan qisqa tushuntirish"}
+  ]
+}

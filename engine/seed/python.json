@@ -1,0 +1,17 @@
+[
+  {"q": "Python'da matnni ekranga chiqarish uchun qaysi funksiya?", "options": ["echo()", "print()", "write()", "log()"], "correct": 1, "difficulty": 1, "explanation": "print() — Python'ning asosiy chiqarish funksiyasi."},
+  {"q": "f-string nima uchun ishlatiladi?", "options": ["Fayl ochish", "O'zgaruvchini matn ichiga qo'shish", "Funksiya yaratish", "Xato ushlash"], "correct": 1, "difficulty": 1, "explanation": "f\"Salom {ism}\" — o'zgaruvchini matnga qulay qo'shadi."},
+  {"q": "Qaysi tur o'zgartirib bo'lmaydigan (immutable)?", "options": ["list", "dict", "tuple", "set"], "correct": 2, "difficulty": 2, "explanation": "tuple immutable. list, dict, set — mutable (o'zgaruvchan)."},
+  {"q": "Lug'at (dict) qanday yaratiladi?", "options": ["[1,2,3]", "{'a': 1}", "(1,2,3)", "<a:1>"], "correct": 1, "difficulty": 1, "explanation": "dict = kalit:qiymat juftliklari, jingalak qavsда: {'a': 1}."},
+  {"q": "len([1,2,3]) nima qaytaradi?", "options": ["2", "3", "[1,2,3]", "Xato"], "correct": 1, "difficulty": 1, "explanation": "len() — elementlar sonini qaytaradi, ya'ni 3."},
+  {"q": "Faylni xavfsiz (avtomatik yopadigan) ochish uchun?", "options": ["open(f)", "with open(f) as x:", "file(f)", "read(f)"], "correct": 1, "difficulty": 2, "explanation": "with ... as ... — blok tugagach faylni avtomatik yopadi."},
+  {"q": "JSON matnini Python dict'ga aylantirish?", "options": ["json.dump", "json.loads", "json.dumps", "json.read"], "correct": 1, "difficulty": 2, "explanation": "json.loads (load string). dumps esa dict->matn."},
+  {"q": "Boshqa buyruqni Python'dan ishga tushirish uchun qaysi modul?", "options": ["os.run", "subprocess", "exec", "system"], "correct": 1, "difficulty": 2, "explanation": "subprocess.run(...) — DevOps avtomatlashtirishда eng ko'p ishlatiladi."},
+  {"q": "for i in range(3): print(i) nimani chiqaradi?", "options": ["1 2 3", "0 1 2", "0 1 2 3", "3"], "correct": 1, "difficulty": 1, "explanation": "range(3) = 0,1,2 (oxiri kirmaydi)."},
+  {"q": "Xato (exception) ushlash uchun?", "options": ["catch/finally", "try/except", "if/else", "do/while"], "correct": 1, "difficulty": 2, "explanation": "try: ... except: ... — Python'da xato boshqaruvi."},
+  {"q": "Skript to'g'ridan-to'g'ri ishga tushganini tekshirish?", "options": ["if __main__:", "if __name__ == '__main__':", "if run:", "def main:"], "correct": 1, "difficulty": 3, "explanation": "Modul import qilinganda emas, to'g'ridan ishga tushganda bajariladi."},
+  {"q": "List comprehension qaysi?", "options": ["[x for x in y]", "for x in y: []", "{x: y}", "(x in y)"], "correct": 0, "difficulty": 3, "explanation": "[x for x in y] — qisqa va tez list yaratish usuli."},
+  {"q": "pip nima uchun?", "options": ["Python kompilyatori", "Paket o'rnatuvchi", "Matn muharriri", "Test vositasi"], "correct": 1, "difficulty": 1, "explanation": "pip — Python paketlarini o'rnatadi (masalan: pip install requests)."},
+  {"q": "dict'dan kalit bo'yicha qiymat olish (kalit yo'q bo'lsa xato bermaydigan)?", "options": ["d[k]", "d.get(k)", "d.find(k)", "d->k"], "correct": 1, "difficulty": 2, "explanation": "d.get(k) — kalit yo'q bo'lsa None qaytaradi, d[k] esa xato beradi."},
+  {"q": "os.environ nima beradi?", "options": ["Fayllar ro'yxati", "Muhit o'zgaruvchilari", "Jarayonlar", "Tarmoq"], "correct": 1, "difficulty": 2, "explanation": "os.environ — muhit o'zgaruvchilari (env vars), DevOps'da config uchun muhim."}
+]

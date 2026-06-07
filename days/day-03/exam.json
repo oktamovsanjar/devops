@@ -1,0 +1,23 @@
+{
+  "title": "Day-03: Jarayonlar va servislar",
+  "workspace": "exams/day-03",
+  "pass_score": 70,
+  "time_limit_min": 15,
+  "tasks": [
+    {"id": "t1", "points": 20,
+     "prompt": "Orqa fonda 'sleep 777' jarayonini ishga tushir (777 — maxsus belgi).",
+     "check": "pgrep -f \"sleep 777\" >/dev/null"},
+    {"id": "t2", "points": 20,
+     "prompt": "O'sha 'sleep 777' jarayonining PID ini top va 'pid.txt' ga yoz (faqat raqam).",
+     "check": "ps -p $(cat $EXAM/pid.txt 2>/dev/null) -o args= 2>/dev/null | grep -q 777"},
+    {"id": "t3", "points": 20,
+     "prompt": "Endi 'sleep 777' jarayonini TO'XTAT (kill).",
+     "check": "! pgrep -f \"sleep 777\" >/dev/null 2>&1"},
+    {"id": "t4", "points": 20,
+     "prompt": "O'z foydalanuvchi nomingni (buyruq bilan) 'whoami.txt' ga yoz.",
+     "check": "grep -qx $(whoami) $EXAM/whoami.txt 2>/dev/null"},
+    {"id": "t5", "points": 20,
+     "prompt": "devops-quizbot servisining holatini (active/inactive) tekshirib, natijani 'svc.txt' ga yoz (buyruq chiqishini ishlat).",
+     "check": "grep -qx $(systemctl is-active devops-quizbot) $EXAM/svc.txt 2>/dev/null"}
+  ]
+}

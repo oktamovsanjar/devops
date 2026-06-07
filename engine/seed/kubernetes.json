@@ -1,0 +1,16 @@
+[
+  {"q": "Kubernetes'da eng kichik ishga tushiriladigan birlik?", "options": ["Container", "Pod", "Node", "Service"], "correct": 1, "difficulty": 2, "explanation": "Pod — bir yoki bir nechta konteynerni o'rab turadi. K8s eng kichik birligi."},
+  {"q": "Pod replikalarini va rolling-update'ni boshqaradigan obyekt?", "options": ["Pod", "Deployment", "Service", "ConfigMap"], "correct": 1, "difficulty": 3, "explanation": "Deployment — nechta replika va yangilanish strategiyasini boshqaradi."},
+  {"q": "Pod'larga barqaror tarmoq manzili (endpoint) beradigan obyekt?", "options": ["Ingress", "Service", "Pod", "Node"], "correct": 1, "difficulty": 3, "explanation": "Service — o'zgaruvchan pod IP'lari oldida turg'un nom/IP beradi."},
+  {"q": "Maxfiy bo'lmagan konfiguratsiya uchun?", "options": ["Secret", "ConfigMap", "Volume", "Env"], "correct": 1, "difficulty": 3, "explanation": "ConfigMap — oddiy sozlamalar. Maxfiy ma'lumot uchun Secret."},
+  {"q": "Parol/token kabi maxfiy ma'lumot uchun?", "options": ["ConfigMap", "Secret", "Pod", "Label"], "correct": 1, "difficulty": 3, "explanation": "Secret — maxfiy ma'lumotlarni (base64) saqlaydi."},
+  {"q": "Kubernetes'ni boshqaruvchi CLI vositasi?", "options": ["kubeadm", "kubectl", "kubelet", "kubecfg"], "correct": 1, "difficulty": 1, "explanation": "kubectl — klaster bilan ishlovchi asosiy buyruq."},
+  {"q": "Pod'lar ro'yxatini ko'rish?", "options": ["kubectl list pods", "kubectl get pods", "kubectl show pods", "kubectl ps"], "correct": 1, "difficulty": 2, "explanation": "kubectl get pods — joriy namespace'dagi pod'lar."},
+  {"q": "Pod nega ishlamayotganini (events bilan) tekshirish?", "options": ["kubectl logs", "kubectl describe pod nom", "kubectl get pod", "kubectl info"], "correct": 1, "difficulty": 3, "explanation": "kubectl describe — batafsil holat va events (debug uchun)."},
+  {"q": "Pod loglarini ko'rish?", "options": ["kubectl logs nom", "kubectl cat nom", "kubectl describe nom", "kubectl tail nom"], "correct": 0, "difficulty": 2, "explanation": "kubectl logs <pod> — konteyner chiqishi."},
+  {"q": "Pod ichiga kirib buyruq bajarish?", "options": ["kubectl run", "kubectl exec -it nom -- bash", "kubectl enter nom", "kubectl ssh nom"], "correct": 1, "difficulty": 4, "explanation": "kubectl exec -it <pod> -- bash — pod ichida interaktiv shell."},
+  {"q": "Tashqaridan HTTP/HTTPS trafikni domen bo'yicha yo'naltirish?", "options": ["Service", "Ingress", "Pod", "Node"], "correct": 1, "difficulty": 4, "explanation": "Ingress — tashqi URL'larni ichki Service'larga yo'naltiradi."},
+  {"q": "Resurslarni mantiqan ajratish/guruhlash mexanizmi?", "options": ["Label", "Namespace", "Node", "Cluster"], "correct": 1, "difficulty": 3, "explanation": "Namespace — bitta klaster ichida muhitlarni (dev/prod) ajratadi."},
+  {"q": "Konteyner tirik ekanini tekshirib, o'lsa qayta ishga tushiradigan probe?", "options": ["readiness", "liveness", "startup", "health"], "correct": 1, "difficulty": 4, "explanation": "liveness probe — muvaffaqiyatsiz bo'lsa, k8s konteynerni restart qiladi."},
+  {"q": "Klaster holatini saqlaydigan asosiy ma'lumotlar ombori?", "options": ["kubelet", "etcd", "kube-proxy", "docker"], "correct": 1, "difficulty": 5, "explanation": "etcd — barcha klaster holati saqlanadigan key-value store."}
+]

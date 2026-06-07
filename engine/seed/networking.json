@@ -1,0 +1,16 @@
+[
+  {"q": "HTTPS standart porti qaysi?", "options": ["80", "443", "22", "8080"], "correct": 1, "difficulty": 2, "explanation": "443 = HTTPS (shifrlangan). 80 = oddiy HTTP."},
+  {"q": "HTTP (shifrlanmagan) standart porti?", "options": ["80", "443", "21", "25"], "correct": 0, "difficulty": 2, "explanation": "80 = HTTP. Brauzer port ko'rsatilmasa shuni ishlatadi."},
+  {"q": "SSH standart porti?", "options": ["21", "22", "23", "80"], "correct": 1, "difficulty": 2, "explanation": "22 = SSH (xavfsiz masofaviy kirish). 23 = eski Telnet."},
+  {"q": "localhost (shu mashina) IP manzili?", "options": ["0.0.0.0", "127.0.0.1", "192.168.0.1", "10.0.0.1"], "correct": 1, "difficulty": 2, "explanation": "127.0.0.1 = loopback, ya'ni 'o'zim'."},
+  {"q": "Domen nomini IP manzilga aylantiruvchi tizim?", "options": ["DHCP", "DNS", "NAT", "VPN"], "correct": 1, "difficulty": 1, "explanation": "DNS — example.com -> 93.184.x.x kabi tarjima qiladi."},
+  {"q": "Server javob beryaptimi-yo'qmi tez tekshirish?", "options": ["ping host", "echo host", "curl ping", "test host"], "correct": 0, "difficulty": 1, "explanation": "ping — paket yuborib javob (va kechikish) ni tekshiradi."},
+  {"q": "Terminaldan URL'ga so'rov yuborish?", "options": ["wget -o", "curl URL", "ping URL", "get URL"], "correct": 1, "difficulty": 2, "explanation": "curl — HTTP so'rov yuboradi, javobni ko'rsatadi (API test uchun zo'r)."},
+  {"q": "Qaysi portlar tinglanayotganini (listening) ko'rish?", "options": ["ss -tlnp", "ls -ports", "ports -a", "ifconfig -p"], "correct": 0, "difficulty": 4, "explanation": "ss -tlnp — ochiq TCP portlar va ularni egallagan jarayonlar."},
+  {"q": "Domen nomini lokal majburan IP'ga bog'laydigan fayl?", "options": ["/etc/dns", "/etc/hosts", "/etc/resolv", "/etc/network"], "correct": 1, "difficulty": 3, "explanation": "/etc/hosts — DNS'dan oldin tekshiriladigan lokal jadval."},
+  {"q": "HTTP 404 status kodi nimani bildiradi?", "options": ["OK", "Topilmadi (Not Found)", "Server xatosi", "Ruxsat yo'q"], "correct": 1, "difficulty": 2, "explanation": "404 = so'ralgan resurs topilmadi."},
+  {"q": "HTTP 500 status kodi?", "options": ["Muvaffaqiyat", "Topilmadi", "Server ichki xatosi", "Yo'naltirish"], "correct": 2, "difficulty": 2, "explanation": "5xx = server tomonidagi xato. 500 = umumiy ichki xato."},
+  {"q": "HTTP 200 nimani anglatadi?", "options": ["OK (muvaffaqiyat)", "Yo'naltirish", "Xato", "Kutilmoqda"], "correct": 0, "difficulty": 1, "explanation": "2xx = muvaffaqiyat. 200 OK = hammasi joyida."},
+  {"q": "Ishonchli, ulanishga asoslangan protokol (UDP'ning aksi)?", "options": ["TCP", "UDP", "ICMP", "ARP"], "correct": 0, "difficulty": 3, "explanation": "TCP — ulanish o'rnatadi, paket yetib borishini kafolatlaydi. UDP tezroq, lekin kafolatsiz."},
+  {"q": "Faylni SSH orqali boshqa serverga nusxalash?", "options": ["cp -ssh", "scp fayl user@host:/yo'l", "ssh-copy fayl", "rsync -ssh"], "correct": 1, "difficulty": 3, "explanation": "scp — SSH ustidan xavfsiz fayl nusxalash."}
+]

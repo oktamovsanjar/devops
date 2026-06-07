@@ -1,0 +1,22 @@
+[
+  {"q": "chmod 755 fayl — bu qanday ruxsat beradi?", "options": ["rw-r--r--", "rwxr-xr-x", "rwxrwxrwx", "r-xr-xr-x"], "correct": 1, "difficulty": 3, "explanation": "7=rwx (ega), 5=r-x (guruh), 5=r-x (boshqalar)."},
+  {"q": "Ctrl+C terminalda qaysi signalni yuboradi?", "options": ["SIGKILL", "SIGINT", "SIGTERM", "SIGHUP"], "correct": 1, "difficulty": 3, "explanation": "SIGINT (interrupt) — jarayonni to'xtatishni so'raydi."},
+  {"q": "Jarayonni majburan (to'xtatib bo'lmasa) o'ldirish?", "options": ["kill -1", "kill -9", "kill -15", "stop"], "correct": 1, "difficulty": 2, "explanation": "kill -9 = SIGKILL, majburiy. -15 (SIGTERM) avval ko'riladi."},
+  {"q": "systemd servisining holatini ko'rish?", "options": ["service list", "systemctl status nginx", "ps nginx", "status nginx"], "correct": 1, "difficulty": 2, "explanation": "systemctl status <servis> — holat, PID va so'nggi loglar."},
+  {"q": "Bitta systemd servisining loglarini ko'rish?", "options": ["cat /var/log/nginx", "journalctl -u nginx", "logs nginx", "dmesg nginx"], "correct": 1, "difficulty": 3, "explanation": "journalctl -u <servis> — o'sha servisning journald loglari."},
+  {"q": "Servisni tizim yonganda avtomatik ishga tushirish?", "options": ["systemctl start", "systemctl enable", "systemctl restart", "systemctl boot"], "correct": 1, "difficulty": 3, "explanation": "enable = boot'da avtomatik. start = hozir bir martalik."},
+  {"q": "/etc/passwd faylida ustunlar qaysi belgi bilan ajratilgan?", "options": ["vergul ,", "ikki nuqta :", "probel", "tab"], "correct": 1, "difficulty": 3, "explanation": "Ikki nuqta (:) bilan: ism:x:UID:GID:...:home:shell."},
+  {"q": "Disk (fayl tizimi) to'ldi-to'lmaganini ko'rish?", "options": ["du -h", "df -h", "ls -s", "free -h"], "correct": 1, "difficulty": 2, "explanation": "df -h = fayl tizimlari bo'sh joyi. du = papka hajmi."},
+  {"q": "Bitta papka qancha joy egallaganini ko'rish?", "options": ["df -sh papka", "du -sh papka", "ls -l papka", "size papka"], "correct": 1, "difficulty": 2, "explanation": "du -sh = papkaning umumiy hajmi (summary, human)."},
+  {"q": "Buyruq natijasini faylga QO'SHIB yozish (eskisi o'chmasin)?", "options": [">", ">>", "2>", "|"], "correct": 1, "difficulty": 2, "explanation": ">> qo'shadi, > esa ustiga yozib eskisini o'chiradi."},
+  {"q": "Faqat xato (stderr) chiqishini faylga yo'naltirish?", "options": ["> err.log", "2> err.log", ">> err.log", "1> err.log"], "correct": 1, "difficulty": 3, "explanation": "2> — stderr (fayl deskriptori 2) ni yo'naltiradi."},
+  {"q": "Fayldagi qatorlar sonini sanash?", "options": ["wc -l fayl", "count fayl", "lines fayl", "wc -c fayl"], "correct": 0, "difficulty": 1, "explanation": "wc -l = qatorlar (lines). -c = baytlar, -w = so'zlar."},
+  {"q": "Faylning birinchi 10 qatorini ko'rish?", "options": ["top fayl", "head fayl", "first fayl", "cat -10 fayl"], "correct": 1, "difficulty": 1, "explanation": "head = boshi (default 10 qator). tail = oxiri."},
+  {"q": "PATH muhit o'zgaruvchisini ekranga chiqarish?", "options": ["echo $PATH", "print PATH", "cat PATH", "show $PATH"], "correct": 0, "difficulty": 2, "explanation": "echo $PATH — o'zgaruvchi qiymatini ko'rsatadi."},
+  {"q": "Faylning egasini (owner) o'zgartirish?", "options": ["chmod", "chown", "chgrp", "chage"], "correct": 1, "difficulty": 2, "explanation": "chown = egasini. chmod = ruxsatni, chgrp = guruhni."},
+  {"q": "Symbolic link (yorliq) yaratish?", "options": ["ln fayl link", "ln -s fayl link", "link fayl", "cp -s fayl"], "correct": 1, "difficulty": 3, "explanation": "ln -s = symbolic (soft) link. -s siz hard link bo'ladi."},
+  {"q": "Linux'da PID 1 (birinchi jarayon) odatda nima?", "options": ["bash", "systemd/init", "kernel", "root"], "correct": 1, "difficulty": 4, "explanation": "PID 1 = init tizimi (zamonaviy Linux'da systemd), barcha jarayonlarning ajdodi."},
+  {"q": ".tar.gz arxivni ochish?", "options": ["tar -czf", "tar -xzf", "unzip", "tar -tf"], "correct": 1, "difficulty": 3, "explanation": "x=extract, z=gzip, f=fayl. Yaratish uchun -czf."},
+  {"q": "Buyruqni administrator (root) huquqi bilan bajarish?", "options": ["admin", "sudo", "root", "su -c"], "correct": 1, "difficulty": 1, "explanation": "sudo = bitta buyruqni root sifatida bajaradi."},
+  {"q": "Oxirgi 1 kun ichida o'zgargan fayllarni topish?", "options": ["find . -mtime -1", "find . -size 1", "ls -t 1", "find . -new"], "correct": 0, "difficulty": 4, "explanation": "-mtime -1 = oxirgi 24 soatda o'zgargan (modified time)."}
+]

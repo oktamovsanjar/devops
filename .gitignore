@@ -1,0 +1,27 @@
+# ═══ MAXFIY — hech qachon git'ga ketmaydi ═══
+engine/config.json
+scripts/telegram/config.json
+**/*.token
+.env
+
+# Ma'lumotlar bazasi (lokal)
+*.db
+engine/bootcamp.db
+
+# ═══ Runtime / shaxsiy / generatsiya (repo'ga kerak emas) ═══
+labs/
+logs/
+exams/
+days/*/quest/
+prayer-times.json
+.snake_high
+__pycache__/
+**/__pycache__/
+*.log
+*.tmp
+
+# ═══ Secret easter-egg javoblari (puzzle yechimlari) ═══
+.day02_secret
+**/.reward
+**/.system.log.bak
+resources/.cache/

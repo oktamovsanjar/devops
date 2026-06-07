@@ -1,0 +1,25 @@
+{
+  "day": 3,
+  "theme": "Jarayonlar, signallar, systemd servislar, journald loglar",
+  "tasks": [
+    {"id": "lab1", "type": "deep", "xp": 40, "title": "LAB I — Jarayonlar va signallar",
+     "desc": "ps aux, top, sleep & (fonda), jobs, pgrep, kill. Nechta jarayon ishlayapti?"},
+    {"id": "lab2", "type": "deep", "xp": 40, "title": "LAB II — systemd & journald (real servislar)",
+     "desc": "systemctl status devops-quizbot/cron/ssh + journalctl -u. Faqat status, restart qilma."},
+    {"id": "boss", "type": "lab", "xp": 250, "title": "BOSS — 'Signal' (guardian jarayoniga SIGUSR1)",
+     "desc": "quest/START.txt: ./guardian.sh & -> pgrep -> kill -USR1 <PID> -> cat flag_unlocked.txt.",
+     "flag": "DEVOPS{process_whisperer_signals_mastered}"},
+    {"id": "secret", "type": "secret", "xp": 50, "title": "SECRET — log ichidagi sir",
+     "desc": "grep -rl 'SECRET{' ~/devops bilan faylni top, SECRET{...} ni ustozga ayt."},
+    {"id": "py", "type": "track", "xp": 20, "title": "🐍 Python Drop — funksiyalar",
+     "desc": "labs/day-03/day03.py: status() funksiya + servislar dict'iga qo'lla."},
+    {"id": "en", "type": "track", "xp": 15, "title": "🇬🇧 English Drop",
+     "desc": "5 so'z (process, service, restart, crash, log) + 2 jumla inglizcha."},
+    {"id": "sh", "type": "track", "xp": 20, "title": "💻 Shell Drill — ps + sort",
+     "desc": "Eng ko'p CPU ishlatayotgan 3 jarayonni bir qatorda chiqar (ps aux --sort)."},
+    {"id": "quiz", "type": "drill", "xp": 30, "title": "Quiz — kamida 15 ta",
+     "desc": "devops quiz today, 80%+ aniqlik maqsad."},
+    {"id": "explain", "type": "deep", "xp": 20, "title": "Tushuntirib ber",
+     "desc": "SIGTERM va SIGKILL farqini + systemctl status nimalarni ko'rsatishini ustozga ayt."}
+  ]
+}
