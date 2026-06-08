@@ -53,11 +53,55 @@ def api(token, method, params, timeout=20):
         return json.load(r)
 
 
-def send_msg(token, chat_id, text):
+def send_msg(token, chat_id, text, markup=None):
+    params = {"chat_id": chat_id, "text": text, "parse_mode": "HTML"}
+    if markup:
+        params["reply_markup"] = markup
     try:
-        api(token, "sendMessage", {"chat_id": chat_id, "text": text, "parse_mode": "HTML"})
+        api(token, "sendMessage", params)
     except Exception as e:
         log(f"send_msg err: {e}")
+
+
+# ───────── Inline tugmalar (UI) ─────────
+def kb(rows):
+    return json.dumps({"inline_keyboard":
+                       [[{"text": t, "callback_data": d} for (t, d) in row] for row in rows]})
+
+
+MENU = [[("▶️ Quiz", "quiz"), ("⏸️ To'xta", "stop")],
+        [("📊 Daraja", "stats"), ("📚 Mavzu", "topic")],
+        [("🔄 Reset", "reset"), ("❓ Yordam", "help")]]
+
+
+def menu_kb():
+    return kb(MENU)
+
+
+def topic_menu_kb(con):
+    learned = sorted(profile.learned_topics(con))
+    rows, row = [], []
+    for t in learned:
+        row.append((f"{TOPIC_EMOJI.get(t, '•')} {t}", f"topic:{t}"))
+        if len(row) == 2:
+            rows.append(row); row = []
+    if row:
+        rows.append(row)
+    rows.append([("🔁 Kunlik (default)", "daily")])
+    return kb(rows)
+
+
+def stats_msg(con):
+    level, _ = get_level(con)
+    r = con.execute("SELECT COUNT(*) n, SUM(correct) ok FROM attempts "
+                    "WHERE date(ts)=date('now')").fetchone()
+    n, ok = r["n"] or 0, r["ok"] or 0
+    streak = profile.streak_days(con)
+    topics = ", ".join(sorted(_pool_topics(con))) or "umumiy"
+    return (f"📊 <b>Holat</b>\n"
+            f"Daraja: <b>{level}</b>  ·  🔥 streak: {streak} kun\n"
+            f"Bugun: {ok}/{n} to'g'ri\n"
+            f"Mavzu: {topics}")
 
 
 # ───────── Adaptiv qiyinlik (terminal bilan bir xil mantiq) ─────────
@@ -225,6 +269,43 @@ def handle_answer(con, poll_id, option_ids):
     return correct
 
 
+def do_quiz(con, token, chat_id, key):
+    db.set_meta(con, "tg_active", "1")
+    send_msg(token, chat_id, start_banner(con), menu_kb())
+    send_quiz(token, chat_id, con, key)
+
+
+def do_daily(con, token, chat_id, key):
+    db.set_meta(con, "tg_topic", "")                 # override'ni tozalab, kunlikка qaytar
+    do_quiz(con, token, chat_id, key)
+
+
+def do_stop(con, token, chat_id):
+    db.set_meta(con, "tg_active", "0")
+    send_msg(token, chat_id, "⏸️ Quiz to'xtatildi.", menu_kb())
+
+
+def do_reset(con, token, chat_id):
+    lv = available_levels(con)
+    db.set_meta(con, "tg_level", lv[0] if lv else 1)
+    db.set_meta(con, "tg_correct", 0)
+    db.set_meta(con, "tg_wrong", 0)
+    send_msg(token, chat_id, "🔄 Daraja boshiga qaytarildi.", menu_kb())
+
+
+def do_topic_menu(con, token, chat_id):
+    send_msg(token, chat_id, "📚 Qaysi mavzu? (o'rganilganlardan tanla)", topic_menu_kb(con))
+
+
+def do_set_topic(con, token, chat_id, key, name):
+    if name in set(profile.learned_topics(con)):
+        db.set_meta(con, "tg_topic", name)
+        send_msg(token, chat_id, f"✅ Mavzu tanlandi: <b>{name}</b>", menu_kb())
+        send_quiz(token, chat_id, con, key)
+    else:
+        do_topic_menu(con, token, chat_id)
+
+
 def process(con, token, chat_id, key, u):
     if "poll_answer" in u:
         pa = u["poll_answer"]
@@ -236,40 +317,52 @@ def process(con, token, chat_id, key, u):
                     send_msg(token, chat_id, level_msg(change, level))
             time.sleep(1)                        # foydalanuvchi Telegram natijani ko'rsin
             send_quiz(token, chat_id, con, key)
+    elif "callback_query" in u:
+        cq = u["callback_query"]
+        data = cq.get("data", "")
+        try:
+            api(token, "answerCallbackQuery", {"callback_query_id": cq["id"]})
+        except Exception:
+            pass
+        if str(cq.get("message", {}).get("chat", {}).get("id")) != str(chat_id):
+            return
+        if data == "quiz":
+            do_quiz(con, token, chat_id, key)
+        elif data == "stop":
+            do_stop(con, token, chat_id)
+        elif data == "stats":
+            send_msg(token, chat_id, stats_msg(con), menu_kb())
+        elif data == "reset":
+            do_reset(con, token, chat_id)
+        elif data == "help":
+            send_msg(token, chat_id, HELP, menu_kb())
+        elif data == "topic":
+            do_topic_menu(con, token, chat_id)
+        elif data == "daily":
+            do_daily(con, token, chat_id, key)
+        elif data.startswith("topic:"):
+            do_set_topic(con, token, chat_id, key, data.split(":", 1)[1])
     elif "message" in u:
         m = u["message"]
         if str(m.get("chat", {}).get("id")) != str(chat_id):
             return
         text = (m.get("text") or "").strip().lower()
-        if text in ("/start", "/quiz", "/next", "/daily"):
-            if text == "/daily":
-                db.set_meta(con, "tg_topic", "")          # override'ni tozalab, kunlikка qaytar
-            db.set_meta(con, "tg_active", "1")
-            send_msg(token, chat_id, start_banner(con))
-            send_quiz(token, chat_id, con, key)
+        if text in ("/start", "/quiz", "/next"):
+            do_quiz(con, token, chat_id, key)
+        elif text == "/daily":
+            do_daily(con, token, chat_id, key)
         elif text.startswith("/topic"):
-            learned = sorted(profile.learned_topics(con))
             parts = text.split()
-            if len(parts) >= 2 and parts[1] in learned:
-                db.set_meta(con, "tg_topic", parts[1])
-                send_msg(token, chat_id, f"✅ Mavzu tanlandi: <b>{parts[1]}</b>. "
-                                         "Kunlikка qaytish: /daily")
-                send_quiz(token, chat_id, con, key)
+            if len(parts) >= 2:
+                do_set_topic(con, token, chat_id, key, parts[1])
             else:
-                tl = ", ".join(learned) or "—"
-                send_msg(token, chat_id, f"📚 O'rganilgan mavzular: {tl}\n"
-                                         f"Misol:  /topic {learned[-1] if learned else 'linux'}")
+                do_topic_menu(con, token, chat_id)
         elif text == "/stop":
-            db.set_meta(con, "tg_active", "0")
-            send_msg(token, chat_id, "⏸️ Quiz to'xtatildi. Qayta boshlash: /quiz")
+            do_stop(con, token, chat_id)
         elif text == "/reset":
-            lv = available_levels(con)
-            db.set_meta(con, "tg_level", lv[0] if lv else 1)
-            db.set_meta(con, "tg_correct", 0)
-            db.set_meta(con, "tg_wrong", 0)
-            send_msg(token, chat_id, "🔄 Daraja boshiga qaytarildi. /quiz bilan boshla.")
-        else:
-            send_msg(token, chat_id, HELP)
+            do_reset(con, token, chat_id)
+        else:                                    # /help, /menu yoki boshqa
+            send_msg(token, chat_id, HELP, menu_kb())
 
 
 def main():
@@ -296,7 +389,7 @@ def main():
         try:
             res = api(token, "getUpdates", {
                 "offset": offset, "timeout": 30,
-                "allowed_updates": json.dumps(["poll_answer", "message"]),
+                "allowed_updates": json.dumps(["poll_answer", "message", "callback_query"]),
             }, timeout=40)
             updates = res.get("result", [])
         except Exception as e:

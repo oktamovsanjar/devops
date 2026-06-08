@@ -1,38 +1,362 @@
 [
- {"q": "`-rwxr-xr--` da EGA (owner) qanday huquqga ega?",
-  "options": ["r--", "rwx", "r-x", "--x"], "correct": 1, "difficulty": 2,
-  "explanation": "Birinchi uchlik egaga tegishli: rwx = o'qish+yozish+ishga tushirish."},
- {"q": "Octal `644` qaysi huquqlarga teng?",
-  "options": ["rw-r--r--", "rwxr-xr-x", "rw-------", "rwxrwxrwx"], "correct": 0, "difficulty": 2,
-  "explanation": "6=rw- (ega), 4=r-- (guruh), 4=r-- (others)."},
- {"q": "Faylni FAQAT ega o'qiy/yoza oladigan (maxfiy) qilish?",
-  "options": ["chmod 777", "chmod 600", "chmod 644", "chmod 755"], "correct": 1, "difficulty": 2,
-  "explanation": "600 = rw------- : faqat ega, boshqalarга hech narsa."},
- {"q": "Skriptni BAJARILADIGAN (executable) qilish?",
-  "options": ["chmod +r run.sh", "chmod +x run.sh", "chmod 644 run.sh", "run run.sh"], "correct": 1, "difficulty": 1,
-  "explanation": "+x — execute bitini qo'shadi; aks holda 'Permission denied'."},
- {"q": "`chmod 700 papka` nimani bildiradi?",
-  "options": ["hamma kira oladi", "faqat ega to'liq, boshqalar yo'q", "hamma o'qiydi", "hech kim kira olmaydi"], "correct": 1, "difficulty": 2,
-  "explanation": "700 = rwx------ : faqat ega kiradi/ishlatadi."},
- {"q": "Papkaga KIRISH (cd) uchun qaysi huquq kerak?",
-  "options": ["r (read)", "w (write)", "x (execute)", "hech qanday"], "correct": 2, "difficulty": 3,
-  "explanation": "Papkada x = ichiga kirish (cd) huquqi."},
- {"q": "Faylning EGASINI o'zgartirish buyrug'i?",
-  "options": ["chmod", "chown", "chage", "chroot"], "correct": 1, "difficulty": 2,
-  "explanation": "chown ubuntu:guruh fayl — ega:guruhni o'zgartiradi (sudo kerak)."},
- {"q": "Ega bo'lsang ham, fayl ruxsati `000` bo'lsa nima bo'ladi?",
-  "options": ["bemalol o'qiysan", "o'qiy olmaysan (root'dan tashqari)", "avtomatik 644 bo'ladi", "fayl o'chadi"], "correct": 1, "difficulty": 3,
-  "explanation": "000 = hech qanday huquq; ega ham o'qiy olmaydi (faqat root)."},
- {"q": "Octal hisobда `r` (read) nechiga teng?",
-  "options": ["1", "2", "4", "7"], "correct": 2, "difficulty": 2,
-  "explanation": "r=4, w=2, x=1 — qo'shib octal chiqadi (masalan rw=6)."},
- {"q": "`chmod o-rwx fayl` nima qiladi?",
-  "options": ["egadan huquq oladi", "'others' (boshqalar)dan barcha huquqni oladi", "hammaga beradi", "executable qiladi"], "correct": 1, "difficulty": 2,
-  "explanation": "o = others; - = olib tashlash; rwx = barcha huquq."},
- {"q": "Bitta buyruqni root huquqi bilan bajarish?",
-  "options": ["su", "sudo buyruq", "admin buyruq", "root buyruq"], "correct": 1, "difficulty": 1,
-  "explanation": "sudo — bitta buyruqni administrator huquqi bilan ishlatadi."},
- {"q": "Octal `755` da GURUH (group) huquqi qanday?",
-  "options": ["rwx", "r-x", "rw-", "---"], "correct": 1, "difficulty": 3,
-  "explanation": "755 = rwx (ega) r-x (guruh) r-x (others); 5 = r-x."}
+ {
+  "q": "`-rwxr-xr--` da EGA (owner) qanday huquqga ega?",
+  "options": [
+   "r--",
+   "rwx",
+   "r-x",
+   "--x"
+  ],
+  "correct": 1,
+  "difficulty": 2,
+  "explanation": "Birinchi uchlik egaga tegishli: rwx = o'qish+yozish+ishga tushirish."
+ },
+ {
+  "q": "Octal `644` qaysi huquqlarga teng?",
+  "options": [
+   "rw-r--r--",
+   "rwxr-xr-x",
+   "rw-------",
+   "rwxrwxrwx"
+  ],
+  "correct": 0,
+  "difficulty": 2,
+  "explanation": "6=rw- (ega), 4=r-- (guruh), 4=r-- (others)."
+ },
+ {
+  "q": "Faylni FAQAT ega o'qiy/yoza oladigan (maxfiy) qilish?",
+  "options": [
+   "chmod 777",
+   "chmod 600",
+   "chmod 644",
+   "chmod 755"
+  ],
+  "correct": 1,
+  "difficulty": 2,
+  "explanation": "600 = rw------- : faqat ega, boshqalarга hech narsa."
+ },
+ {
+  "q": "Skriptni BAJARILADIGAN (executable) qilish?",
+  "options": [
+   "chmod +r run.sh",
+   "chmod +x run.sh",
+   "chmod 644 run.sh",
+   "run run.sh"
+  ],
+  "correct": 1,
+  "difficulty": 1,
+  "explanation": "+x — execute bitini qo'shadi; aks holda 'Permission denied'."
+ },
+ {
+  "q": "`chmod 700 papka` nimani bildiradi?",
+  "options": [
+   "hamma kira oladi",
+   "faqat ega to'liq, boshqalar yo'q",
+   "hamma o'qiydi",
+   "hech kim kira olmaydi"
+  ],
+  "correct": 1,
+  "difficulty": 2,
+  "explanation": "700 = rwx------ : faqat ega kiradi/ishlatadi."
+ },
+ {
+  "q": "Papkaga KIRISH (cd) uchun qaysi huquq kerak?",
+  "options": [
+   "r (read)",
+   "w (write)",
+   "x (execute)",
+   "hech qanday"
+  ],
+  "correct": 2,
+  "difficulty": 3,
+  "explanation": "Papkada x = ichiga kirish (cd) huquqi."
+ },
+ {
+  "q": "Faylning EGASINI o'zgartirish buyrug'i?",
+  "options": [
+   "chmod",
+   "chown",
+   "chage",
+   "chroot"
+  ],
+  "correct": 1,
+  "difficulty": 2,
+  "explanation": "chown ubuntu:guruh fayl — ega:guruhni o'zgartiradi (sudo kerak)."
+ },
+ {
+  "q": "Ega bo'lsang ham, fayl ruxsati `000` bo'lsa nima bo'ladi?",
+  "options": [
+   "bemalol o'qiysan",
+   "o'qiy olmaysan (root'dan tashqari)",
+   "avtomatik 644 bo'ladi",
+   "fayl o'chadi"
+  ],
+  "correct": 1,
+  "difficulty": 3,
+  "explanation": "000 = hech qanday huquq; ega ham o'qiy olmaydi (faqat root)."
+ },
+ {
+  "q": "Octal hisobда `r` (read) nechiga teng?",
+  "options": [
+   "1",
+   "2",
+   "4",
+   "7"
+  ],
+  "correct": 2,
+  "difficulty": 2,
+  "explanation": "r=4, w=2, x=1 — qo'shib octal chiqadi (masalan rw=6)."
+ },
+ {
+  "q": "`chmod o-rwx fayl` nima qiladi?",
+  "options": [
+   "egadan huquq oladi",
+   "'others' (boshqalar)dan barcha huquqni oladi",
+   "hammaga beradi",
+   "executable qiladi"
+  ],
+  "correct": 1,
+  "difficulty": 2,
+  "explanation": "o = others; - = olib tashlash; rwx = barcha huquq."
+ },
+ {
+  "q": "Bitta buyruqni root huquqi bilan bajarish?",
+  "options": [
+   "su",
+   "sudo buyruq",
+   "admin buyruq",
+   "root buyruq"
+  ],
+  "correct": 1,
+  "difficulty": 1,
+  "explanation": "sudo — bitta buyruqni administrator huquqi bilan ishlatadi."
+ },
+ {
+  "q": "Octal `755` da GURUH (group) huquqi qanday?",
+  "options": [
+   "rwx",
+   "r-x",
+   "rw-",
+   "---"
+  ],
+  "correct": 1,
+  "difficulty": 3,
+  "explanation": "755 = rwx (ega) r-x (guruh) r-x (others); 5 = r-x."
+ },
+ {
+  "q": "`ls -l` chiqishida `-rwxr-xr--` ko'rsatilsa, faylningturi nima?",
+  "options": [
+   "Oddiy fayl",
+   "Papka",
+   "Symlink",
+   "Device fayl"
+  ],
+  "correct": 0,
+  "difficulty": 1,
+  "explanation": "Birinchi belgi `-` bo'lsa, bu oddiy faylni bildiradi; `d` papka, `l` symlink."
+ },
+ {
+  "q": "`chmod 600 secret.txt` buyrug'i qanday ruxsat o'rnatadi?",
+  "options": [
+   "Faqat ega o'qiy va yoza oladi, boshqalar hech narsa qila olmaydi",
+   "Hamma o'qiy oladi",
+   "Ega ishga tushira oladi",
+   "Guruh yoza oladi"
+  ],
+  "correct": 0,
+  "difficulty": 1,
+  "explanation": "600 = rw- --- --- ya'ni faqat egaga o'qish va yozish ruxsati beriladi."
+ },
+ {
+  "q": "Skriptni ishga tushiradigan qilish uchun qaysi buyruq ishlatiladi?",
+  "options": [
+   "chmod +x skript.sh",
+   "chmod -x skript.sh",
+   "chmod 600 skript.sh",
+   "chown +x skript.sh"
+  ],
+  "correct": 0,
+  "difficulty": 1,
+  "explanation": "`chmod +x` faylga execute (ishga tushirish) ruxsatini qo'shadi."
+ },
+ {
+  "q": "`r=4, w=2, x=1` bo'lsa, `rw-` uchun octal qiymat qancha?",
+  "options": [
+   "6",
+   "7",
+   "5",
+   "4"
+  ],
+  "correct": 0,
+  "difficulty": 1,
+  "explanation": "rw- = r(4) + w(2) + -(0) = 6."
+ },
+ {
+  "q": "`chmod 644 file.txt` qanday ruxsat o'rnatadi?",
+  "options": [
+   "Ega o'qiy+yoza oladi, guruh va boshqalar faqat o'qiy oladi",
+   "Hamma yoza oladi",
+   "Faqat ega o'qiy oladi",
+   "Hamma ishga tushira oladi"
+  ],
+  "correct": 0,
+  "difficulty": 1,
+  "explanation": "644 = rw- r-- r-- ya'ni ega uchun o'qish+yozish, qolganlar uchun faqat o'qish."
+ },
+ {
+  "q": "`ls -l` chiqishida `d` bilan boshlangan satr nimani bildiradi?",
+  "options": [
+   "Papka",
+   "Oddiy fayl",
+   "Symlink",
+   "Maxfiy fayl"
+  ],
+  "correct": 0,
+  "difficulty": 1,
+  "explanation": "`ls -l` da birinchi `d` belgisi papkani (directory) bildiradi."
+ },
+ {
+  "q": "Boshqalarga barcha ruxsatni olib tashlash uchun qaysi harfli `chmod` buyrug'i to'g'ri?",
+  "options": [
+   "chmod o-rwx fayl",
+   "chmod a-rwx fayl",
+   "chmod u-rwx fayl",
+   "chmod g-rwx fayl"
+  ],
+  "correct": 0,
+  "difficulty": 1,
+  "explanation": "`o` boshqalarni (others) bildiradi, `-rwx` esa barcha ruxsatlarni olib tashlaydi."
+ },
+ {
+  "q": "Papkada `x` (execute) huquqi nimani bildiradi?",
+  "options": [
+   "Papka ichiga kirish (cd) mumkin",
+   "Papkani ishga tushirish mumkin",
+   "Papka ichidagi fayllarni o'chirish mumkin",
+   "Papka nomini o'zgartirish mumkin"
+  ],
+  "correct": 0,
+  "difficulty": 1,
+  "explanation": "Papkada `x` huquqi `cd` bilan ichiga kirish imkonini beradi."
+ },
+ {
+  "q": "`chmod 700 myfolder` buyrug'i qanday ruxsat o'rnatadi?",
+  "options": [
+   "Faqat ega kirishi, o'qishi va yozishi mumkin",
+   "Hamma kira oladi",
+   "Faqat guruh kira oladi",
+   "Faqat ega o'qiy oladi"
+  ],
+  "correct": 0,
+  "difficulty": 2,
+  "explanation": "700 = rwx --- --- ya'ni faqat egaga to'liq ruxsat, boshqalarga hech narsa yo'q."
+ },
+ {
+  "q": "`sudo chown ubuntu:devops fayl` buyrug'ida `:devops` neni bildiradi?",
+  "options": [
+   "Faylning guruhini",
+   "Faylning egasini",
+   "Faylning ruxsatini",
+   "Faylning turini"
+  ],
+  "correct": 0,
+  "difficulty": 2,
+  "explanation": "`chown ega:guruh` formatida ikkinchi qism faylning guruhini o'zgartiradi."
+ },
+ {
+  "q": "Faylning ruxsati `000` bo'lsa, faylning egasi nima qila oladi?",
+  "options": [
+   "Hech narsa qila olmaydi (root bundan mustasno)",
+   "Faylni o'qiy oladi",
+   "Faylni ishga tushira oladi",
+   "Faylni yoza oladi"
+  ],
+  "correct": 0,
+  "difficulty": 2,
+  "explanation": "Ruxsat `000` bo'lsa, hatto ega ham o'qiy olmaydi — bu root'dan tashqari barcha uchun amal qiladi."
+ },
+ {
+  "q": "`rwx` uchun octal qiymat qancha?",
+  "options": [
+   "7",
+   "6",
+   "5",
+   "4"
+  ],
+  "correct": 0,
+  "difficulty": 1,
+  "explanation": "rwx = r(4) + w(2) + x(1) = 7."
+ },
+ {
+  "q": "`chmod 755 deploy.sh` da boshqalar (others) uchun ruxsat qanday?",
+  "options": [
+   "r-x (o'qish + ishga tushirish)",
+   "rwx (to'liq)",
+   "rw- (o'qish + yozish)",
+   "--- (hech narsa)"
+  ],
+  "correct": 0,
+  "difficulty": 2,
+  "explanation": "755 = rwx r-x r-x, oxirgi r-x boshqalar uchun o'qish va ishga tushirishni bildiradi."
+ },
+ {
+  "q": "SSH kalit faylini himoya qilish uchun qaysi ruxsat tavsiya etiladi?",
+  "options": [
+   "600",
+   "755",
+   "644",
+   "777"
+  ],
+  "correct": 0,
+  "difficulty": 2,
+  "explanation": "600 faqat egaga o'qish+yozish beradi, boshqalar ko'ra olmaydi — maxfiy fayllar uchun ideal."
+ },
+ {
+  "q": "`chmod o-rwx fayl` buyrug'i nima qiladi?",
+  "options": [
+   "Boshqalardan barcha ruxsatni olib tashlaydi",
+   "Egadan barcha ruxsatni olib tashlaydi",
+   "Guruhdan barcha ruxsatni olib tashlaydi",
+   "Barcha toifalardan ruxsatni olib tashlaydi"
+  ],
+  "correct": 0,
+  "difficulty": 2,
+  "explanation": "`o` — others (boshqalar) toifasini, `-rwx` esa barcha ruxsatlarni olib tashlashni bildiradi."
+ },
+ {
+  "q": "Papkada `w` (write) huquqi nimani anglatadi?",
+  "options": [
+   "Papka ichida yangi fayl yaratish yoki o'chirish mumkin",
+   "Papkani o'qish mumkin",
+   "Papka ichiga kirish mumkin",
+   "Papkani ishga tushirish mumkin"
+  ],
+  "correct": 0,
+  "difficulty": 2,
+  "explanation": "Papkada `w` huquqi ichida fayl yaratish va o'chirishga imkon beradi."
+ },
+ {
+  "q": "`sudo cat /etc/shadow` buyrug'ida `sudo` nima uchun kerak?",
+  "options": [
+   "Bu fayl root huquqini talab qiladi",
+   "Bu fayl yo'q bo'lishi mumkin",
+   "cat buyrug'i doim sudo talab qiladi",
+   "shadow fayl maxfiy emas"
+  ],
+  "correct": 0,
+  "difficulty": 2,
+  "explanation": "`/etc/shadow` faqat root tomonidan o'qilishi mumkin, shuning uchun `sudo` kerak."
+ },
+ {
+  "q": "`ls -l` chiqishida `l` bilan boshlangan satr nimani bildiradi?",
+  "options": [
+   "Symlink",
+   "Papka",
+   "Oddiy fayl",
+   "Maxfiy fayl"
+  ],
+  "correct": 0,
+  "difficulty": 1,
+  "explanation": "`ls -l` da birinchi `l` belgisi symbolik havolani (symlink) bildiradi."
+ }
 ]

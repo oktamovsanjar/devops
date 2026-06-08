@@ -1,38 +1,362 @@
 [
- {"q": "Barcha ishlab turgan jarayonlarni ko'rsatadigan buyruq?",
-  "options": ["ls aux", "ps aux", "cat proc", "show procs"], "correct": 1, "difficulty": 1,
-  "explanation": "ps aux — barcha jarayonlar (PID, CPU, RAM, COMMAND)."},
- {"q": "Linux'da PID 1 (birinchi jarayon) odatda nima?",
-  "options": ["bash", "kernel", "systemd / init", "root"], "correct": 2, "difficulty": 2,
-  "explanation": "PID 1 = systemd (init) — barcha jarayonlarning ajdodi."},
- {"q": "Jarayonni NOM bo'yicha PID ini topish?",
-  "options": ["pgrep", "grep", "findpid", "ps -n"], "correct": 0, "difficulty": 2,
-  "explanation": "pgrep -f 'nom' — nomga mos jarayon PID(lar)ini beradi."},
- {"q": "SIGTERM (15) va SIGKILL (9) farqi?",
-  "options": ["ikkalasi bir xil", "SIGTERM yumshoq (cleanup), SIGKILL majburiy", "SIGKILL yumshoq", "SIGTERM majburiy"], "correct": 1, "difficulty": 2,
-  "explanation": "SIGTERM=chiroyli to'xta (default); SIGKILL=majburan, cleanup yo'q."},
- {"q": "Jarayonni MAJBURAN to'xtatish (oxirgi chora)?",
-  "options": ["kill -1 PID", "kill -9 PID", "kill -15 PID", "stop PID"], "correct": 1, "difficulty": 2,
-  "explanation": "kill -9 = SIGKILL — jarayon e'tiborsiz qoldira olmaydi."},
- {"q": "Buyruqni ORQA FONDA ishga tushirish?",
-  "options": ["buyruq &", "buyruq -bg", "bg buyruq", "&buyruq"], "correct": 0, "difficulty": 1,
-  "explanation": "Oxiriga & qo'ysang — jarayon fonda ishlaydi."},
- {"q": "systemd servisi ishlab turibdimi (active/inactive)?",
-  "options": ["systemctl is-active nom", "systemctl run nom", "service active nom", "svc nom"], "correct": 0, "difficulty": 2,
-  "explanation": "systemctl is-active nom — active yoki inactive deb javob beradi."},
- {"q": "Servisni qayta ishga tushirish?",
-  "options": ["systemctl restart nom", "systemctl reboot nom", "restart nom", "systemctl new nom"], "correct": 0, "difficulty": 2,
-  "explanation": "systemctl restart nom — servisni to'xtatib, qayta ishga tushiradi."},
- {"q": "Bitta servisning loglarini ko'rish (journald)?",
-  "options": ["cat /var/log/all", "journalctl -u nom", "logs nom", "dmesg nom"], "correct": 1, "difficulty": 2,
-  "explanation": "journalctl -u <servis> — o'sha servisning loglarini ko'rsatadi."},
- {"q": "Fonda turgan joblar (background jobs) ro'yxatini ko'rish?",
-  "options": ["jobs", "ps -j", "bg list", "fglist"], "correct": 0, "difficulty": 1,
-  "explanation": "jobs — joriy shell'dagi fon joblarini ko'rsatadi."},
- {"q": "Eng ko'p CPU ishlatayotgan jarayonni tepaga chiqarish?",
-  "options": ["ps aux --sort=-%cpu", "ps cpu", "sort ps cpu", "cpu top"], "correct": 0, "difficulty": 3,
-  "explanation": "--sort=-%cpu — CPU bo'yicha kamayish tartibida saralaydi."},
- {"q": "'nginx' nomli BARCHA jarayonni nom bo'yicha to'xtatish?",
-  "options": ["kill nginx", "pkill -f nginx", "stop nginx", "ps kill nginx"], "correct": 1, "difficulty": 2,
-  "explanation": "pkill -f nginx — nomга mos hamma jarayonni to'xtatadi."}
+ {
+  "q": "Barcha ishlab turgan jarayonlarni ko'rsatadigan buyruq?",
+  "options": [
+   "ls aux",
+   "ps aux",
+   "cat proc",
+   "show procs"
+  ],
+  "correct": 1,
+  "difficulty": 1,
+  "explanation": "ps aux — barcha jarayonlar (PID, CPU, RAM, COMMAND)."
+ },
+ {
+  "q": "Linux'da PID 1 (birinchi jarayon) odatda nima?",
+  "options": [
+   "bash",
+   "kernel",
+   "systemd / init",
+   "root"
+  ],
+  "correct": 2,
+  "difficulty": 2,
+  "explanation": "PID 1 = systemd (init) — barcha jarayonlarning ajdodi."
+ },
+ {
+  "q": "Jarayonni NOM bo'yicha PID ini topish?",
+  "options": [
+   "pgrep",
+   "grep",
+   "findpid",
+   "ps -n"
+  ],
+  "correct": 0,
+  "difficulty": 2,
+  "explanation": "pgrep -f 'nom' — nomga mos jarayon PID(lar)ini beradi."
+ },
+ {
+  "q": "SIGTERM (15) va SIGKILL (9) farqi?",
+  "options": [
+   "ikkalasi bir xil",
+   "SIGTERM yumshoq (cleanup), SIGKILL majburiy",
+   "SIGKILL yumshoq",
+   "SIGTERM majburiy"
+  ],
+  "correct": 1,
+  "difficulty": 2,
+  "explanation": "SIGTERM=chiroyli to'xta (default); SIGKILL=majburan, cleanup yo'q."
+ },
+ {
+  "q": "Jarayonni MAJBURAN to'xtatish (oxirgi chora)?",
+  "options": [
+   "kill -1 PID",
+   "kill -9 PID",
+   "kill -15 PID",
+   "stop PID"
+  ],
+  "correct": 1,
+  "difficulty": 2,
+  "explanation": "kill -9 = SIGKILL — jarayon e'tiborsiz qoldira olmaydi."
+ },
+ {
+  "q": "Buyruqni ORQA FONDA ishga tushirish?",
+  "options": [
+   "buyruq &",
+   "buyruq -bg",
+   "bg buyruq",
+   "&buyruq"
+  ],
+  "correct": 0,
+  "difficulty": 1,
+  "explanation": "Oxiriga & qo'ysang — jarayon fonda ishlaydi."
+ },
+ {
+  "q": "systemd servisi ishlab turibdimi (active/inactive)?",
+  "options": [
+   "systemctl is-active nom",
+   "systemctl run nom",
+   "service active nom",
+   "svc nom"
+  ],
+  "correct": 0,
+  "difficulty": 2,
+  "explanation": "systemctl is-active nom — active yoki inactive deb javob beradi."
+ },
+ {
+  "q": "Servisni qayta ishga tushirish?",
+  "options": [
+   "systemctl restart nom",
+   "systemctl reboot nom",
+   "restart nom",
+   "systemctl new nom"
+  ],
+  "correct": 0,
+  "difficulty": 2,
+  "explanation": "systemctl restart nom — servisni to'xtatib, qayta ishga tushiradi."
+ },
+ {
+  "q": "Bitta servisning loglarini ko'rish (journald)?",
+  "options": [
+   "cat /var/log/all",
+   "journalctl -u nom",
+   "logs nom",
+   "dmesg nom"
+  ],
+  "correct": 1,
+  "difficulty": 2,
+  "explanation": "journalctl -u <servis> — o'sha servisning loglarini ko'rsatadi."
+ },
+ {
+  "q": "Fonda turgan joblar (background jobs) ro'yxatini ko'rish?",
+  "options": [
+   "jobs",
+   "ps -j",
+   "bg list",
+   "fglist"
+  ],
+  "correct": 0,
+  "difficulty": 1,
+  "explanation": "jobs — joriy shell'dagi fon joblarini ko'rsatadi."
+ },
+ {
+  "q": "Eng ko'p CPU ishlatayotgan jarayonni tepaga chiqarish?",
+  "options": [
+   "ps aux --sort=-%cpu",
+   "ps cpu",
+   "sort ps cpu",
+   "cpu top"
+  ],
+  "correct": 0,
+  "difficulty": 3,
+  "explanation": "--sort=-%cpu — CPU bo'yicha kamayish tartibida saralaydi."
+ },
+ {
+  "q": "'nginx' nomli BARCHA jarayonni nom bo'yicha to'xtatish?",
+  "options": [
+   "kill nginx",
+   "pkill -f nginx",
+   "stop nginx",
+   "ps kill nginx"
+  ],
+  "correct": 1,
+  "difficulty": 2,
+  "explanation": "pkill -f nginx — nomга mos hamma jarayonni to'xtatadi."
+ },
+ {
+  "q": "`ps aux` buyrug'i nima uchun ishlatiladi?",
+  "options": [
+   "Barcha jarayonlarni PID, CPU, RAM bilan ko'rsatish",
+   "Faqat fon jarayonlarini o'chirish",
+   "Servis loglarini o'qish",
+   "Faylga ruxsat berish"
+  ],
+  "correct": 0,
+  "difficulty": 1,
+  "explanation": "`ps aux` sistemadagi barcha jarayonlar haqida batafsil ma'lumot (PID, CPU, RAM) ko'rsatadi."
+ },
+ {
+  "q": "PID 1 qaysi jarayonga tegishli?",
+  "options": [
+   "nginx",
+   "bash",
+   "systemd",
+   "journald"
+  ],
+  "correct": 2,
+  "difficulty": 1,
+  "explanation": "PID 1 har doim `systemd` bo'lib, u barcha jarayonlarning 'ajdodi' hisoblanadi."
+ },
+ {
+  "q": "`pgrep -f nginx` buyrug'i nima qaytaradi?",
+  "options": [
+   "nginx servisini qayta ishga tushiradi",
+   "nginx nomli jarayonning PID raqamini",
+   "nginx loglarini ko'rsatadi",
+   "nginx fayllariga ruxsat beradi"
+  ],
+  "correct": 1,
+  "difficulty": 1,
+  "explanation": "`pgrep -f` nom bo'yicha mos keladigan jarayonning PID raqamini topib qaytaradi."
+ },
+ {
+  "q": "Jarayonni fonda ishga tushirish uchun qaysi belgi ishlatiladi?",
+  "options": [
+   "#",
+   "&",
+   "@",
+   "$"
+  ],
+  "correct": 1,
+  "difficulty": 1,
+  "explanation": "Buyruq oxiriga `&` qo'yilsa, jarayon orqa fonda (background) ishlaydi."
+ },
+ {
+  "q": "`kill 1234` buyrug'i qaysi signalni yuboradi?",
+  "options": [
+   "SIGKILL (9)",
+   "SIGUSR1 (10)",
+   "SIGTERM (15)",
+   "SIGHUP (1)"
+  ],
+  "correct": 2,
+  "difficulty": 1,
+  "explanation": "`kill PID` default holda SIGTERM (15) — 'chiroyli to'xta' signalini yuboradi."
+ },
+ {
+  "q": "`kill -9 1234` buyrug'i nima qiladi?",
+  "options": [
+   "Jarayonga SIGTERM yuboradi",
+   "Jarayonga SIGUSR1 yuboradi",
+   "Jarayonni majburan o'ldiradi (SIGKILL)",
+   "Jarayonni fonga o'tkazadi"
+  ],
+  "correct": 2,
+  "difficulty": 1,
+  "explanation": "`-9` SIGKILL signali bo'lib, jarayonni majburan va darhol to'xtatadi."
+ },
+ {
+  "q": "`systemctl status nginx` buyrug'i nima ko'rsatadi?",
+  "options": [
+   "nginx o'rnatilgan papkani",
+   "nginx servisining holati, PID va so'nggi loglarini",
+   "nginx konfiguratsiya faylini",
+   "nginx CPU sarfini"
+  ],
+  "correct": 1,
+  "difficulty": 1,
+  "explanation": "`systemctl status` servisning joriy holati, PID raqami va oxirgi log qatorlarini ko'rsatadi."
+ },
+ {
+  "q": "`journalctl -u nginx` nima uchun ishlatiladi?",
+  "options": [
+   "nginx servisini qayta ishga tushirish",
+   "nginx jarayonini to'xtatish",
+   "nginx servisining loglarini ko'rish",
+   "nginx konfiguratsiyasini tekshirish"
+  ],
+  "correct": 2,
+  "difficulty": 1,
+  "explanation": "`journalctl -u` ko'rsatilgan servisga tegishli barcha loglarni journald dan o'qib chiqaradi."
+ },
+ {
+  "q": "`jobs -l` buyrug'i nima ko'rsatadi?",
+  "options": [
+   "Tizimda o'rnatilgan barcha servislar",
+   "Fondagi joblar va ularning PID raqamlari",
+   "Barcha fayllar ro'yxati",
+   "Tarmoq ulanishlari"
+  ],
+  "correct": 1,
+  "difficulty": 1,
+  "explanation": "`jobs -l` joriy terminal sessiyasidagi fon jarayonlarini PID bilan birga ko'rsatadi."
+ },
+ {
+  "q": "`sleep 500 &` buyrug'ini bajarganingizda nima sodir bo'ladi?",
+  "options": [
+   "Terminal 500 soniya kutib turadi",
+   "500 soniya kutadigan jarayon fonda ishga tushadi",
+   "500 ta jarayon yaratiladi",
+   "Xato xabari chiqadi"
+  ],
+  "correct": 1,
+  "difficulty": 1,
+  "explanation": "`&` belgisi tufayli `sleep 500` jarayoni fonda ishlaydi va terminal bo'sh qoladi."
+ },
+ {
+  "q": "SIGTERM va SIGKILL o'rtasidagi asosiy farq nima?",
+  "options": [
+   "SIGTERM tezroq, SIGKILL sekinroq ishlaydi",
+   "SIGTERM 'chiroyli to'xta' deydi, SIGKILL majburan o'ldiradi",
+   "SIGTERM faqat nginx uchun, SIGKILL hammaga",
+   "Hech qanday farq yo'q"
+  ],
+  "correct": 1,
+  "difficulty": 2,
+  "explanation": "SIGTERM jarayonga tozalanib to'xtash imkoniyati beradi, SIGKILL esa uni darhol majburan tugatadi."
+ },
+ {
+  "q": "`ps aux | grep nginx` buyrug'i nima qiladi?",
+  "options": [
+   "nginx ni o'chiradi",
+   "nginx nomli jarayonlarni filtrlaydi",
+   "nginx loglarini ko'rsatadi",
+   "nginx ni qayta ishga tushiradi"
+  ],
+  "correct": 1,
+  "difficulty": 2,
+  "explanation": "`ps aux` chiqishini `grep nginx` ga uzatib, faqat nginx bilan bog'liq qatorlarni ko'rsatadi."
+ },
+ {
+  "q": "`journalctl -u nginx -f` buyrug'idagi `-f` bayrog'i nima vazifa bajaradi?",
+  "options": [
+   "Faqat xato loglarini ko'rsatadi",
+   "Loglarni faylga saqlaydi",
+   "Loglarni jonli (real-time) kuzatadi",
+   "Loglarni filtrlaydi"
+  ],
+  "correct": 2,
+  "difficulty": 2,
+  "explanation": "`-f` (follow) bayrog'i yangi log qatorlari paydo bo'lganda ularni darhol terminalga chiqaradi."
+ },
+ {
+  "q": "`systemctl is-active nginx` buyrug'i qanday natija qaytaradi?",
+  "options": [
+   "nginx PID raqamini",
+   "`active` yoki `inactive` so'zini",
+   "nginx loglarini",
+   "nginx versiyasini"
+  ],
+  "correct": 1,
+  "difficulty": 2,
+  "explanation": "`systemctl is-active` servisning faqat holat so'zini — `active` yoki `inactive` qaytaradi."
+ },
+ {
+  "q": "`kill -USR1 1234` buyrug'i qanday signal yuboradi?",
+  "options": [
+   "SIGTERM",
+   "SIGKILL",
+   "SIGUSR1",
+   "SIGHUP"
+  ],
+  "correct": 2,
+  "difficulty": 2,
+  "explanation": "`-USR1` bayrog'i SIGUSR1 (10) signalini yuboradi — bu dasturchi o'zi belgilagan maxsus signaldir."
+ },
+ {
+  "q": "`pkill` buyrug'i `kill` dan qanday farqlanadi?",
+  "options": [
+   "pkill faqat SIGKILL yuboradi",
+   "pkill PID o'rniga nom bo'yicha jarayonni to'xtatadi",
+   "pkill faqat systemd servislarini to'xtatadi",
+   "pkill va kill bir xil buyruqdir"
+  ],
+  "correct": 1,
+  "difficulty": 2,
+  "explanation": "`pkill` jarayon nomini (yoki pattern) qabul qilib, PID qidirmasdan to'g'ridan-to'g'ri to'xtatadi."
+ },
+ {
+  "q": "`journalctl -xe` buyrug'i nima uchun ishlatiladi?",
+  "options": [
+   "Barcha servislarni o'chirish",
+   "So'nggi xato va muhim loglarni ko'rish",
+   "Loglarni o'chirish",
+   "Yangi servis yaratish"
+  ],
+  "correct": 1,
+  "difficulty": 2,
+  "explanation": "`-xe` so'nggi muhim hodisalar va xato loglarini tezda ko'rish uchun ishlatiladi."
+ },
+ {
+  "q": "Eng ko'p CPU sarflayotgan jarayonni topish uchun qaysi buyruq qo'llaniladi?",
+  "options": [
+   "journalctl -u cpu",
+   "ps aux va top",
+   "systemctl status cpu",
+   "pgrep -f cpu"
+  ],
+  "correct": 1,
+  "difficulty": 2,
+  "explanation": "`top` real-time CPU sarfini ko'rsatadi, `ps aux` esa CPU ustunini ko'rib tartiblash imkonini beradi."
+ }
 ]

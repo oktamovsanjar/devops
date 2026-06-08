@@ -1,38 +1,362 @@
 [
- {"q": "Hozir qaysi papkada turganingni qaysi buyruq ko'rsatadi?",
-  "options": ["pwd", "ls", "cd", "whoami"], "correct": 0, "difficulty": 1,
-  "explanation": "pwd (print working directory) — joriy papka yo'lini chiqaradi."},
- {"q": "Yashirin (.) fayllarni ham batafsil ko'rsatadigan buyruq?",
-  "options": ["ls", "ls -la", "ls -s", "dir"], "correct": 1, "difficulty": 1,
-  "explanation": "-l batafsil, -a yashirin fayllarni ham ko'rsatadi."},
- {"q": "Qaysi yo'l ABSOLUTE (mutlaq) yo'l?",
-  "options": ["logs/app.log", "./app.log", "/var/log/app.log", "../app.log"], "correct": 2, "difficulty": 2,
-  "explanation": "Absolute yo'l / (root) dan boshlanadi — har joydan ishlaydi."},
- {"q": "Yo'lда `..` nimani bildiradi?",
-  "options": ["shu papka", "bir yuqori (parent) papka", "uy papkasi", "root"], "correct": 1, "difficulty": 1,
-  "explanation": ".. = bir daraja yuqori; . = shu papka."},
- {"q": "Fayl ichidan faqat 'ERROR' bor qatorlarni ajratish?",
-  "options": ["find ERROR fayl", "grep ERROR fayl", "cat fayl", "sort fayl"], "correct": 1, "difficulty": 1,
-  "explanation": "grep — fayl ICHIDAN matn (naqsh) qidiradi."},
- {"q": "Fayl NOMINI papkalar bo'ylab qidirish uchun?",
-  "options": ["grep", "find", "cat", "pwd"], "correct": 1, "difficulty": 2,
-  "explanation": "find — fayl/papka nomini qidiradi; grep esa ichidagi matnni."},
- {"q": "`ls > out.txt` nima qiladi?",
-  "options": ["faylni o'qiydi", "chiqishni faylga yozadi (ustiga)", "faylga qo'shadi", "faylni o'chiradi"], "correct": 1, "difficulty": 2,
-  "explanation": "> — buyruq chiqishini faylga yozadi (ustiga yozib yuboradi)."},
- {"q": "`>` va `>>` orasidagi farq?",
-  "options": ["ikkalasi bir xil", "> ustiga yozadi, >> oxiriga qo'shadi", "> qo'shadi, >> ustiga", ">> faylni o'chiradi"], "correct": 1, "difficulty": 2,
-  "explanation": "> mavjud matnni almashtiradi; >> esa qo'shib yozadi."},
- {"q": "`*.log` namunasi (glob) nimani tanlaydi?",
-  "options": ["faqat 'log' nomli fayl", ".log bilan tugaydigan barcha fayllar", "barcha fayllar", "log nomli papka"], "correct": 1, "difficulty": 2,
-  "explanation": "* — istalgan belgilar; *.log = .log bilan tugaydigan hamma fayl."},
- {"q": "`touch file{1..5}.txt` nechta fayl yaratadi?",
-  "options": ["1", "5", "15", "0"], "correct": 1, "difficulty": 2,
-  "explanation": "{1..5} brace expansion — file1.txt ... file5.txt (5 ta)."},
- {"q": "Faylning OXIRGI 5 qatorini ko'rish?",
-  "options": ["head -5 fayl", "tail -5 fayl", "cat -5 fayl", "last 5 fayl"], "correct": 1, "difficulty": 1,
-  "explanation": "tail — oxiridan; head — boshidan."},
- {"q": "`~` belgisi nimani bildiradi?",
-  "options": ["root (/)", "uy papkasi (home)", "joriy papka", "oldingi papka"], "correct": 1, "difficulty": 1,
-  "explanation": "~ = foydalanuvchining uy papkasi (masalan /home/ubuntu)."}
+ {
+  "q": "Hozir qaysi papkada turganingni qaysi buyruq ko'rsatadi?",
+  "options": [
+   "pwd",
+   "ls",
+   "cd",
+   "whoami"
+  ],
+  "correct": 0,
+  "difficulty": 1,
+  "explanation": "pwd (print working directory) — joriy papka yo'lini chiqaradi."
+ },
+ {
+  "q": "Yashirin (.) fayllarni ham batafsil ko'rsatadigan buyruq?",
+  "options": [
+   "ls",
+   "ls -la",
+   "ls -s",
+   "dir"
+  ],
+  "correct": 1,
+  "difficulty": 1,
+  "explanation": "-l batafsil, -a yashirin fayllarni ham ko'rsatadi."
+ },
+ {
+  "q": "Qaysi yo'l ABSOLUTE (mutlaq) yo'l?",
+  "options": [
+   "logs/app.log",
+   "./app.log",
+   "/var/log/app.log",
+   "../app.log"
+  ],
+  "correct": 2,
+  "difficulty": 2,
+  "explanation": "Absolute yo'l / (root) dan boshlanadi — har joydan ishlaydi."
+ },
+ {
+  "q": "Yo'lда `..` nimani bildiradi?",
+  "options": [
+   "shu papka",
+   "bir yuqori (parent) papka",
+   "uy papkasi",
+   "root"
+  ],
+  "correct": 1,
+  "difficulty": 1,
+  "explanation": ".. = bir daraja yuqori; . = shu papka."
+ },
+ {
+  "q": "Fayl ichidan faqat 'ERROR' bor qatorlarni ajratish?",
+  "options": [
+   "find ERROR fayl",
+   "grep ERROR fayl",
+   "cat fayl",
+   "sort fayl"
+  ],
+  "correct": 1,
+  "difficulty": 1,
+  "explanation": "grep — fayl ICHIDAN matn (naqsh) qidiradi."
+ },
+ {
+  "q": "Fayl NOMINI papkalar bo'ylab qidirish uchun?",
+  "options": [
+   "grep",
+   "find",
+   "cat",
+   "pwd"
+  ],
+  "correct": 1,
+  "difficulty": 2,
+  "explanation": "find — fayl/papka nomini qidiradi; grep esa ichidagi matnni."
+ },
+ {
+  "q": "`ls > out.txt` nima qiladi?",
+  "options": [
+   "faylni o'qiydi",
+   "chiqishni faylga yozadi (ustiga)",
+   "faylga qo'shadi",
+   "faylni o'chiradi"
+  ],
+  "correct": 1,
+  "difficulty": 2,
+  "explanation": "> — buyruq chiqishini faylga yozadi (ustiga yozib yuboradi)."
+ },
+ {
+  "q": "`>` va `>>` orasidagi farq?",
+  "options": [
+   "ikkalasi bir xil",
+   "> ustiga yozadi, >> oxiriga qo'shadi",
+   "> qo'shadi, >> ustiga",
+   ">> faylni o'chiradi"
+  ],
+  "correct": 1,
+  "difficulty": 2,
+  "explanation": "> mavjud matnni almashtiradi; >> esa qo'shib yozadi."
+ },
+ {
+  "q": "`*.log` namunasi (glob) nimani tanlaydi?",
+  "options": [
+   "faqat 'log' nomli fayl",
+   ".log bilan tugaydigan barcha fayllar",
+   "barcha fayllar",
+   "log nomli papka"
+  ],
+  "correct": 1,
+  "difficulty": 2,
+  "explanation": "* — istalgan belgilar; *.log = .log bilan tugaydigan hamma fayl."
+ },
+ {
+  "q": "`touch file{1..5}.txt` nechta fayl yaratadi?",
+  "options": [
+   "1",
+   "5",
+   "15",
+   "0"
+  ],
+  "correct": 1,
+  "difficulty": 2,
+  "explanation": "{1..5} brace expansion — file1.txt ... file5.txt (5 ta)."
+ },
+ {
+  "q": "Faylning OXIRGI 5 qatorini ko'rish?",
+  "options": [
+   "head -5 fayl",
+   "tail -5 fayl",
+   "cat -5 fayl",
+   "last 5 fayl"
+  ],
+  "correct": 1,
+  "difficulty": 1,
+  "explanation": "tail — oxiridan; head — boshidan."
+ },
+ {
+  "q": "`~` belgisi nimani bildiradi?",
+  "options": [
+   "root (/)",
+   "uy papkasi (home)",
+   "joriy papka",
+   "oldingi papka"
+  ],
+  "correct": 1,
+  "difficulty": 1,
+  "explanation": "~ = foydalanuvchining uy papkasi (masalan /home/ubuntu)."
+ },
+ {
+  "q": "Terminal ochilganda qaysi buyruq sizning hozirgi joylashuvingizni ko'rsatadi?",
+  "options": [
+   "pwd",
+   "ls",
+   "cd",
+   "cat"
+  ],
+  "correct": 0,
+  "difficulty": 1,
+  "explanation": "`pwd` (print working directory) joriy papka yo'lini chiqaradi."
+ },
+ {
+  "q": "Linuxda fayl tizimi qaysi belgidan boshlanadi?",
+  "options": [
+   "/",
+   "C:",
+   "~",
+   "./"
+  ],
+  "correct": 0,
+  "difficulty": 1,
+  "explanation": "Linux fayl tizimi bitta `/` (root) dan boshlanadigan daraxt strukturasiga ega."
+ },
+ {
+  "q": "`ls -la` buyrug'i nima uchun ishlatiladi?",
+  "options": [
+   "Papka tarkibini batafsil va yashirin fayllar bilan ko'rsatish",
+   "Papka yaratish",
+   "Faylni o'chirish",
+   "Fayl ichini o'qish"
+  ],
+  "correct": 0,
+  "difficulty": 1,
+  "explanation": "`-l` batafsil, `-a` yashirin fayllarni ham ko'rsatadi."
+ },
+ {
+  "q": "Linuxda konfiguratsiya fayllari qaysi papkada saqlanadi?",
+  "options": [
+   "/etc",
+   "/var/log",
+   "/tmp",
+   "/home"
+  ],
+  "correct": 0,
+  "difficulty": 1,
+  "explanation": "FHS standartiga ko'ra `/etc` tizim konfiguratsiya fayllarini saqlaydi."
+ },
+ {
+  "q": "Loglar odatda qaysi papkada joylashgan bo'ladi?",
+  "options": [
+   "/var/log",
+   "/etc",
+   "/bin",
+   "/tmp"
+  ],
+  "correct": 0,
+  "difficulty": 1,
+  "explanation": "FHS bo'yicha tizim log fayllari `/var/log` papkasida saqlanadi."
+ },
+ {
+  "q": "`~` belgisi nimani anglatadi?",
+  "options": [
+   "Joriy foydalanuvchining uy papkasi",
+   "Root papka",
+   "Oldingi papka",
+   "Vaqtinchalik papka"
+  ],
+  "correct": 0,
+  "difficulty": 1,
+  "explanation": "`~` har doim joriy foydalanuvchining `/home/username` papkasiga ishora qiladi."
+ },
+ {
+  "q": "`cd ..` buyrug'i nima qiladi?",
+  "options": [
+   "Bir yuqori (parent) papkaga o'tadi",
+   "Uy papkasiga o'tadi",
+   "Root papkasiga o'tadi",
+   "Oldingi papkaga qaytadi"
+  ],
+  "correct": 0,
+  "difficulty": 1,
+  "explanation": "`..` — bir yuqori papkani anglatadi, shuning uchun `cd ..` parent papkaga o'tkazadi."
+ },
+ {
+  "q": "Faylning oxirgi 10 qatorini ko'rish uchun qaysi buyruq ishlatiladi?",
+  "options": [
+   "tail",
+   "head",
+   "cat",
+   "grep"
+  ],
+  "correct": 0,
+  "difficulty": 1,
+  "explanation": "`tail` faylning oxirgi (default 10) qatorlarini chiqaradi."
+ },
+ {
+  "q": "`>` operatori nima qiladi?",
+  "options": [
+   "Chiqishni faylga yozadi (ustiga)",
+   "Chiqishni faylga qo'shib yozadi",
+   "Xato oqimini yo'naltiradi",
+   "Bir buyruq chiqishini boshqasiga uzatadi"
+  ],
+  "correct": 0,
+  "difficulty": 1,
+  "explanation": "`>` mavjud fayl mazmunini o'chirib, yangi natijani yozadi."
+ },
+ {
+  "q": "`>>` va `>` operatorlari o'rtasidagi farq nima?",
+  "options": [
+   "`>>` faylga qo'shib yozadi, `>` esa ustiga yozadi",
+   "`>` faylga qo'shib yozadi, `>>` esa ustiga yozadi",
+   "Ikkalasi ham ustiga yozadi",
+   "Ikkalasi ham qo'shib yozadi"
+  ],
+  "correct": 0,
+  "difficulty": 1,
+  "explanation": "`>>` append (qo'shib yozish), `>` overwrite (ustiga yozish) operatori."
+ },
+ {
+  "q": "`touch file{1..5}.txt` buyrug'i nechta fayl yaratadi?",
+  "options": [
+   "5",
+   "1",
+   "10",
+   "3"
+  ],
+  "correct": 0,
+  "difficulty": 1,
+  "explanation": "Brace expansion `{1..5}` 1 dan 5 gacha ketma-ketlik hosil qilib 5 ta fayl yaratadi."
+ },
+ {
+  "q": "`grep ERROR app.log` buyrug'i nima qiladi?",
+  "options": [
+   "app.log ichidan ERROR so'zi bo'lgan qatorlarni topadi",
+   "app.log faylini o'chiradi",
+   "app.log nomli faylni qidiradi",
+   "app.log faylini yaratadi"
+  ],
+  "correct": 0,
+  "difficulty": 1,
+  "explanation": "`grep` fayl ichidan matn qidiradi va mos qatorlarni chiqaradi."
+ },
+ {
+  "q": "Absolute yo'l qaysi belgidan boshlanadi?",
+  "options": [
+   "/",
+   ".",
+   "~",
+   ".."
+  ],
+  "correct": 0,
+  "difficulty": 2,
+  "explanation": "Absolute yo'l har doim `/` (root) dan boshlanadi va har joydan ishlaydi."
+ },
+ {
+  "q": "`find /var/log -name \"*.log\" -size +50k` buyrug'i nimani topadi?",
+  "options": [
+   "/var/log ichida 50KB dan katta .log fayllarini",
+   "/var/log ichida 50KB dan kichik .log fayllarini",
+   "Barcha .log fayllarini tizimda",
+   "Faqat /var/log papkasining o'zidagi fayllarni"
+  ],
+  "correct": 0,
+  "difficulty": 2,
+  "explanation": "`-size +50k` 50 kilobaytdan katta fayllarni filtrlaydi."
+ },
+ {
+  "q": "`grep -r` flagining vazifasi nima?",
+  "options": [
+   "Ichki papkalarni ham qamrab qidiruv o'tkazadi",
+   "Faqat fayl nomlarini chiqaradi",
+   "Katta-kichik harfni e'tiborsiz qidiradi",
+   "Faqat birinchi mos qatorni chiqaradi"
+  ],
+  "correct": 0,
+  "difficulty": 2,
+  "explanation": "`-r` (recursive) bayrog'i `grep`ni papka ichidagi barcha fayllarda qidirishga majbur qiladi."
+ },
+ {
+  "q": "`grep -l needle papka/` buyrug'ida `-l` flagi nima qiladi?",
+  "options": [
+   "Faqat mos kelgan fayl nomlarini chiqaradi",
+   "Qatorlar sonini ko'rsatadi",
+   "Katta harflarga e'tibor bermaydi",
+   "Rekursiv qidiradi"
+  ],
+  "correct": 0,
+  "difficulty": 2,
+  "explanation": "`-l` faqat mos matn topilgan fayl nomlarini chiqaradi, qatorlarni emas."
+ },
+ {
+  "q": "`ls -S /var/log | head -3 > biggest.txt` buyrug'i nima qiladi?",
+  "options": [
+   "/var/log dagi eng katta 3 ta faylni biggest.txt ga yozadi",
+   "/var/log dagi eng kichik 3 ta faylni ko'rsatadi",
+   "/var/log dagi barcha fayllarni biggest.txt ga yozadi",
+   "biggest.txt faylini o'chiradi"
+  ],
+  "correct": 0,
+  "difficulty": 2,
+  "explanation": "`-S` hajmga ko'ra saralaydi, `head -3` birinchi 3 ni oladi, `>` faylga yozadi."
+ },
+ {
+  "q": "Wildcard `?` belgisi nimani bildiradi?",
+  "options": [
+   "Aynan bitta ixtiyoriy belgini",
+   "Istalgan uzunlikdagi belgilar ketma-ketligini",
+   "Raqamlar oralig'ini",
+   "Ketma-ketlik hosil qilishni"
+  ],
+  "correct": 0,
+  "difficulty": 2,
+  "explanation": "`?` glob namunasida faqat bitta ixtiyoriy belgiga mos keladi."
+ }
 ]
