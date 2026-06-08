@@ -1,0 +1,362 @@
+[
+ {
+  "q": "Bash skriptida oxirgi buyruqning exit kodini qaysi o'zgaruvchi saqlaydi?",
+  "options": [
+   "$0",
+   "$?",
+   "$#",
+   "$!"
+  ],
+  "correct": 1,
+  "difficulty": 1,
+  "explanation": "$? — oxirgi bajarilgan buyruqning exit kodini saqlaydi."
+ },
+ {
+  "q": "Buyruq muvaffaqiyatli tugaganda qanday exit kod qaytaradi?",
+  "options": [
+   "1",
+   "255",
+   "0",
+   "-1"
+  ],
+  "correct": 2,
+  "difficulty": 1,
+  "explanation": "Unix/Linux konvensiyasida 0 = muvaffaqiyat, nol bo'lmagan qiymat = xato."
+ },
+ {
+  "q": "`set -e` buyrug'i nimani bajaradi?",
+  "options": [
+   "Aniqlanmagan o'zgaruvchini xato deb hisoblaydi",
+   "Birinchi xatoda skriptni to'xtatadi",
+   "Pipe'dagi xatolarni ushlaydi",
+   "Barcha argumentlarni o'chiradi"
+  ],
+  "correct": 1,
+  "difficulty": 1,
+  "explanation": "`set -e` — skript birinchi xatoga duch kelganda darhol to'xtaydi."
+ },
+ {
+  "q": "`set -u` nimani bajaradi?",
+  "options": [
+   "Pipe'dagi xatolarni ushlaydi",
+   "Skriptni faqat root sifatida ishga tushiradi",
+   "Aniqlanmagan (undefined) o'zgaruvchidan foydalanilsa xato beradi",
+   "Birinchi xatoda skriptni to'xtatadi"
+  ],
+  "correct": 2,
+  "difficulty": 2,
+  "explanation": "`set -u` — hali e'lon qilinmagan o'zgaruvchiga murojaat xato hisoblanadi."
+ },
+ {
+  "q": "Professional skriptlarda ko'p ishlatiladigan qattiq rejim qaysi?",
+  "options": [
+   "set -euo pipefail",
+   "set -x pipefail",
+   "set -euv pipefail",
+   "set -ef pipefail"
+  ],
+  "correct": 0,
+  "difficulty": 2,
+  "explanation": "`set -euo pipefail` — darslikda professional skriptlar uchun tavsiya etilgan standart kombinatsiya."
+ },
+ {
+  "q": "Skriptga berilgan argumentlar SONINI qaysi belgi ko'rsatadi?",
+  "options": [
+   "$@",
+   "$*",
+   "$#",
+   "$0"
+  ],
+  "correct": 2,
+  "difficulty": 1,
+  "explanation": "$# — skriptga uzatilgan argumentlarning umumiy sonini ifodalaydi."
+ },
+ {
+  "q": "`\"$@\"` va `$@` ning asosiy farqi nima?",
+  "options": [
+   "\"$@\" faqat birinchi argumentni oladi",
+   "\"$@\" argumentlar sonini qaytaradi",
+   "\"$@\" har bir argumentni to'g'ri tirnoqlangan holda saqlaydi",
+   "Hech qanday farqi yo'q"
+  ],
+  "correct": 2,
+  "difficulty": 2,
+  "explanation": "Darslikda `\"$@\"` — to'g'ri tirnoqlangan hamma argument deb ta'riflanadi, bo'sh joy bo'lgan argumentlar buzilmaydi."
+ },
+ {
+  "q": "`${1:-default}` iborasi qachon `default` qiymatini ishlatadi?",
+  "options": [
+   "Har doim",
+   "$1 argument bo'sh yoki ko'rsatilmagan bo'lsa",
+   "$1 raqam bo'lsa",
+   "Faqat $1 = 0 bo'lsa"
+  ],
+  "correct": 1,
+  "difficulty": 2,
+  "explanation": "${1:-default} — $1 bo'sh yoki mavjud bo'lmasa avtomatik 'default' qiymatini ishlatadi."
+ },
+ {
+  "q": "Quyidagi `getopts` kodida `-n ali` berilsa, qaysi o'zgaruvchiga `ali` yoziladi?\n`while getopts \"n:v\" opt; do case $opt in n) name=$OPTARG ;; esac; done`",
+  "options": [
+   "$opt",
+   "$OPTARG",
+   "$name — noto'g'ri, chunki $OPTARG yo'q",
+   "$n"
+  ],
+  "correct": 1,
+  "difficulty": 2,
+  "explanation": "`getopts` flag qiymatini $OPTARG o'zgaruvchisiga yozadi, keyin biz uni name ga o'tkazamiz."
+ },
+ {
+  "q": "`getopts \"n:v\"` ifodasida `n:` va `v` ning farqi nima?",
+  "options": [
+   "n: majburiy flag, v ixtiyoriy flag",
+   "n: — qiymat talab qiluvchi flag, v — qiymatsiz (switch) flag",
+   "n: raqam qabul qiladi, v matn qabul qiladi",
+   "Ikkalasi ham bir xil ishlaydi"
+  ],
+  "correct": 1,
+  "difficulty": 2,
+  "explanation": "Darslikda ko'rsatilganidek, ikki nuqta (:) flagning qiymat talab qilishini bildiradi."
+ },
+ {
+  "q": "`trap 'rm -f /tmp/lock' EXIT` buyrug'i qachon ishlaydi?",
+  "options": [
+   "Faqat skript muvaffaqiyatli tugaganda",
+   "Faqat xato yuz berganda",
+   "Skript tugaganda — muvaffaqiyatli bo'lsa ham, xato bo'lsa ham",
+   "Faqat Ctrl+C bosilganda"
+  ],
+  "correct": 2,
+  "difficulty": 2,
+  "explanation": "Darslikda `trap ... EXIT` — skript tugaganida (xato bo'lsa ham) ishlaydigan tozalash mexanizmi ekanligi ta'kidlangan."
+ },
+ {
+  "q": "Funksiyada `return 1` nima beradi?",
+  "options": [
+   "Funksiyadan 1 sonini matn sifatida chiqaradi",
+   "Funksiyaning exit kodini 1 ga o'rnatadi",
+   "Funksiyani 1 marta qaytadan chaqiradi",
+   "Argumentlar sonini 1 ga o'rnatadi"
+  ],
+  "correct": 1,
+  "difficulty": 2,
+  "explanation": "Darslikda `return N` funksiyaning exit kodini beradi (0-255 oralig'ida)."
+ },
+ {
+  "q": "Funksiyadan natijani chiqarish uchun (`echo` vs `return`) qaysi usul matn qaytaradi?",
+  "options": [
+   "return — matn chiqaradi",
+   "echo — matn chiqaradi",
+   "Ikkalasi ham matn chiqaradi",
+   "Ikkalasi ham faqat exit kod qaytaradi"
+  ],
+  "correct": 1,
+  "difficulty": 1,
+  "explanation": "Darslikda aniq ko'rsatilgan: `echo` natijani chiqaradi (matn), `return N` esa exit kodni beradi."
+ },
+ {
+  "q": "`set -o pipefail` qanday holatda foydali?",
+  "options": [
+   "Faqat bitta buyruq ishlatilganda",
+   "Pipe (`|`) zanjirida birorta bo'g'in xato berganda butun pipe xato deb hisoblanishi uchun",
+   "Funksiya ichida return ishlatilganda",
+   "getopts flaglarini tekshirishda"
+  ],
+  "correct": 1,
+  "difficulty": 3,
+  "explanation": "Darslikda `set -o pipefail` — pipe'da birorta bo'g'in yiqilsa xato sifatida qaraladi deb ta'riflangan."
+ },
+ {
+  "q": "Skript argumentlarini tekshirib, yetarli argument yo'q bo'lsa xabar chiqaruvchi kod qaysi?",
+  "options": [
+   "if [ $@ -lt 2 ]; then echo 'Kam argument'; fi",
+   "if [ $# -lt 2 ]; then echo 'Kam argument'; fi",
+   "if [ $? -lt 2 ]; then echo 'Kam argument'; fi",
+   "if [ $1 -lt 2 ]; then echo 'Kam argument'; fi"
+  ],
+  "correct": 1,
+  "difficulty": 3,
+  "explanation": "$# argumentlar sonini saqlaydi, shuning uchun argument soni tekshiruvida $# ishlatiladi."
+ },
+ {
+  "q": "Bash skriptda oxirgi buyruqning exit kodini qaysi o'zgaruvchi saqlaydi?",
+  "options": [
+   "$0",
+   "$#",
+   "$?",
+   "$@"
+  ],
+  "correct": 2,
+  "difficulty": 1,
+  "explanation": "$? — oxirgi bajarilgan buyruqning exit kodini saqlaydi."
+ },
+ {
+  "q": "Muvaffaqiyatli tugagan buyruqning exit kodi qanday bo'ladi?",
+  "options": [
+   "1",
+   "0",
+   "-1",
+   "255"
+  ],
+  "correct": 1,
+  "difficulty": 1,
+  "explanation": "Bash konvensiyasida 0 = muvaffaqiyat, noldan farqli = xato."
+ },
+ {
+  "q": "`set -e` buyrug'i skriptda nima qiladi?",
+  "options": [
+   "Aniqlanmagan o'zgaruvchini xato deb hisoblaydi",
+   "Pipe xatolarini ushlaydi",
+   "Birinchi xatoda skriptni to'xtatadi",
+   "Barcha argumentlarni o'chiradi"
+  ],
+  "correct": 2,
+  "difficulty": 1,
+  "explanation": "set -e — birinchi xato yuz berganda skript darhol to'xtaydi."
+ },
+ {
+  "q": "`set -u` nima uchun ishlatiladi?",
+  "options": [
+   "Pipe xatolarini ushlash uchun",
+   "Aniqlanmagan o'zgaruvchini xato deb belgilash uchun",
+   "Skriptni to'xtatish uchun",
+   "Flaglarni o'qish uchun"
+  ],
+  "correct": 1,
+  "difficulty": 2,
+  "explanation": "set -u — skriptda qiymati berilmagan o'zgaruvchi ishlatilsa, xato chiqaradi."
+ },
+ {
+  "q": "Professional skriptlarda ko'p ishlatiladigan kombinatsiya qaysi?",
+  "options": [
+   "set -euo pipefail",
+   "set -xe pipefail",
+   "set -eu nofail",
+   "set -o exit"
+  ],
+  "correct": 0,
+  "difficulty": 2,
+  "explanation": "set -euo pipefail — xato, aniqlanmagan o'zgaruvchi va pipe xatolarini birgalikda ushlaydi."
+ },
+ {
+  "q": "`$#` belgisi nimani bildiradi?",
+  "options": [
+   "Skript nomini",
+   "Oxirgi argumentni",
+   "Argumentlar sonini",
+   "Hamma argumentlarni"
+  ],
+  "correct": 2,
+  "difficulty": 1,
+  "explanation": "$# — skriptga uzatilgan argumentlarning umumiy sonini beradi."
+ },
+ {
+  "q": "Skriptga 3 ta argument uzatilsa, `$#` qiymati qanday bo'ladi?",
+  "options": [
+   "0",
+   "1",
+   "2",
+   "3"
+  ],
+  "correct": 3,
+  "difficulty": 1,
+  "explanation": "$# argumentlar sonini ko'rsatadi, 3 ta argument uzatilsa qiymati 3 bo'ladi."
+ },
+ {
+  "q": "`\"$@\"` va `$@` ning farqi nima?",
+  "options": [
+   "\"$@\" faqat birinchi argumentni beradi",
+   "\"$@\" har bir argumentni to'g'ri tirnoqlangan holda beradi",
+   "Hech qanday farq yo'q",
+   "$@ exit kodni saqlaydi"
+  ],
+  "correct": 1,
+  "difficulty": 2,
+  "explanation": "\"$@\" har bir argumentni alohida va to'g'ri tirnoqlangan holda uzatadi, bo'shliqli argumentlar buzilmaydi."
+ },
+ {
+  "q": "`${1:-default}` ifodasi nima qiladi?",
+  "options": [
+   "$1 mavjud bo'lsa 'default' qaytaradi",
+   "$1 bo'sh yoki ko'rsatilmagan bo'lsa 'default' ishlatadi",
+   "Har doim 'default' qiymatini beradi",
+   "$1 ni o'chirib 'default' yozadi"
+  ],
+  "correct": 1,
+  "difficulty": 2,
+  "explanation": "${1:-default} — $1 bo'sh yoki mavjud bo'lmasa, o'rniga 'default' qiymatini ishlatadi."
+ },
+ {
+  "q": "`getopts \"n:v\" opt` da `n:` dagi ikki nuqta (:) nimani anglatadi?",
+  "options": [
+   "-n flagi qiymatsiz ishlatiladi",
+   "-n flagi qiymat (argument) talab qiladi",
+   "-n flagi ixtiyoriy",
+   "-n flagi raqam qabul qiladi"
+  ],
+  "correct": 1,
+  "difficulty": 2,
+  "explanation": "getopts da harf ketidan ':' qo'yilsa, o'sha flag majburiy qiymat ($OPTARG) talab qiladi."
+ },
+ {
+  "q": "getopts orqali `-n Ali` uzatilganda, `Ali` qiymati qaysi o'zgaruvchida saqlanadi?",
+  "options": [
+   "$opt",
+   "$name",
+   "$OPTARG",
+   "$1"
+  ],
+  "correct": 2,
+  "difficulty": 2,
+  "explanation": "getopts da flag qiymati $OPTARG o'zgaruvchisiga avtomatik yuklanadi."
+ },
+ {
+  "q": "Funksiyada `return N` nima qaytaradi?",
+  "options": [
+   "Matn natijasini standart chiqishga chiqaradi",
+   "Funksiyaning exit kodini (0-255) beradi",
+   "Keyingi argumentni qaytaradi",
+   "N ta argument qaytaradi"
+  ],
+  "correct": 1,
+  "difficulty": 2,
+  "explanation": "return N — funksiyaning exit kodini belgilaydi (0-255), matn chiqarmaydi."
+ },
+ {
+  "q": "`trap 'rm -f /tmp/lock' EXIT` qachon ishlaydi?",
+  "options": [
+   "Faqat skript muvaffaqiyatli tugaganda",
+   "Faqat xato yuz berganda",
+   "Skript har qanday holatda (xato bo'lsa ham) tugaganda",
+   "Faqat trap buyrug'i chaqirilganda"
+  ],
+  "correct": 2,
+  "difficulty": 2,
+  "explanation": "trap ... EXIT — skript normal yoki xato bilan tugasin, har ikki holatda ham ishlaydi."
+ },
+ {
+  "q": "Quyidagi skriptda argumentlar soni 2 dan kam bo'lsa xato chiqarish uchun qaysi tekshiruv to'g'ri?",
+  "options": [
+   "if [ $@ -lt 2 ]",
+   "if [ $# -lt 2 ]",
+   "if [ $1 -lt 2 ]",
+   "if [ $? -lt 2 ]"
+  ],
+  "correct": 1,
+  "difficulty": 2,
+  "explanation": "$# argumentlar sonini beradi, shuning uchun son tekshiruvida $# ishlatiladi."
+ },
+ {
+  "q": "`set -o pipefail` nima uchun kerak?",
+  "options": [
+   "Pipe'dagi birorta buyruq xato bersa, butun pipe xato hisoblanadi",
+   "Pipe chiqishini faylga yo'naltiradi",
+   "Pipe'ni o'chirib qo'yadi",
+   "Faqat oxirgi buyruq xatosini ushlaydi"
+  ],
+  "correct": 0,
+  "difficulty": 3,
+  "explanation": "set -o pipefail — pipe zanjirida biror bo'g'in xato bersa, butun pipe exit kodi noldan farqli bo'ladi."
+ }
+]
