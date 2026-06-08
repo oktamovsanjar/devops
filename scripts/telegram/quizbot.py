@@ -26,6 +26,7 @@ from notify import load_creds  # noqa: E402
 import db  # noqa: E402
 import srs  # noqa: E402
 import quizplan  # noqa: E402
+import profile  # noqa: E402  (o'rganilgan mavzular — learner model)
 from generate import load_key  # noqa: E402
 
 API = "https://api.telegram.org/bot{token}/{method}"
@@ -104,7 +105,9 @@ def _recent_qids(con, n=12):
 
 
 def pick_qid_at_level(con, level):
+    learned = set(profile.learned_topics(con))           # faqat kunliklarда o'rganilgan mavzular
     rows = con.execute("SELECT id, topic FROM questions WHERE difficulty=?", (level,)).fetchall()
+    rows = [r for r in rows if r["topic"] in learned]    # o'rganilmagan mavzu (masalan kubernetes) yuborilmaydi
     if not rows:
         return None
     weak = set(quizplan.weak_topics(con))

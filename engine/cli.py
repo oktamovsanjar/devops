@@ -296,11 +296,12 @@ def cmd_quiz(args):
 
 def cmd_review(args):
     con = db.connect()
-    ids = srs.due_question_ids(con, limit=args.n)
-    qs = fetch(con, ids)
+    ids = srs.due_question_ids(con, limit=args.n * 4)        # zaxira ol, keyin filtrlaymiz
+    learned = set(learner.learned_topics(con))
+    qs = [q for q in fetch(con, ids) if q["topic"] in learned][:args.n]
     if not qs:
-        print(c("\n  🎉 Bugun takrorlash uchun hech narsa yo'q! Hammasi yangi (due emas).\n", "green"))
-    run_session(con, qs, "🧠 SRS TAKROR (eski mavzular)")
+        print(c("\n  🎉 Bugun takror yo'q (o'rganilgan mavzular bo'yicha). Yangi mavzu o'rgan yoki quiz yech.\n", "green"))
+    run_session(con, qs, "🧠 SRS TAKROR (o'rganilgan mavzular)")
     con.close()
 
 
@@ -399,16 +400,7 @@ def now_tz():
 
 
 # Hafta -> shu haftaning mavzulari (devops quiz today shu bo'yicha filtrlaydi)
-WEEK_TOPICS = {
-    1: ["linux"],
-    2: ["bash", "git", "networking"],
-    3: ["docker"],
-    4: ["cicd"],
-    5: ["kubernetes"],
-    6: ["kubernetes"],
-    7: ["terraform", "ansible", "aws"],
-    8: ["monitoring"],
-}
+WEEK_TOPICS = learner.WEEK_TOPICS        # yagona manba: engine/profile.py
 
 
 def day_topics(day):
@@ -833,27 +825,34 @@ def cmd_profile(args):
     print(c("\n  🧑‍🚀 MEN HAQIMDA (Bilim profili)", "bold"))
     print(c("  — AI-coach va ustoz har muloqotда shu ma'lumotни o'qiydi —\n", "dim"))
     print(f"  Boshlangan: {start}   ·   Joriy kun: {p['day']}/{TOTAL_DAYS}   ·   Tugatilgan: {p['done_days']}")
-    print(f"  🔥 Streak: {c(str(p['streak'])+' kun', 'mag')}   ·   Quiz javoblari: {p['answers']}"
-          f"   ·   Aniqlik: {c(str(p['accuracy'])+'%', 'green')}")
+    print(f"  🔥 Streak: {c(str(p['streak'])+' kun', 'mag')}")
+
+    print(c("\n  📊 BILIM DARAJASI (faqat o'rganilgan mavzu + checkpoint):", "bold"))
+    if not p["learned"]:
+        print(c("   Hali mavzu o'rganilmagan.", "dim"))
+    for t in p["learned"]:
+        m = p["mastery"][t]
+        if m["assessed"]:
+            col = "green" if m["passed"] else "red"
+            gate = c("🔓 GATE O'TILGAN", "green") if m["passed"] else c("🔒 yiqildi", "red")
+            print(f"   {t:<11} {c(_bar(m['pct']), col)} {m['pct']:>3}%  {gate}  (checkpoint)")
+        else:
+            pr = m["practice"]
+            note = f"mashq {pr['n']} ta" if pr["n"] else "hali mashq yo'q"
+            print(f"   {t:<11} {c('○ baholanmagan', 'yellow')}  — checkpoint topshir  "
+                  f"{c('(devops checkpoint '+t+')', 'dim')}   [{note}]")
+
+    print(c(f"\n  🎲 Mashq (random/Telegram quiz): {p['practice_total']} javob"
+            f"  — bilim darajasiga KIRMAYDI, faqat takror uchun", "dim"))
     if p["due"]:
-        print(f"  🧠 SRS takror kutyapti: {c(str(p['due'])+' ta', 'yellow')}  (devops review)")
+        print(c(f"  🧠 SRS takror kutyapti: {p['due']} ta  (devops review)", "yellow"))
 
-    if p["topics"]:
-        print(c("\n  Mavzu mastery (gate: 95%):", "bold"))
-        order = sorted(p["topics"].items(), key=lambda kv: kv[1]["pct"])
-        for t, s in order:
-            pct = s["pct"]
-            gate = c("🔒 gate o'tilgan", "green") if t in p["passed"] else (
-                   c("⚠️ zaif", "red") if pct < 70 else (
-                   c("✅ tayyor", "green") if pct >= learner.MASTERY_PCT else c("◔ o'rta", "yellow")))
-            col = "green" if pct >= learner.MASTERY_PCT else ("red" if pct < 70 else "yellow")
-            print(f"   {t:<11} {c(_bar(pct), col)} {pct:>3}%  ({s['ok']}/{s['n']})  {gate}")
-    else:
-        print(c("\n  Hali quiz ma'lumoti yo'q — boshla:  devops quiz today", "yellow"))
-
-    if p["weak"]:
-        print(c(f"\n  🎯 Tavsiya: avval shularni mustahkamla → {', '.join(p['weak'])}", "yellow"))
-        print(c(f"     Mashq:  devops quiz {p['weak'][0]}   ·   Gate:  devops checkpoint {p['weak'][0]}", "dim"))
+    if p["unassessed"]:
+        nxt = p["unassessed"][0]
+        print(c(f"\n  🎯 Keyingi qadam: '{nxt}' ni o'rganib bo'lgach checkpoint topshir → "
+                f"devops checkpoint {nxt}", "yellow"))
+    elif p["weak"]:
+        print(c(f"\n  🎯 Mustahkamla (gate yiqilgan): {', '.join(p['weak'])} → devops quiz {p['weak'][0]}", "yellow"))
     print()
 
 
