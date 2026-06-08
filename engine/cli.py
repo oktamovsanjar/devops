@@ -216,12 +216,15 @@ class AdaptivePicker:
         self.recent = deque(maxlen=20)
 
     def next(self):
-        """Savol DOIM joriy darajada (eng yaqin mavjudida) — sakrashlar yo'q."""
+        """Joriy darajaga eng yaqin, YAQINDA chiqmagan savol — takror yo'q.
+        (Daraja havzasi kichik bo'lsa, eng yaqin boshqa darajaга o'tadi.)"""
         if not self.levels:
             return None
-        d = min(self.levels, key=lambda x: (abs(x - self.level), x))
-        pool = [i for i in self.by_diff[d] if i not in self.recent] or self.by_diff[d]
-        qid = random.choice(pool)
+        allq = [(d, i) for d in self.levels for i in self.by_diff[d]]
+        fresh = [(d, i) for (d, i) in allq if i not in self.recent] or allq
+        target = min((d for d, _ in fresh), key=lambda x: (abs(x - self.level), x))
+        band = [i for (d, i) in fresh if d == target]
+        qid = random.choice(band)
         self.recent.append(qid)
         rows = fetch(self.con, [qid])
         return rows[0] if rows else None
