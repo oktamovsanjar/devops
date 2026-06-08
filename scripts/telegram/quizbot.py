@@ -125,8 +125,14 @@ def _pool_topics(con):
 
 def _pool_questions(con):
     topics = _pool_topics(con)
+    day = int(db.get_meta(con, "current_day", "1"))
+    taught = con.execute("SELECT id, topic, difficulty FROM questions "
+                         "WHERE day IS NOT NULL AND day<=?", (day,)).fetchall()
+    pool = [r for r in taught if r["topic"] in topics]      # faqat O'RGATILGAN kun savollari
+    if pool:
+        return pool
     rows = con.execute("SELECT id, topic, difficulty FROM questions").fetchall()
-    return [r for r in rows if r["topic"] in topics]
+    return [r for r in rows if r["topic"] in topics]        # zaxira (day-savollar hali yo'q bo'lsa)
 
 
 def next_adaptive_question(con):

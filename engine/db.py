@@ -113,6 +113,9 @@ def connect():
 def init():
     con = connect()
     con.executescript(SCHEMA)
+    cols = [r[1] for r in con.execute("PRAGMA table_info(questions)")]
+    if "day" not in cols:                          # migratsiya: savol qaysi KUN darsiga tegishli
+        con.execute("ALTER TABLE questions ADD COLUMN day INTEGER")
     con.commit()
     con.close()
 
@@ -122,17 +125,17 @@ def q_hash(question):
 
 
 def add_question(con, topic, question, options, correct, explanation="",
-                 difficulty=1, source="seed", category=None):
+                 difficulty=1, source="seed", category=None, day=None):
     """Bitta savol qo'shadi. Dublikat bo'lsa (hash) o'tkazib yuboradi. id yoki None qaytaradi."""
     category = category or CATEGORY.get(topic, "devops")
     h = q_hash(question)
     try:
         cur = con.execute(
-            "INSERT INTO questions(topic,category,difficulty,qtype,question,options,correct,explanation,source,hash)"
-            " VALUES(?,?,?,?,?,?,?,?,?,?)",
+            "INSERT INTO questions(topic,category,difficulty,qtype,question,options,correct,explanation,source,hash,day)"
+            " VALUES(?,?,?,?,?,?,?,?,?,?,?)",
             (topic, category, int(difficulty), "quiz", question,
              json.dumps(options, ensure_ascii=False), int(correct),
-             explanation, source, h),
+             explanation, source, h, day),
         )
         return cur.lastrowid
     except sqlite3.IntegrityError:

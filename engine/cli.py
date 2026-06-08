@@ -92,7 +92,7 @@ def fetch(con, ids):
     return [by_id[i] for i in ids if i in by_id]
 
 
-def _filter_clause(topic=None, category=None, topics=None):
+def _filter_clause(topic=None, category=None, topics=None, day_max=None):
     where, params = [], []
     if topics:
         where.append(f"topic IN ({','.join('?'*len(topics))})"); params += list(topics)
@@ -100,11 +100,13 @@ def _filter_clause(topic=None, category=None, topics=None):
         where.append("topic=?"); params.append(topic)
     if category:
         where.append("category=?"); params.append(category)
+    if day_max is not None:                       # faqat O'RGATILGAN kun savollari (day<=joriy)
+        where.append("day IS NOT NULL AND day<=?"); params.append(day_max)
     return (("WHERE " + " AND ".join(where)) if where else ""), params
 
 
-def pick_questions(con, n, topic=None, category=None, topics=None):
-    clause, params = _filter_clause(topic, category, topics)
+def pick_questions(con, n, topic=None, category=None, topics=None, day_max=None):
+    clause, params = _filter_clause(topic, category, topics, day_max)
     rows = con.execute(
         f"SELECT id FROM questions {clause} ORDER BY RANDOM() LIMIT ?", (*params, n)
     ).fetchall()
@@ -158,8 +160,7 @@ def ask(con, q, hint=True):
 
 def run_session(con, questions, title):
     if not questions:
-        print(c("\n  ⚠️  Bu mavzuda hali savol yo'q. `devops count` bilan tekshir yoki "
-                "AI generator bilan to'ldiramiz.\n", "yellow"))
+        print(c("\n  ⚠️  Bu yo'nalishда hali savol yo'q.\n", "yellow"))
         return
     print(c(f"\n══════ {title} ({len(questions)} savol) ══════", "mag"))
     correct = total = 0
@@ -181,9 +182,16 @@ def run_session(con, questions, title):
     print()
 
 
-def all_ids(con, topic=None, category=None, topics=None):
-    clause, params = _filter_clause(topic, category, topics)
+def all_ids(con, topic=None, category=None, topics=None, day_max=None):
+    clause, params = _filter_clause(topic, category, topics, day_max)
     return [r["id"] for r in con.execute(f"SELECT id FROM questions {clause}", params)]
+
+
+def taught_ids(con, topic=None, topics=None, day_max=None):
+    """Faqat O'RGATILGAN kun savollari (day tagi bor va day<=joriy kun)."""
+    if day_max is None:
+        day_max = current_day(con)
+    return all_ids(con, topic=topic, topics=topics, day_max=day_max)
 
 
 class AdaptivePicker:
@@ -194,9 +202,9 @@ class AdaptivePicker:
     PROMOTE = 2   # ketma-ket nechta to'g'ridan keyin daraja oshadi
     DEMOTE = 2    # ketma-ket nechta xatodan keyin daraja tushadi
 
-    def __init__(self, con, topic=None, category=None, topics=None):
+    def __init__(self, con, topic=None, category=None, topics=None, day_max=None):
         self.con = con
-        clause, params = _filter_clause(topic, category, topics)
+        clause, params = _filter_clause(topic, category, topics, day_max)
         rows = con.execute(
             f"SELECT id, difficulty FROM questions {clause}", params).fetchall()
         self.by_diff = defaultdict(list)
@@ -272,28 +280,27 @@ def run_continuous(con, picker, title):
 def cmd_quiz(args):
     con = db.connect()
     topic = args.topic
-    category = topics = None
+    category = topics = day_max = None
     label = topic or "bugungi"
-    if topic in (None, "today", "kun", "kunlik"):   # DEFAULT = bugungi kun mavzu(lar)i
+    if topic in (None, "today", "kun", "kunlik"):   # DEFAULT = bugun(gacha) O'RGATILGAN savollar
         day = current_day(con)
-        cand = day_topics(day)
-        topics = [t for t in cand if con.execute(
-            "SELECT 1 FROM questions WHERE topic=? LIMIT 1", (t,)).fetchone()]
-        topic = None
-        label = f"BUGUN Day {day} ({', '.join(topics) or 'umumiy'})"
-        if not topics:
-            print(c("\n  ℹ️  Bugungi mavzuda hali savol yo'q — umumiy rejimga o'tdim.", "yellow"))
-    elif topic in ("all", "mix", "aralash"):        # hamma O'RGANILGAN mavzu
+        day_max = day                               # faqat o'rgatilgan kun savollari
+        topics = topic = None
+        label = f"BUGUN Day {day} (o'rgatilgan)"
+        if not taught_ids(con, day_max=day):
+            print(c("\n  ℹ️  Hali o'rgatilgan kun savoli yo'q. Umumiy mashq: devops quiz all\n", "yellow"))
+            con.close(); return
+    elif topic in ("all", "mix", "aralash"):        # hamma O'RGANILGAN mavzu (kun cheklovsiz)
         topics = learner.learned_topics(con) or None
         topic = None
         label = "aralash (o'rganilgan)"
     elif topic in ("devops", "python", "english"):
         category, topic = topic, None
     if args.n and args.n > 0:                 # cheklangan sessiya
-        qs = pick_questions(con, args.n, topic=topic, category=category, topics=topics)
+        qs = pick_questions(con, args.n, topic=topic, category=category, topics=topics, day_max=day_max)
         run_session(con, qs, f"QUIZ — {label}")
     else:                                     # default: cheksiz ADAPTIV oqim
-        run_continuous(con, AdaptivePicker(con, topic=topic, category=category, topics=topics),
+        run_continuous(con, AdaptivePicker(con, topic=topic, category=category, topics=topics, day_max=day_max),
                        f"QUIZ — {label}")
     con.close()
 
@@ -301,23 +308,26 @@ def cmd_quiz(args):
 def cmd_review(args):
     con = db.connect()
     ids = srs.due_question_ids(con, limit=args.n * 4)        # zaxira ol, keyin filtrlaymiz
-    learned = set(learner.learned_topics(con))
-    qs = [q for q in fetch(con, ids) if q["topic"] in learned][:args.n]
+    taught = set(taught_ids(con))                            # faqat o'rgatilgan kun savollari
+    qs = [q for q in fetch(con, ids) if q["id"] in taught][:args.n]
     if not qs:
-        print(c("\n  🎉 Bugun takror yo'q (o'rganilgan mavzular bo'yicha). Yangi mavzu o'rgan yoki quiz yech.\n", "green"))
-    run_session(con, qs, "🧠 SRS TAKROR (o'rganilgan mavzular)")
+        print(c("\n  🎉 Bugun takror yo'q. Yangi savollar yechsang, ertaga takrorга keladi.\n", "green"))
+        con.close(); return
+    run_session(con, qs, "🧠 SRS TAKROR (o'rgatilgan savollar)")
     con.close()
 
 
 def checkpoint_questions(con, topic, n_topic=25, n_prior=5):
-    """Mastery-gate to'plami: shu mavzudan n_topic + oldingi mavzulardan n_prior (kümülatif)."""
-    prior = [t for t in learner.prior_topics(topic)
-             if con.execute("SELECT 1 FROM questions WHERE topic=? LIMIT 1", (t,)).fetchone()]
+    """Mastery-gate to'plami: faqat O'RGATILGAN (day<=joriy) savollar — shu mavzudan
+    n_topic + oldingi mavzulardan n_prior (kümülatif)."""
+    dm = current_day(con)
+    prior = [t for t in learner.prior_topics(topic) if taught_ids(con, topic=t, day_max=dm)]
     if not prior:                                  # birinchi mavzu — kümülatif yo'q
         n_topic, n_prior = n_topic + n_prior, 0
-    qs = pick_questions(con, n_topic, topic=topic)
+    qs = pick_questions(con, n_topic, topic=topic, day_max=dm)
     seen = {q["id"] for q in qs}
-    pri = [q for q in pick_questions(con, n_prior, topics=prior) if q["id"] not in seen] if prior else []
+    pri = [q for q in pick_questions(con, n_prior, topics=prior, day_max=dm)
+           if q["id"] not in seen] if prior else []
     allq = qs + pri
     random.shuffle(allq)
     return allq, len(qs), len(pri)
@@ -1247,6 +1257,32 @@ def ensure_ready(con):
             db.import_seed_dir(con, s)
 
 
+def sync_day_quizzes(con):
+    """Har kunning days/day-XX/quiz.json savollarini DB ga 'day' tagi bilan yuklaydi.
+    Quiz/checkpoint shu day-tagli savollardан (faqat o'rgatilgan) so'raydi."""
+    base = os.path.join(db.DEVOPS_HOME, "days")
+    changed = False
+    for d in range(1, TOTAL_DAYS + 1):
+        f = os.path.join(base, f"day-{d:02d}", "quiz.json")
+        if not os.path.exists(f):
+            continue
+        topic = (day_topics(d) or ["linux"])[0]
+        try:
+            items = json.load(open(f, encoding="utf-8"))
+        except Exception:
+            continue
+        for it in items:
+            rid = db.add_question(con, topic, it["q"], it["options"], it["correct"],
+                                  it.get("explanation", ""), it.get("difficulty", 1),
+                                  source="day", day=d)
+            if rid is None:                       # dup hash — borini day bilan tagla
+                con.execute("UPDATE questions SET day=? WHERE hash=? AND day IS NULL",
+                            (d, db.q_hash(it["q"])))
+            changed = True
+    if changed:
+        con.commit()
+
+
 def print_help_uz():
     print(c("\n  🐧 devops", "bold") + c("  ·  DevOps Bootcamp", "dim"))
     print(c("  ─────────────────────────────────────────────", "dim"))
@@ -1317,6 +1353,7 @@ def main():
     db.init()                                  # sxema (idempotent)
     _con = db.connect(); ensure_ready(_con)                 # init kerak emas — avto seed
     try:
+        sync_day_quizzes(_con)                              # per-day savollarni day-tag bilan yukla
         ensure_work(current_day(_con))                      # ish joyi har doim tayyor
     except Exception:
         pass
