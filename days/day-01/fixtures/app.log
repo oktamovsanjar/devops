@@ -1,0 +1,7 @@
+2026-06-01 09:01:12 INFO  service started on port 8080
+2026-06-01 09:01:15 INFO  health check ok
+2026-06-01 09:03:41 ERROR database connection refused (db:5432)
+2026-06-01 09:03:42 WARN  high latency on /api/users (820ms)
+2026-06-01 09:05:10 ERROR timeout while calling payment-service
+2026-06-01 09:06:00 INFO  retry succeeded
+2026-06-01 09:09:33 WARN  disk usage 78%

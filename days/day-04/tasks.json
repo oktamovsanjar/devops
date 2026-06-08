@@ -1,0 +1,46 @@
+{
+  "day": 4,
+  "theme": "Paketlar (apt) va matn ustasi — grep, sed, awk, pipe",
+  "tasks": [
+    {"id": "errcount", "type": "real", "xp": 25, "title": "Xatolarni sana (grep -c)",
+     "why": "Minglab qatorli logда nechta ERROR borligini bir buyruqda bilish — triage.",
+     "steps": ["Ishchi papkangga o't:  cd ~/devops/days/day-04/work",
+               "Namuna log:  cat ~/devops/days/day-04/fixtures/server.log",
+               "ERROR qatorlari SONINI yoz:  grep -c ERROR ~/devops/days/day-04/fixtures/server.log > errors.txt"],
+     "expect": "errors.txt = server.log dagi ERROR qatorlari soni",
+     "check": "[ \"$(cat $LAB/errors.txt 2>/dev/null)\" = \"$(grep -c ERROR $DAY/fixtures/server.log)\" ]"},
+
+    {"id": "uniqip", "type": "real", "xp": 30, "title": "Unikal IP'larni ajrat (awk + sort -u)",
+     "why": "Access-logдан kim kirganini bilish: 1-ustun = IP. awk ustunni, sort -u unikalini oladi.",
+     "steps": ["access.log ni ko'r:  cat ~/devops/days/day-04/fixtures/access.log",
+               "1-ustun (IP) unikallarini yoz:  awk '{print $1}' ~/devops/days/day-04/fixtures/access.log | sort -u > ips.txt"],
+     "expect": "ips.txt — unikal IP'lar (saralangan)",
+     "check": "diff -q <(awk '{print $1}' $DAY/fixtures/access.log | sort -u) $LAB/ips.txt"},
+
+    {"id": "sed", "type": "real", "xp": 25, "title": "Configni tahrirla (sed)",
+     "why": "Konfigda qiymatni almashtirish — deploy avtomatlashtirishning asosi.",
+     "steps": ["config.ini ni ko'r:  cat ~/devops/days/day-04/fixtures/config.ini",
+               "'debug=false' ni 'debug=true' ga almashtirib yoz:",
+               "sed 's/debug=false/debug=true/' ~/devops/days/day-04/fixtures/config.ini > config.ini"],
+     "expect": "work/config.ini — debug=true (false yo'q)",
+     "check": "grep -qx 'debug=true' $LAB/config.ini && ! grep -q 'debug=false' $LAB/config.ini"},
+
+    {"id": "topip", "type": "real", "xp": 30, "title": "Eng faol IP (pipe zanjiri)",
+     "why": "Kim eng ko'p so'rov yuborgan? sort|uniq -c|sort -rn — klassik tahlil zanjiri.",
+     "steps": ["Eng ko'p uchragan IP ni top va FAQAT IP ni yoz:",
+               "awk '{print $1}' ~/devops/days/day-04/fixtures/access.log | sort | uniq -c | sort -rn | head -1 | awk '{print $2}' > topip.txt"],
+     "expect": "topip.txt = eng ko'p so'rov yuborgan IP",
+     "check": "grep -qx 10.0.0.5 $LAB/topip.txt"},
+
+    {"id": "pkg", "type": "real", "xp": 20, "title": "Paket versiyasini tekshir",
+     "why": "Qaysi versiya o'rnatilgan? Audit va debug uchun muhim.",
+     "steps": ["git versiyasini work/gitver.txt ga yoz:  git --version > gitver.txt"],
+     "expect": "gitver.txt ichida 'git version ...' bor",
+     "check": "grep -qi 'git version' $LAB/gitver.txt"},
+
+    {"id": "explain", "type": "deep", "xp": 20, "title": "Tushuntirib ber",
+     "why": "Tushuntira olish — tushunganingning isboti.",
+     "steps": ["pipe ( | ) nima qiladi va `grep` bilan `find` farqini ustozga ayt"],
+     "expect": "O'z so'zlaring bilan qisqa tushuntirish"}
+  ]
+}

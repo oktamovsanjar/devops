@@ -1,0 +1,43 @@
+{
+  "day": 6,
+  "theme": "Bash skripting I — o'zgaruvchi, shart, sikl, funksiya",
+  "tasks": [
+    {"id": "hello", "type": "real", "xp": 25, "title": "O'zgaruvchili skript",
+     "why": "Avtomatlashtirish skriptdan boshlanadi. O'zgaruvchi — uning g'ishti.",
+     "steps": ["Ishchi papkangga o't:  cd ~/devops/days/day-06/work",
+               "hello.sh yarat: birinchi qator #!/bin/bash, keyin o'zgaruvchiga ism ber",
+               "Masalan:  name=\"agent\"  va  echo \"Salom, $name\"",
+               "Ishlat:  bash hello.sh"],
+     "expect": "hello.sh ishga tushganda 'Salom' chiqaradi",
+     "check": "bash $LAB/hello.sh 2>/dev/null | grep -qi salom"},
+
+    {"id": "loop", "type": "real", "xp": 25, "title": "Sikl (for)",
+     "why": "Bir ishni ko'p marta takrorlash — siklning kuchi.",
+     "steps": ["count.sh yarat: 1 dan 5 gacha sanab chiqaradigan for sikli",
+               "Masalan:  for i in 1 2 3 4 5; do echo $i; done",
+               "Ishlat:  bash count.sh"],
+     "expect": "count.sh 1,2,3,4,5 ni chiqaradi",
+     "check": "[ \"$(bash $LAB/count.sh 2>/dev/null | tr -d '[:space:]')\" = '12345' ]"},
+
+    {"id": "cond", "type": "real", "xp": 25, "title": "Shart (if)",
+     "why": "Qaror qabul qilish — skriptni aqlli qiladi.",
+     "steps": ["check.sh yarat: /etc/passwd fayli bor-yo'qligini tekshirsin",
+               "if [ -f /etc/passwd ]; then echo 'bor'; else echo 'yo''q'; fi",
+               "Ishlat:  bash check.sh"],
+     "expect": "check.sh 'bor' deb chiqaradi",
+     "check": "bash $LAB/check.sh 2>/dev/null | grep -qi bor"},
+
+    {"id": "func", "type": "real", "xp": 30, "title": "Funksiya + arifmetika",
+     "why": "Funksiya — qayta ishlatiladigan kod bo'lagi. Argument $1 bilan keladi.",
+     "steps": ["square.sh yarat: sonni kvadratga oshiradigan funksiya",
+               "square() { echo $(( $1 * $1 )); }  keyin  square 5",
+               "Ishlat:  bash square.sh   (natija 25 bo'lishi kerak)"],
+     "expect": "square.sh — 25 chiqaradi (5 ning kvadrati)",
+     "check": "bash $LAB/square.sh 2>/dev/null | grep -qw 25"},
+
+    {"id": "explain", "type": "deep", "xp": 20, "title": "Tushuntirib ber",
+     "why": "Tushuntira olish — tushunganingning isboti.",
+     "steps": ["echo \"$x\" va echo $x farqini (qo'shtirnoq nega muhim) ustozga ayt"],
+     "expect": "O'z so'zlaring bilan qisqa tushuntirish"}
+  ]
+}

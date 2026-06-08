@@ -1,0 +1,9 @@
+2026-06-01 09:00:01 INFO  service started
+2026-06-01 09:00:05 INFO  config loaded
+2026-06-01 09:01:10 WARN  high memory usage 82%
+2026-06-01 09:02:33 ERROR database connection refused
+2026-06-01 09:02:34 INFO  retrying connection
+2026-06-01 09:03:00 ERROR timeout calling auth-service
+2026-06-01 09:04:12 WARN  slow query 1200ms
+2026-06-01 09:05:45 ERROR disk write failed /var/data
+2026-06-01 09:06:00 INFO  recovered

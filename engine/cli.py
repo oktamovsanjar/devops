@@ -185,11 +185,10 @@ def all_ids(con, topic=None, category=None, topics=None):
 class AdaptivePicker:
     """Adaptiv qiyinlik. Eng past darajadan boshlaydi; ketma-ket 2 to'g'ri ->
     daraja oshadi; ketma-ket 2 xato -> tushadi (takror). Orada past darajalardan
-    savol aralashtiriladi (interleaving). 'q' bosguncha cheksiz."""
+    Daraja FAQAT joriy daraja savollariga qarab o'zgaradi. 'q' bosguncha cheksiz."""
 
     PROMOTE = 2   # ketma-ket nechta to'g'ridan keyin daraja oshadi
     DEMOTE = 2    # ketma-ket nechta xatodan keyin daraja tushadi
-    REVIEW_PROB = 0.25  # orada past daraja takrori ehtimoli
 
     def __init__(self, con, topic=None, category=None, topics=None):
         self.con = con
@@ -202,23 +201,17 @@ class AdaptivePicker:
         self.levels = sorted(self.by_diff)
         self.level = self.levels[0] if self.levels else 1
         self.correct_streak = self.wrong_streak = 0
-        self.recent = deque(maxlen=12)
+        self.recent = deque(maxlen=20)
 
-    def _pick_from(self, d):
-        d = min(self.levels, key=lambda x: (abs(x - d), x))   # eng yaqin mavjud daraja
+    def next(self):
+        """Savol DOIM joriy darajada (eng yaqin mavjudida) — sakrashlar yo'q."""
+        if not self.levels:
+            return None
+        d = min(self.levels, key=lambda x: (abs(x - self.level), x))
         pool = [i for i in self.by_diff[d] if i not in self.recent] or self.by_diff[d]
         qid = random.choice(pool)
         self.recent.append(qid)
-        return qid
-
-    def next(self):
-        if not self.levels:
-            return None
-        if self.level > self.levels[0] and random.random() < self.REVIEW_PROB:
-            target = self.level - random.choice([1, 2])      # past darajani takrorla
-        else:
-            target = self.level
-        rows = fetch(self.con, [self._pick_from(target)])
+        rows = fetch(self.con, [qid])
         return rows[0] if rows else None
 
     def update(self, correct):
@@ -514,7 +507,11 @@ def _task_detail(t, n, day, done):
     if t.get("expect"):
         print(c(f"  🎯 Kutilgan natija: {t['expect']}", "dim"))
     if t.get("flag"):
+        print(c(f"  📂 Quest papkasi:  ~/devops/days/day-{day:02d}/quest", "cyan"))
         print(c("  🏴 Quest'ni yech, flagni top — keyin:  devops verify", "yellow"))
+    elif t.get("check"):
+        print(c(f"  📂 Ish papkang:  ~/devops/days/day-{day:02d}/work", "cyan"))
+        print(c("  ✅ Bajargach:  devops verify   (AI/tizim tekshiradi)", "yellow"))
     else:
         print(c("  ✅ Bajargach:  devops verify   (AI/tizim tekshiradi)", "yellow"))
     print()
@@ -709,7 +706,7 @@ def cmd_next(args):
         print(c("\n  🎉 Bugungi barcha topshiriqlar bajarildi! Keyingi kun: devops today\n", "green"))
         con.close(); return
     n, task = pend[0]
-    print(c(f"\n  👉 KEYINGI ISH  ({len(done)}/{len(tasks)} bajarilgan)", "bold"))
+    print(c(f"\n  👉 KEYINGI ISH  ({sum(1 for t in tasks if t['id'] in done)}/{len(tasks)} bajarilgan)", "bold"))
     _task_detail(task, n, day, done)
     print(c("  Bajargach:  devops verify\n", "yellow"))
     con.close()
@@ -1064,41 +1061,63 @@ def cmd_focus(args):
         print("  " + ans.replace("\n", "\n  ") + "\n")
 
 
+def _recent_cmds(n=15):
+    import datetime as _dt
+    logf = os.path.join(db.DEVOPS_HOME, "logs", "activity",
+                        f"commands-{_dt.date.today().isoformat()}.log")
+    cmds = []
+    if os.path.exists(logf):
+        with open(logf) as f:
+            for ln in f.readlines()[-n:]:
+                parts = ln.split("|", 3)
+                if len(parts) == 4:
+                    cmds.append(parts[3].strip())
+    return cmds
+
+
+def _current_task_ctx(con):
+    day = current_day(con)
+    data = load_tasks(day)
+    if not data:
+        return f"O'quvchi Day {day}/56 da."
+    done = db.done_task_ids(con, day)
+    pend = [t for t in data["tasks"] if t["id"] not in done]
+    if not pend:
+        return f"O'quvchi Day {day}/56 da — barcha topshiriq bajarilgan."
+    t = pend[0]
+    return (f"O'quvchi Day {day}/56 da. Hozirgi topshirig'i: \"{t['title']}\" — {t.get('why','')} "
+            f"Qadamlar: {t.get('steps','')} Kutilgan: {t.get('expect','')}")
+
+
 def cmd_ai(args):
-    """🤖 Yagona AI yordam: savol/tushuncha/shpargalka — yoki bo'sh bo'lsa loglardan maslahat."""
+    """🤖 AI: loglar + joriy topshiriq + savolni BIRGA ko'rib javob beradi."""
     if not load_key():
         print(c("\n  ⚠️  AI uchun API key kerak (engine/config.json).\n", "yellow")); return
     q = " ".join(args.text).strip() if getattr(args, "text", None) else ""
-    con = db.connect(); ctx = learner_context(con); con.close()
+    con = db.connect()
+    ctx = learner_context(con)
+    task_ctx = _current_task_ctx(con)
+    con.close()
+    cmds = _recent_cmds()
+    cmds_txt = ("\nOxirgi terminal buyruqlari:\n" + "\n".join(f"- {x}" for x in cmds)) if cmds else ""
 
-    if q:                                    # savol/mavzu berildi -> javob
-        sysp = ("You are 'Ustoz', an expert DevOps mentor. The learner gives a question OR a "
-                "topic. Answer in Uzbek (English terms/commands). If a concept → explain "
-                "(nima/nega/misol). If they want a cheat-sheet/quick reference → compact grouped "
-                "list. If a direct question → answer it. Practical, accurate, concise; add a short "
-                "command example when useful.")
-        print(c("\n  🤔 Ustoz o'ylayapti...", "dim"))
-        ans = ai_ask(sysp, f"{ctx}\n\nSo'rov: {q}", max_tokens=900)
+    if q:                                    # savol berildi -> loglar+topshiriq bilan javob
+        sysp = ("You are 'Ustoz', a DevOps mentor sitting next to the learner. You CAN SEE their "
+                "recent terminal commands and current task — USE them. If they ask why something "
+                "isn't working, find the real cause IN their recent commands (e.g. wrong path, "
+                "wrong flag). Do NOT ask for info you can already see. Answer in Uzbek (English "
+                "terms/commands), concrete and short, with a fixed command example when relevant.")
+        print(c("\n  🤔 Ustoz loglar + savolingni o'qiyapti...", "dim"))
+        ans = ai_ask(sysp, f"{ctx}\n{task_ctx}{cmds_txt}\n\nSavol: {q}", max_tokens=900)
         if ans:
             print(c("\n  🧑‍🏫 USTOZ:", "bold"))
             print("  " + ans.replace("\n", "\n  ") + "\n")
         return
 
-    # argument yo'q -> oxirgi buyruqlarni o'qib kontekstli yordam
-    import datetime as _dt
-    logf = os.path.join(db.DEVOPS_HOME, "logs", "activity", f"commands-{_dt.date.today().isoformat()}.log")
-    cmds = []
-    if os.path.exists(logf):
-        with open(logf) as f:
-            for ln in f.readlines()[-15:]:
-                parts = ln.split("|", 3)
-                if len(parts) == 4:
-                    cmds.append(parts[3].strip())
-    if not cmds:
-        print(c("\n  💡 Foydalanish:  devops ai \"savol yoki mavzu\"\n", "yellow")); return
+    if not cmds:                             # savol yo'q, log ham yo'q
+        print(c("\n  💡 Foydalanish:  devops ai \"savol\"   (yoki ishlab tur, keyin devops ai)\n", "yellow")); return
     print(c("\n  🤔 Ustoz loglaringni o'qiyapti...", "dim"))
-    txt = ai_ask(AI_HELP_SYSTEM, f"{ctx}\n\nOxirgi buyruqlar:\n"
-                 + "\n".join(f"- {x}" for x in cmds) + "\n\nNima qilyapti? Qisqa yordam ber.",
+    txt = ai_ask(AI_HELP_SYSTEM, f"{ctx}\n{task_ctx}{cmds_txt}\n\nNima qilyapti? Qisqa yordam ber.",
                  max_tokens=400)
     if txt:
         print(c("\n  🤖 USTOZ-AI:", "bold"))

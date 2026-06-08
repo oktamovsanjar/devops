@@ -1,0 +1,46 @@
+{
+  "day": 7,
+  "theme": "1-hafta BOSS — Health-Check mini-loyiha (hammasini birlashtirish)",
+  "tasks": [
+    {"id": "ws", "type": "real", "xp": 20, "title": "Loyiha tuzilmasini yarat",
+     "why": "1-hafta yakuni: real loyiha quramiz. Avval tartibli papka (Day-1 ko'nikmasi).",
+     "steps": ["Ishchi papkangga o't:  cd ~/devops/days/day-07/work",
+               "Tuzilma yarat:  mkdir -p health/bin health/logs"],
+     "expect": "health/bin va health/logs papkalari mavjud",
+     "check": "[ -d $LAB/health/bin ] && [ -d $LAB/health/logs ]"},
+
+    {"id": "script", "type": "real", "xp": 30, "title": "Monitoring skripti yoz (bash)",
+     "why": "Day-6 bash + Day-1/3 buyruqlar birga: server holatini ko'rsatuvchi skript.",
+     "steps": ["health/bin/check.sh yarat (#!/bin/bash bilan)",
+               "Ichида chiqarsin: hostname,  nproc (CPU),  df -h / | tail -1 (disk)",
+               "Masalan:  echo \"Host: $(hostname)\";  echo \"CPU: $(nproc)\";  df -h /"],
+     "expect": "check.sh ishga tushganda hostname'ni chiqaradi",
+     "check": "bash $LAB/health/bin/check.sh 2>/dev/null | grep -q \"$(hostname)\""},
+
+    {"id": "perms", "type": "real", "xp": 20, "title": "Skriptni bajariladigan qil",
+     "why": "Day-2 ko'nikmasi: skript executable bo'lmasa ishlamaydi.",
+     "steps": ["chmod +x health/bin/check.sh"],
+     "expect": "check.sh executable (x biti bor)",
+     "check": "[ -x $LAB/health/bin/check.sh ]"},
+
+    {"id": "logs", "type": "real", "xp": 25, "title": "Loglardan xatolarni sana",
+     "why": "Day-4 ko'nikmasi: logдан ERROR sonini ajratish.",
+     "steps": ["Namuna log:  cat ~/devops/days/day-07/fixtures/app.log",
+               "ERROR sonini yoz:  grep -c ERROR ~/devops/days/day-07/fixtures/app.log > health/logs/errors.txt"],
+     "expect": "errors.txt = app.log dagi ERROR soni",
+     "check": "[ \"$(cat $LAB/health/logs/errors.txt 2>/dev/null)\" = \"$(grep -c ERROR $DAY/fixtures/app.log)\" ]"},
+
+    {"id": "run", "type": "real", "xp": 30, "title": "Ishga tushir va hisobotni saqla",
+     "why": "Hammasini birlashtirish: skriptni ishga tushirib, natijani faylga saqlash.",
+     "steps": ["Skriptni ishga tushirib, natijani saqla:",
+               "./health/bin/check.sh > health/logs/report.txt   (work papkasidan turib)",
+               "Ko'r:  cat health/logs/report.txt"],
+     "expect": "report.txt ichida hostname va tizim ma'lumotlari bor",
+     "check": "grep -q \"$(hostname)\" $LAB/health/logs/report.txt"},
+
+    {"id": "explain", "type": "deep", "xp": 25, "title": "1-hafta xulosasi",
+     "why": "Haftani umumlashtirish — bilimni mustahkamlaydi.",
+     "steps": ["1-haftada o'rgangan 3 ta eng muhim narsani (navigatsiya, ruxsat, jarayon, matn, tarmoq, bash'dan) ustozga ayt"],
+     "expect": "O'z so'zlaring bilan haftaning xulosasi"}
+  ]
+}

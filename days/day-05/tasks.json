@@ -1,0 +1,45 @@
+{
+  "day": 5,
+  "theme": "Tarmoq asoslari — ip, ss, dns, ssh, curl",
+  "tasks": [
+    {"id": "myip", "type": "real", "xp": 20, "title": "Server IP manzilini hujjatla",
+     "why": "Serverning IP manzilini bilish — ulanish va debug uchun birinchi qadam.",
+     "steps": ["Ishchi papkangga o't:  cd ~/devops/days/day-05/work",
+               "Serverning IP manzilini ko'r:  hostname -I   (yoki: ip a)",
+               "Birinchi IP ni myip.txt ga yoz:  hostname -I | awk '{print $1}' > myip.txt"],
+     "expect": "myip.txt ichida serverning IP manzili",
+     "check": "grep -q \"$(hostname -I | awk '{print $1}')\" $LAB/myip.txt"},
+
+    {"id": "ports", "type": "real", "xp": 25, "title": "Ochiq (tinglanayotgan) portlar",
+     "why": "Qaysi servis qaysi portда eshitayapti? ss — port diagnostikasi asbobi.",
+     "steps": ["Tinglanayotgan TCP portlarni ko'r va yoz:  ss -tlnp > ports.txt"],
+     "expect": "ports.txt — LISTEN holatdagi portlar ro'yxati",
+     "check": "grep -q LISTEN $LAB/ports.txt"},
+
+    {"id": "dns", "type": "real", "xp": 25, "title": "DNS so'rovi (nom → IP)",
+     "why": "DNS domen nomini IP ga aylantiradi — internetning asosi.",
+     "steps": ["google.com ni IP ga aylantirib yoz:  getent hosts google.com > dns.txt",
+               "(yoki:  nslookup google.com  /  dig google.com)"],
+     "expect": "dns.txt ichida google.com ning IP manzili (IPv4 yoki IPv6)",
+     "check": "[ -s $LAB/dns.txt ] && grep -qE '[0-9a-f]+[:.][0-9a-f]+' $LAB/dns.txt"},
+
+    {"id": "curl", "type": "real", "xp": 30, "title": "HTTP so'rov (curl)",
+     "why": "curl bilan saytga so'rov yuborish va javob (header) ni ko'rish — API debug.",
+     "steps": ["github.com header'larini ol:  curl -sI https://github.com > headers.txt",
+               "Ko'r:  cat headers.txt   (HTTP status qatori bo'lishi kerak)"],
+     "expect": "headers.txt ichida HTTP javob qatori (HTTP/...)",
+     "check": "grep -qi 'HTTP/' $LAB/headers.txt"},
+
+    {"id": "port443", "type": "real", "xp": 20, "title": "Port bilimi",
+     "why": "Standart portlarni yodda tutish — tez diagnostika.",
+     "steps": ["HTTPS qaysi portда ishlaydi? Faqat raqamni port.txt ga yoz:",
+               "echo 443 > port.txt"],
+     "expect": "port.txt = 443",
+     "check": "grep -qx 443 $LAB/port.txt"},
+
+    {"id": "explain", "type": "deep", "xp": 20, "title": "Tushuntirib ber",
+     "why": "Tushuntira olish — tushunganingning isboti.",
+     "steps": ["TCP va UDP farqini + ping nima uchun ishlatilishini ustozga ayt"],
+     "expect": "O'z so'zlaring bilan qisqa tushuntirish"}
+  ]
+}
