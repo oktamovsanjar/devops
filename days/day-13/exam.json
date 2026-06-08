@@ -1,0 +1,23 @@
+{
+  "title": "Day-13: Nginx (reverse proxy, TLS)",
+  "workspace": "days/day-13/exam",
+  "pass_score": 70,
+  "time_limit_min": 20,
+  "tasks": [
+    {"id": "t1", "points": 20,
+     "prompt": "'static.conf' yarat: server bloki ичида listen 80, server_name va root direktivalari bo'lsin.",
+     "check": "grep -qE 'listen +80' $EXAM/static.conf && grep -q server_name $EXAM/static.conf && grep -q root $EXAM/static.conf"},
+    {"id": "t2", "points": 20,
+     "prompt": "'proxy.conf' yarat: location / ичида proxy_pass http://localhost:3000; bo'lsin.",
+     "check": "grep -q proxy_pass $EXAM/proxy.conf && grep -q location $EXAM/proxy.conf"},
+    {"id": "t3", "points": 20,
+     "prompt": "'tls.conf' yarat: listen 443 ssl va ssl_certificate direktivalari bo'lsin.",
+     "check": "grep -qE 'listen +443 +ssl' $EXAM/tls.conf && grep -q ssl_certificate $EXAM/tls.conf"},
+    {"id": "t4", "points": 20,
+     "prompt": "'redirect.conf' yarat: HTTP (80) ni HTTPS ga yo'naltirsin (return 301).",
+     "check": "grep -qE 'return +301' $EXAM/redirect.conf"},
+    {"id": "t5", "points": 20,
+     "prompt": "'upstream.conf' yarat: upstream blokида orqa servis manzili bo'lsin (masalan 127.0.0.1:8080).",
+     "check": "grep -q upstream $EXAM/upstream.conf && grep -qE ':[0-9]+' $EXAM/upstream.conf"}
+  ]
+}
