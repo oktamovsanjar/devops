@@ -1,0 +1,23 @@
+{
+  "title": "Day-12: Tarmoq chuqur (DNS, TLS, HTTP)",
+  "workspace": "days/day-12/exam",
+  "pass_score": 70,
+  "time_limit_min": 20,
+  "tasks": [
+    {"id": "t1", "points": 20,
+     "prompt": "github.com ning A (IPv4) yozuvini 'a.txt' ga yoz (dig +short ... A yoki getent).",
+     "check": "grep -qE '[0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+' $EXAM/a.txt"},
+    {"id": "t2", "points": 20,
+     "prompt": "https://example.com HTTP status kodini (3 raqam) 'code.txt' ga yoz (curl -w '%{http_code}').",
+     "check": "grep -qE '^[0-9]{3}' $EXAM/code.txt"},
+    {"id": "t3", "points": 20,
+     "prompt": "github.com TLS sertifikat muddatini 'cert.txt' ga yoz (openssl ... x509 -noout -dates).",
+     "check": "grep -qi notAfter $EXAM/cert.txt"},
+    {"id": "t4", "points": 20,
+     "prompt": "github.com:443 port ochiqligini tekshir; ochiq bo'lsa 'port.txt' ga 'open' yoz (nc -z).",
+     "check": "grep -qx open $EXAM/port.txt"},
+    {"id": "t5", "points": 20,
+     "prompt": "curl -sI bilan github.com header'larini 'h.txt' ga yoz (HTTP javob qatori bo'lsin).",
+     "check": "grep -qi 'HTTP/' $EXAM/h.txt"}
+  ]
+}
