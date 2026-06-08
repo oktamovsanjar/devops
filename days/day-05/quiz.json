@@ -1,0 +1,362 @@
+[
+ {
+  "q": "Serverning IP manzilini ko'rsatuvchi buyruq qaysi?",
+  "options": [
+   "hostname -I",
+   "whoami",
+   "ls -la",
+   "pwd"
+  ],
+  "correct": 0,
+  "difficulty": 1,
+  "explanation": "hostname -I buyrug'i serverning barcha IP manzillarini ko'rsatadi."
+ },
+ {
+  "q": "`ip a` buyrug'i nima ko'rsatadi?",
+  "options": [
+   "Barcha tarmoq interfeyslarini",
+   "Faqat localhost IP ni",
+   "Ochiq portlarni",
+   "DNS serverini"
+  ],
+  "correct": 0,
+  "difficulty": 1,
+  "explanation": "ip a buyrug'i serverdagi barcha tarmoq interfeyslarini va ularning IP larini ko'rsatadi."
+ },
+ {
+  "q": "`127.0.0.1` manzili nimani bildiradi?",
+  "options": [
+   "Localhost (o'z server)",
+   "Barcha interfeyslar",
+   "Tashqi IP manzil",
+   "DNS server"
+  ],
+  "correct": 0,
+  "difficulty": 1,
+  "explanation": "127.0.0.1 — bu localhost, ya'ni serverning o'zi."
+ },
+ {
+  "q": "`0.0.0.0` manzili nimani anglatadi?",
+  "options": [
+   "Barcha interfeyslar",
+   "Localhost",
+   "Default gateway",
+   "DNS server manzili"
+  ],
+  "correct": 0,
+  "difficulty": 2,
+  "explanation": "0.0.0.0 — barcha mavjud tarmoq interfeyslarini bildiradi."
+ },
+ {
+  "q": "Tinglanayotgan TCP portlarni ko'rish uchun qaysi buyruq ishlatiladi?",
+  "options": [
+   "ss -tlnp",
+   "curl -sI",
+   "dig",
+   "scp"
+  ],
+  "correct": 0,
+  "difficulty": 1,
+  "explanation": "ss -tlnp buyrug'i barcha tinglanayotgan TCP portlarni va ularga tegishli jarayonlarni ko'rsatadi."
+ },
+ {
+  "q": "80-portni qaysi jarayon egallayotganini bilish uchun qaysi buyruq to'g'ri?",
+  "options": [
+   "ss -tlnp | grep 80",
+   "ip a | grep 80",
+   "curl -s | grep 80",
+   "hostname -I | grep 80"
+  ],
+  "correct": 0,
+  "difficulty": 2,
+  "explanation": "ss -tlnp | grep 80 buyrug'i 80-port bilan bog'liq jarayonni filtrlaydi."
+ },
+ {
+  "q": "SSH standart port raqami qaysi?",
+  "options": [
+   "22",
+   "80",
+   "443",
+   "53"
+  ],
+  "correct": 0,
+  "difficulty": 1,
+  "explanation": "SSH standart ravishda 22-portda ishlaydi."
+ },
+ {
+  "q": "DNS standart port raqami qaysi?",
+  "options": [
+   "53",
+   "22",
+   "80",
+   "443"
+  ],
+  "correct": 0,
+  "difficulty": 2,
+  "explanation": "DNS so'rovlari standart ravishda 53-portda ishlaydi."
+ },
+ {
+  "q": "Domen nomini IP manzilga tez tarjima qilish uchun qaysi buyruq ishlatiladi?",
+  "options": [
+   "getent hosts google.com",
+   "curl https://google.com",
+   "ss -tlnp",
+   "ssh google.com"
+  ],
+  "correct": 0,
+  "difficulty": 2,
+  "explanation": "getent hosts buyrug'i domen nomini IP manzilga tezkor tarjima qiladi."
+ },
+ {
+  "q": "`nslookup google.com` buyrug'i nima qiladi?",
+  "options": [
+   "DNS so'rovi orqali google.com IP sini topadi",
+   "google.com ga HTTP so'rov yuboradi",
+   "google.com portlarini skanerlaydi",
+   "google.com ga SSH orqali ulanadi"
+  ],
+  "correct": 0,
+  "difficulty": 1,
+  "explanation": "nslookup DNS so'rovi yuborib domen nomini IP manzilga aylantiradi."
+ },
+ {
+  "q": "`curl -sI https://github.com` buyrug'i nima qaytaradi?",
+  "options": [
+   "Faqat HTTP header",
+   "Faqat javob tanasi",
+   "IP manzil",
+   "Port holati"
+  ],
+  "correct": 0,
+  "difficulty": 2,
+  "explanation": "-I bayrog'i curl ga faqat HTTP headerlarni olishni buyuradi, javob tanasini emas."
+ },
+ {
+  "q": "HTTP status kodi 404 nimani bildiradi?",
+  "options": [
+   "Topilmadi",
+   "OK",
+   "Server xatosi",
+   "Redirect"
+  ],
+  "correct": 0,
+  "difficulty": 1,
+  "explanation": "404 — so'ralgan resurs serverda topilmadi."
+ },
+ {
+  "q": "HTTP status kodi 301 nimani bildiradi?",
+  "options": [
+   "Redirect (yo'naltirish)",
+   "OK",
+   "Topilmadi",
+   "Server xatosi"
+  ],
+  "correct": 0,
+  "difficulty": 2,
+  "explanation": "301 — so'rov boshqa manzilga doimiy redirect qilinganini bildiradi."
+ },
+ {
+  "q": "TCP va UDP haqida qaysi ifoda to'g'ri?",
+  "options": [
+   "TCP ishonchli, UDP tez lekin kafolatsiz",
+   "UDP ishonchli, TCP tez lekin kafolatsiz",
+   "Ikkalasi ham ulanishsiz",
+   "Ikkalasi ham bir xil ishlaydi"
+  ],
+  "correct": 0,
+  "difficulty": 2,
+  "explanation": "TCP ulanishli va ishonchli (web, SSH), UDP esa ulanishsiz va tez lekin kafolatsiz (DNS, video)."
+ },
+ {
+  "q": "`scp fayl user@host:/yo'l` buyrug'i nima qiladi?",
+  "options": [
+   "SSH ustidan fayl nusxalaydi",
+   "Faylni o'chiradi",
+   "Masofaviy serverga kiradi",
+   "Port tekshiradi"
+  ],
+  "correct": 0,
+  "difficulty": 3,
+  "explanation": "scp buyrug'i SSH protokoli orqali masofaviy serverga fayl nusxalash uchun ishlatiladi."
+ },
+ {
+  "q": "Serverning barcha IP manzillarini ko'rsatuvchi buyruq qaysi?",
+  "options": [
+   "hostname -I",
+   "whoami",
+   "ls -la",
+   "pwd"
+  ],
+  "correct": 0,
+  "difficulty": 1,
+  "explanation": "hostname -I buyrug'i serverning barcha IP manzillarini chiqaradi."
+ },
+ {
+  "q": "Tinglanayotgan TCP portlar va jarayonlarni ko'rsatuvchi buyruq qaysi?",
+  "options": [
+   "ip a",
+   "ss -tlnp",
+   "dig google.com",
+   "curl -sI"
+  ],
+  "correct": 1,
+  "difficulty": 1,
+  "explanation": "ss -tlnp buyrug'i tinglanayotgan TCP portlar va ularga tegishli jarayonlarni ko'rsatadi."
+ },
+ {
+  "q": "80-portni kim egallagan ekanligini tekshirish uchun qaysi buyruq ishlatiladi?",
+  "options": [
+   "ss -tlnp | grep 80",
+   "hostname -I | grep 80",
+   "curl -s | grep 80",
+   "ip a | grep 80"
+  ],
+  "correct": 0,
+  "difficulty": 1,
+  "explanation": "ss -tlnp | grep 80 natijani 80-port bo'yicha filterlaydi."
+ },
+ {
+  "q": "SSH uchun standart port raqami qaysi?",
+  "options": [
+   "80",
+   "443",
+   "53",
+   "22"
+  ],
+  "correct": 3,
+  "difficulty": 1,
+  "explanation": "SSH standart port 22 bo'yicha ishlaydi."
+ },
+ {
+  "q": "DNS so'rovlari uchun standart port raqami qaysi?",
+  "options": [
+   "22",
+   "80",
+   "53",
+   "443"
+  ],
+  "correct": 2,
+  "difficulty": 2,
+  "explanation": "DNS xizmati standart 53-portda ishlaydi."
+ },
+ {
+  "q": "`getent hosts google.com` buyrug'i nima qiladi?",
+  "options": [
+   "google.com serverga fayl yuboradi",
+   "google.com domenini IP manziliga tarjima qiladi",
+   "google.com portlarini skanerlaydi",
+   "google.com ga SSH ulanadi"
+  ],
+  "correct": 1,
+  "difficulty": 2,
+  "explanation": "getent hosts domen nomini IP manziliga (nom → IP) tarjima qiladi."
+ },
+ {
+  "q": "HTTP status kodi 500 nimani bildiradi?",
+  "options": [
+   "OK",
+   "Topilmadi",
+   "Server xatosi",
+   "Redirect"
+  ],
+  "correct": 2,
+  "difficulty": 1,
+  "explanation": "500 — server tomonida ichki xatolik yuz berganini bildiradi."
+ },
+ {
+  "q": "`curl -s https://api.test` buyrug'ida `-s` bayrog'i nima vazifani bajaradi?",
+  "options": [
+   "SSL ni o'chiradi",
+   "Faqat headerlarni ko'rsatadi",
+   "Progress va xato xabarlarini yashiradi",
+   "So'rovni sekinlashtiradi"
+  ],
+  "correct": 2,
+  "difficulty": 2,
+  "explanation": "-s (silent) bayrog'i progress ko'rsatkichi va xato xabarlarini yashiradi."
+ },
+ {
+  "q": "`scp fayl user@host:/yo'l` buyrug'i nima uchun ishlatiladi?",
+  "options": [
+   "DNS so'rov yuborish",
+   "Port skanerlash",
+   "SSH orqali fayl nusxalash",
+   "HTTP so'rov yuborish"
+  ],
+  "correct": 2,
+  "difficulty": 2,
+  "explanation": "scp buyrug'i SSH protokoli ustidan masofaviy serverga fayl nusxalash uchun ishlatiladi."
+ },
+ {
+  "q": "`ip a` buyrug'i qanday ma'lumot beradi?",
+  "options": [
+   "Faqat birinchi tarmoq interfeysini",
+   "Barcha tarmoq interfeyslarini",
+   "Faqat DNS manzillarini",
+   "Faqat ochiq portlarni"
+  ],
+  "correct": 1,
+  "difficulty": 3,
+  "explanation": "ip a barcha tarmoq interfeyslarini va ularga tegishli IP manzillarini ko'rsatadi."
+ },
+ {
+  "q": "Serverning barcha IP manzillarini ko'rsatadigan buyruq qaysi?",
+  "options": [
+   "hostname -I",
+   "whoami",
+   "pwd",
+   "ls -la"
+  ],
+  "correct": 0,
+  "difficulty": 1,
+  "explanation": "hostname -I buyrug'i serverning barcha IP manzillarini chiqaradi."
+ },
+ {
+  "q": "127.0.0.1 manzili nimani bildiradi?",
+  "options": [
+   "Tashqi server",
+   "Barcha interfeyslar",
+   "localhost (o'zi)",
+   "DNS server"
+  ],
+  "correct": 2,
+  "difficulty": 1,
+  "explanation": "127.0.0.1 — localhost, ya'ni serverning o'zi."
+ },
+ {
+  "q": "Tinglanayotgan TCP portlarni jarayon nomi bilan ko'rsatish uchun qaysi buyruq ishlatiladi?",
+  "options": [
+   "ip a",
+   "ss -tlnp",
+   "dig google.com",
+   "curl -sI"
+  ],
+  "correct": 1,
+  "difficulty": 1,
+  "explanation": "ss -tlnp buyrug'i tinglanayotgan TCP portlar va ularni egallagan jarayonlarni ko'rsatadi."
+ },
+ {
+  "q": "SSH standar port raqami qaysi?",
+  "options": [
+   "80",
+   "443",
+   "53",
+   "22"
+  ],
+  "correct": 3,
+  "difficulty": 1,
+  "explanation": "22-port — SSH protokoli uchun standart port."
+ },
+ {
+  "q": "curl -sI https://github.com buyrug'i nima qaytaradi?",
+  "options": [
+   "Javob tanasini (body)",
+   "Faqat HTTP headerlarini",
+   "DNS yozuvlarini",
+   "Barcha ochiq portlarni"
+  ],
+  "correct": 1,
+  "difficulty": 2,
+  "explanation": "-I flagi faqat HTTP headerlarini oladi, -s esa progress barni yashiradi."
+ }
+]

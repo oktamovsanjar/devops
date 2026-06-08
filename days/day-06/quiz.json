@@ -1,0 +1,362 @@
+[
+ {
+  "q": "Bash skriptida shebang qatori qanday yoziladi?",
+  "options": [
+   "#!/bin/bash",
+   "#/bin/bash",
+   "//bin/bash",
+   "!#/bin/bash"
+  ],
+  "correct": 0,
+  "difficulty": 1,
+  "explanation": "Shebang `#!/bin/bash` ko'rinishida yoziladi va qaysi interpretator ishlatilishini bildiradi."
+ },
+ {
+  "q": "Bash skriptida o'zgaruvchiga qiymat berishda qaysi yozuv to'g'ri?",
+  "options": [
+   "name = agent",
+   "name=agent",
+   "$name=agent",
+   "set name=agent"
+  ],
+  "correct": 1,
+  "difficulty": 1,
+  "explanation": "`=` atrofida probel bo'lmasligi kerak, to'g'ri sintaksis `name=agent`."
+ },
+ {
+  "q": "`files=$(ls | wc -l)` ifodasi nima qiladi?",
+  "options": [
+   "ls va wc buyruqlarini o'chiradi",
+   "ls buyrug'i natijasini ekranga chiqaradi",
+   "Buyruq natijasini `files` o'zgaruvchisiga saqlaydi",
+   "fayl nomini wc ga yuboradi"
+  ],
+  "correct": 2,
+  "difficulty": 2,
+  "explanation": "`$(...)` konstruksiyasi buyruq natijasini o'zgaruvchiga saqlash uchun ishlatiladi."
+ },
+ {
+  "q": "Bash `if` bloki qaysi kalit so'z bilan yopiladi?",
+  "options": [
+   "end",
+   "endif",
+   "fi",
+   "done"
+  ],
+  "correct": 2,
+  "difficulty": 1,
+  "explanation": "Bash'da `if` bloki `fi` kalit so'zi bilan yopiladi."
+ },
+ {
+  "q": "`[ -f fayl ]` testi nimani tekshiradi?",
+  "options": [
+   "Papka mavjudligini",
+   "O'zgaruvchi bo'shligini",
+   "Fayl mavjudligini",
+   "Son qiymatini"
+  ],
+  "correct": 2,
+  "difficulty": 1,
+  "explanation": "`-f` bayrog'i berilgan yo'lda oddiy fayl mavjudligini tekshiradi."
+ },
+ {
+  "q": "`[ -d fayl ]` testi nimani tekshiradi?",
+  "options": [
+   "Fayl mavjudligini",
+   "Papka mavjudligini",
+   "O'zgaruvchi bo'shligini",
+   "Matn tengligini"
+  ],
+  "correct": 1,
+  "difficulty": 1,
+  "explanation": "`-d` bayrog'i berilgan yo'lda papka (directory) mavjudligini tekshiradi."
+ },
+ {
+  "q": "Bash'da ikkita sonni solishtirish uchun `x` 10 dan katta ekanini qaysi test ifodalaydi?",
+  "options": [
+   "[ \"$x\" -lt 10 ]",
+   "[ \"$x\" -eq 10 ]",
+   "[ \"$x\" -gt 10 ]",
+   "[ \"$x\" = 10 ]"
+  ],
+  "correct": 2,
+  "difficulty": 2,
+  "explanation": "`-gt` (greater than) operatori birinchi son ikkinchisidan katta ekanini tekshiradi."
+ },
+ {
+  "q": "`[ -z \"$var\" ]` testi qachon rost (true) bo'ladi?",
+  "options": [
+   "`$var` nol bo'lganda",
+   "`$var` bo'sh satr bo'lganda",
+   "`$var` mavjud fayl bo'lganda",
+   "`$var` 0 dan katta bo'lganda"
+  ],
+  "correct": 1,
+  "difficulty": 2,
+  "explanation": "`-z` testi o'zgaruvchi bo'sh satr ekanini tekshiradi."
+ },
+ {
+  "q": "`for i in 1 2 3; do echo $i; done` qancha marta chiqaruv qiladi?",
+  "options": [
+   "1",
+   "2",
+   "3",
+   "0"
+  ],
+  "correct": 2,
+  "difficulty": 1,
+  "explanation": "Ro'yxatda 3 ta element bor, shuning uchun sikl 3 marta ishlaydi."
+ },
+ {
+  "q": "`for f in *.txt; do echo $f; done` nima qiladi?",
+  "options": [
+   "Barcha fayllarni o'chiradi",
+   "Joriy papkadagi barcha `.txt` fayllar nomini chiqaradi",
+   "Faqat `f.txt` nomli faylni chiqaradi",
+   "Yangi `.txt` fayl yaratadi"
+  ],
+  "correct": 1,
+  "difficulty": 2,
+  "explanation": "`*.txt` glob pattern joriy papkadagi barcha `.txt` fayllarni ro'yxatga oladi."
+ },
+ {
+  "q": "`while read line; do echo \"$line\"; done < fayl` ifodasi nima qiladi?",
+  "options": [
+   "Faylni o'chiradi",
+   "Faylga yozadi",
+   "Faylning har bir satrini o'qib ekranga chiqaradi",
+   "Faylni boshqa joyga ko'chiradi"
+  ],
+  "correct": 2,
+  "difficulty": 2,
+  "explanation": "`while read line` konstruksiyasi fayl mazmunini satr-satr o'qib ishlaydi."
+ },
+ {
+  "q": "Quyidagi funksiyada `$1` nima?",
+  "options": [
+   "Skript nomi",
+   "Funksiyaga berilgan birinchi argument",
+   "Birinchi o'zgaruvchi",
+   "PID raqami"
+  ],
+  "correct": 1,
+  "difficulty": 1,
+  "explanation": "`$1` funksiyaga yoki skriptga berilgan birinchi pozitsion argument hisoblanadi."
+ },
+ {
+  "q": "`greet() { echo \"Salom, $1\"; }` funksiyasini `greet \"DevOps\"` bilan chaqirsak natija qanday bo'ladi?",
+  "options": [
+   "Salom, $1",
+   "Salom, greet",
+   "Salom, DevOps",
+   "DevOps, Salom"
+  ],
+  "correct": 2,
+  "difficulty": 1,
+  "explanation": "`$1` o'rniga funksiyaga uzatilgan birinchi argument `DevOps` qo'yiladi."
+ },
+ {
+  "q": "`echo $(( 5 * 5 ))` natijasi nima?",
+  "options": [
+   "5 * 5",
+   "10",
+   "25",
+   "55"
+  ],
+  "correct": 2,
+  "difficulty": 1,
+  "explanation": "`$(( ))` arifmetik ifoda bo'lib, `5 * 5 = 25` hisoblaydi."
+ },
+ {
+  "q": "Argumentning kvadratini hisoblovchi `echo $(( $1 * $1 ))` ifodasi `3` argument bilan chaqirilsa natija nima?",
+  "options": [
+   "3",
+   "6",
+   "9",
+   "33"
+  ],
+  "correct": 2,
+  "difficulty": 3,
+  "explanation": "`$1` qiymati `3` bo'lganda `$(( 3 * 3 ))` = `9` hisoblanadi."
+ },
+ {
+  "q": "Bash skriptida o'zgaruvchi qiymat belgilashda qaysi yozuv to'g'ri?",
+  "options": [
+   "name = agent",
+   "name=agent",
+   "$name=agent",
+   "set name=agent"
+  ],
+  "correct": 1,
+  "difficulty": 1,
+  "explanation": "`=` atrofida probel bo'lmasligi kerak, aks holda bash uni buyruq deb qabul qiladi."
+ },
+ {
+  "q": "`files=$(ls | wc -l)` satri nima qiladi?",
+  "options": [
+   "ls va wc buyruqlarini parallel ishga tushiradi",
+   "ls va wc-l nomli o'zgaruvchilarni qo'shadi",
+   "ls buyrug'i natijasini wc -l ga berib, chiqarish natijasini files o'zgaruvchisiga saqlaydi",
+   "files nomli faylni ochib, satrlari sonini chop etadi"
+  ],
+  "correct": 2,
+  "difficulty": 2,
+  "explanation": "`$(...)` — buyruq natijasini o'zgaruvchiga olish usuli (command substitution)."
+ },
+ {
+  "q": "Bash `if` blokini qaysi kalit so'z bilan yakunlash kerak?",
+  "options": [
+   "end",
+   "endif",
+   "fi",
+   "done"
+  ],
+  "correct": 2,
+  "difficulty": 1,
+  "explanation": "Bash `if` bloki `fi` kalit so'zi bilan yopiladi."
+ },
+ {
+  "q": "`[ -f fayl ]` sharti nimani tekshiradi?",
+  "options": [
+   "fayl nomli papka mavjudligini",
+   "fayl nomli oddiy fayl mavjudligini",
+   "fayl nomli o'zgaruvchi bo'shligini",
+   "fayl nomli skript bajariladimi yoki yo'qligini"
+  ],
+  "correct": 1,
+  "difficulty": 1,
+  "explanation": "`-f` testi berilgan yo'lda oddiy fayl (regular file) mavjudligini tekshiradi."
+ },
+ {
+  "q": "`[ -d papka ]` sharti nimani tekshiradi?",
+  "options": [
+   "papka nomli faylning o'lchamini",
+   "papka nomli fayl o'qilishi mumkinligini",
+   "papka nomli directory (katalog) mavjudligini",
+   "papka nomli o'zgaruvchi aniqlanganligini"
+  ],
+  "correct": 2,
+  "difficulty": 1,
+  "explanation": "`-d` testi berilgan yo'lda papka (directory) mavjudligini tekshiradi."
+ },
+ {
+  "q": "Sonlarni solishtirish uchun `-gt` testi nima degani?",
+  "options": [
+   "greater than (katta)",
+   "get type",
+   "general test",
+   "go to"
+  ],
+  "correct": 0,
+  "difficulty": 1,
+  "explanation": "`-gt` (greater than) — chap operand o'ng operanddan katta ekanligini tekshiradi."
+ },
+ {
+  "q": "Quyidagi siklda ekranga nechta satr chiqadi? `for i in 1 2 3; do echo $i; done`",
+  "options": [
+   "1",
+   "2",
+   "3",
+   "4"
+  ],
+  "correct": 2,
+  "difficulty": 1,
+  "explanation": "`in 1 2 3` ro'yxatida 3 ta element bor, shuning uchun `echo` 3 marta ishlaydi."
+ },
+ {
+  "q": "`for f in *.txt; do echo $f; done` buyrug'i nima qiladi?",
+  "options": [
+   "Barcha `.txt` fayllarni o'chiradi",
+   "Joriy katalogdagi har bir `.txt` fayl nomini chop etadi",
+   "`.txt` kengaytmali yangi fayl yaratadi",
+   "Faqat birinchi `.txt` faylni chop etadi"
+  ],
+  "correct": 1,
+  "difficulty": 2,
+  "explanation": "`*.txt` glob pattern joriy katalogdagi barcha `.txt` fayllarni topadi va sikl ularning nomini chop etadi."
+ },
+ {
+  "q": "`while read line; do echo \"$line\"; done < fayl` buyrug'i qanday ishlaydi?",
+  "options": [
+   "fayl ichidagi har bir satrni o'qib, ekranga chiqaradi",
+   "faylga har bir satrni yozib qo'yadi",
+   "fayl nomini ekranga bir marta chiqaradi",
+   "faylni satr-satr o'chirib boradi"
+  ],
+  "correct": 0,
+  "difficulty": 2,
+  "explanation": "`while read line` faylni oxirigacha satr-satr o'qib, har birini `echo` orqali chop etadi."
+ },
+ {
+  "q": "Funksiyada `$1` nima degani?",
+  "options": [
+   "Skriptning o'zi nomi",
+   "Funksiyaga uzatilgan birinchi argument",
+   "Birinchi global o'zgaruvchi",
+   "Oxirgi buyruqning chiqish kodi"
+  ],
+  "correct": 1,
+  "difficulty": 2,
+  "explanation": "`$1` funksiya ichida birinchi positional argumentni ifodalaydi."
+ },
+ {
+  "q": "Quyidagi funksiya chaqiruvi qanday natija beradi? `greet() { echo \"Salom, $1\"; }; greet \"agent\"`",
+  "options": [
+   "Salom, $1",
+   "Salom, agent",
+   "agent",
+   "Salom,"
+  ],
+  "correct": 1,
+  "difficulty": 2,
+  "explanation": "`$1` o'rniga funksiyaga uzatilgan `agent` argumenti qo'yiladi."
+ },
+ {
+  "q": "`echo $(( 3 + 4 ))` buyrug'i ekranga nima chiqaradi?",
+  "options": [
+   "3 + 4",
+   "34",
+   "7",
+   "$(( 3 + 4 ))"
+  ],
+  "correct": 2,
+  "difficulty": 1,
+  "explanation": "`$(( ))` arifmetik hisob-kitob uchun ishlatiladi va `3 + 4` ni baholab `7` chiqaradi."
+ },
+ {
+  "q": "`echo $(( $1 * $1 ))` skriptini `5` argumenti bilan chaqirsangiz natija nima bo'ladi?",
+  "options": [
+   "10",
+   "55",
+   "25",
+   "$1 * $1"
+  ],
+  "correct": 2,
+  "difficulty": 2,
+  "explanation": "`$1` ga `5` beriladi, `5 * 5 = 25` hisob-kitob qilinadi va ekranga `25` chiqadi."
+ },
+ {
+  "q": "Quyidagi kodda xato nima? `x = 10; echo $x`",
+  "options": [
+   "echo oldida `$` belgisi kerak emas",
+   "`=` atrofida probel bo'lmasligi kerak",
+   "o'zgaruvchi nomi raqamdan boshlanmasligi kerak",
+   "echo o'rniga print ishlatish kerak"
+  ],
+  "correct": 1,
+  "difficulty": 3,
+  "explanation": "Bash o'zgaruvchi belgilashda `=` atrofida probel bo'lsa, uni buyruq deb talqin qiladi va xato chiqaradi."
+ },
+ {
+  "q": "`if` shartida mavjud faylni tekshirish uchun qaysi test operatori ishlatiladi?",
+  "options": [
+   "-d",
+   "-z",
+   "-f",
+   "-eq"
+  ],
+  "correct": 2,
+  "difficulty": 2,
+  "explanation": "Darsda `-f` operatori fayl mavjudligini tekshirish uchun ishlatiladi deb ko'rsatilgan."
+ }
+]

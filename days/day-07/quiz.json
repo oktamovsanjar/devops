@@ -1,0 +1,362 @@
+[
+ {
+  "q": "Bugungi loyihada `health/bin/check.sh` skripti qanday ma'lumotlarni chiqarishi kerak?",
+  "options": [
+   "hostname, CPU, disk holati",
+   "foydalanuvchi ro'yxati, port holati, RAM",
+   "tarmoq interfeyslari, DNS, ping natijalari",
+   "jarayonlar ro'yxati, uptime, kernel versiyasi"
+  ],
+  "correct": 0,
+  "difficulty": 1,
+  "explanation": "MISSION.md da `health/bin/check.sh` — hostname, CPU, disk holatini chiqaradi deb aniq ko'rsatilgan."
+ },
+ {
+  "q": "Loyiha tuzilmasida log fayllari qaysi katalogda saqlanadi?",
+  "options": [
+   "health/logs/",
+   "health/bin/",
+   "health/reports/",
+   "health/data/"
+  ],
+  "correct": 0,
+  "difficulty": 1,
+  "explanation": "MISSION.md da log fayllari `health/logs/` katalogida joylashishi ko'rsatilgan."
+ },
+ {
+  "q": "Skriptni bajariladigan (executable) qilish uchun qaysi buyruq ishlatiladi?",
+  "options": [
+   "chmod",
+   "chown",
+   "sudo",
+   "find"
+  ],
+  "correct": 0,
+  "difficulty": 1,
+  "explanation": "1-hafta takrorida ruxsatlar mavzusida `chmod` skriptga bajarish huquqi berish uchun ishlatiladi."
+ },
+ {
+  "q": "`health/logs/errors.txt` fayli qanday yo'l bilan to'ldiriladi?",
+  "options": [
+   "Log fayldan ERROR so'zlarini `grep` bilan filtrlash orqali",
+   "`sed` bilan faylni tahrirlash orqali",
+   "`awk` bilan ustunlarni ajratish orqali",
+   "`curl` bilan serverdan yuklab olish orqali"
+  ],
+  "correct": 0,
+  "difficulty": 1,
+  "explanation": "MISSION.md da `health/logs/errors.txt` — logdan ERROR soni `grep` orqali olinishi ko'rsatilgan."
+ },
+ {
+  "q": "Skript natijasini `health/logs/report.txt` fayliga saqlash uchun qaysi operatordan foydalaniladi?",
+  "options": [
+   "`>`",
+   "`|`",
+   "`<`",
+   "`&`"
+  ],
+  "correct": 0,
+  "difficulty": 1,
+  "explanation": "1-hafta Day-1 da o'rganilgan `>` operatori chiqishni faylga yo'naltiradi va natijani saqlaydi."
+ },
+ {
+  "q": "Monitoring skriptini yozishda bash o'zgaruvchisi, `if` va `for` konstruksiyalarini qaysi kun o'rganilgan?",
+  "options": [
+   "Day 6",
+   "Day 3",
+   "Day 4",
+   "Day 5"
+  ],
+  "correct": 0,
+  "difficulty": 1,
+  "explanation": "MISSION.md jadvalida Day-6 mavzusi Bash: o'zgaruvchi, if, for, funksiya ekanligi ko'rsatilgan."
+ },
+ {
+  "q": "Loyihada `grep` buyrug'i asosan qaysi maqsadda ishlatiladi?",
+  "options": [
+   "Log fayldan ERROR satrlarini topish uchun",
+   "Disk holatini ko'rish uchun",
+   "CPU yukini o'lchash uchun",
+   "Tarmoq portlarini skanerlash uchun"
+  ],
+  "correct": 0,
+  "difficulty": 2,
+  "explanation": "MISSION.md da `health/logs/errors.txt` — logdan ERROR soni `grep` bilan olinishi aytilgan."
+ },
+ {
+  "q": "Day-3 da o'rganilgan `systemctl` va `journalctl` buyruqlari qaysi mavzuga tegishli?",
+  "options": [
+   "Jarayonlar",
+   "Tarmoq",
+   "Matn",
+   "Navigatsiya"
+  ],
+  "correct": 0,
+  "difficulty": 2,
+  "explanation": "MISSION.md jadvalida Day-3 mavzusi Jarayonlar va unga `ps`, `kill`, `systemctl`, `journalctl` kirishi ko'rsatilgan."
+ },
+ {
+  "q": "Loyiha skriptida hostname ma'lumotini olish uchun hafta davomida o'rganilgan qaysi soha bilimlari kerak bo'ladi?",
+  "options": [
+   "Bash skript yozish (o'zgaruvchi, funksiya)",
+   "Faqat tarmoq buyruqlari",
+   "Faqat ruxsatlar boshqaruvi",
+   "Faqat matn filtrlash"
+  ],
+  "correct": 0,
+  "difficulty": 2,
+  "explanation": "Bash skriptida (Day-6) o'zgaruvchi va funksiyalar orqali hostname kabi ma'lumotlar jamlashtiriladi."
+ },
+ {
+  "q": "1-haftadagi qaysi kun `ip`, `ss`, `dns`, `curl` buyruqlari o'rganilgan?",
+  "options": [
+   "Day 5",
+   "Day 4",
+   "Day 6",
+   "Day 2"
+  ],
+  "correct": 0,
+  "difficulty": 2,
+  "explanation": "MISSION.md jadvalida Day-5 mavzusi Tarmoq bo'lib, `ip`, `ss`, `dns`, `curl` buyruqlari ko'rsatilgan."
+ },
+ {
+  "q": "Bugungi loyihaning asosiy natijasi (output) nima?",
+  "options": [
+   "Ishlaydigan monitoring skripti va log tahlili",
+   "Faqat tarmoq holati hisoboti",
+   "Faqat disk bo'sh joyini ko'rsatuvchi chiqish",
+   "Server jarayonlari ro'yxati"
+  ],
+  "correct": 0,
+  "difficulty": 2,
+  "explanation": "MISSION.md da 'Natija: ishlaydigan monitoring skripti + log tahlili = mini-loyiha' deb aniq yozilgan."
+ },
+ {
+  "q": "Loyihani tekshirish va keyingi bosqichga o'tish uchun qaysi buyruq ishlatiladi?",
+  "options": [
+   "devops verify",
+   "devops next",
+   "devops check",
+   "devops run"
+  ],
+  "correct": 0,
+  "difficulty": 2,
+  "explanation": "MISSION.md da 'devops verify — tekshiradi → keyingisi' deb ko'rsatilgan."
+ },
+ {
+  "q": "1-hafta muvaffaqiyatli yakunlansa, qaysi kun ochiladi?",
+  "options": [
+   "Day-8 (Bash II)",
+   "Day-8 (Tarmoq II)",
+   "Day-9 (Docker)",
+   "Day-7 qayta takrorlanadi"
+  ],
+  "correct": 0,
+  "difficulty": 2,
+  "explanation": "MISSION.md da 'Hammasi tugasa — 1-hafta yakunlanadi, Day-8 (Bash II) ochiladi' deb yozilgan."
+ },
+ {
+  "q": "Loyiha tuzilmasida skript fayli qaysi to'liq yo'lda joylashadi?",
+  "options": [
+   "health/bin/check.sh",
+   "health/logs/check.sh",
+   "bin/health/check.sh",
+   "health/check/script.sh"
+  ],
+  "correct": 0,
+  "difficulty": 3,
+  "explanation": "MISSION.md da skript fayli aniq `health/bin/check.sh` yo'lida bo'lishi ko'rsatilgan."
+ },
+ {
+  "q": "Quyidagi haftalik ko'nikmalarning qaysi kombinatsiyasi bugungi Health-Check loyihasida birlashtiriladi?",
+  "options": [
+   "Navigatsiya, ruxsat, jarayon, matn, tarmoq, bash",
+   "Faqat bash va tarmoq",
+   "Faqat matn va ruxsatlar",
+   "Faqat navigatsiya va jarayon"
+  ],
+  "correct": 0,
+  "difficulty": 3,
+  "explanation": "MISSION.md da 'butun hafta o'rganganingni birlashturasan' deb, jadvaldagi barcha 6 mavzu sanab o'tilgan."
+ },
+ {
+  "q": "Skriptni bajariladigan qilish uchun qaysi command ishlatiladi?",
+  "options": [
+   "chmod",
+   "chown",
+   "sudo",
+   "find"
+  ],
+  "correct": 0,
+  "difficulty": 1,
+  "explanation": "Day-2 dan `chmod` fayl ruxsatlarini o'zgartirish, jumladan bajariladigan qilish uchun ishlatiladi."
+ },
+ {
+  "q": "Loglardan ERROR so'zlarini sanash uchun qaysi tool ishlatiladi?",
+  "options": [
+   "grep",
+   "sed",
+   "awk",
+   "curl"
+  ],
+  "correct": 0,
+  "difficulty": 1,
+  "explanation": "Lesson da `health/logs/errors.txt` — logdan ERROR soni `grep` orqali topilishi ko'rsatilgan."
+ },
+ {
+  "q": "Skript natijasi qaysi faylga saqlanadi?",
+  "options": [
+   "health/logs/report.txt",
+   "health/logs/errors.txt",
+   "health/bin/check.sh",
+   "health/logs/output.txt"
+  ],
+  "correct": 0,
+  "difficulty": 1,
+  "explanation": "Lesson da `health/logs/report.txt` skript natijasi saqlanadigan fayl sifatida ko'rsatilgan."
+ },
+ {
+  "q": "Bu loyihada `>` operatori qanday maqsadda ishlatiladi?",
+  "options": [
+   "Skript chiqishini faylga yo'naltirish uchun",
+   "Faylni o'chirish uchun",
+   "Jarayonni to'xtatish uchun",
+   "Tarmoq holatini tekshirish uchun"
+  ],
+  "correct": 0,
+  "difficulty": 2,
+  "explanation": "Day-1 dan `>` operatori — chiqishni (output) faylga saqlash uchun ishlatiladi, natijani report.txt ga yozishda kerak."
+ },
+ {
+  "q": "Qaysi hafta mavzusi `ps` va `kill` commandlarini o'z ichiga oladi?",
+  "options": [
+   "Day-3: Jarayonlar",
+   "Day-2: Ruxsatlar",
+   "Day-5: Tarmoq",
+   "Day-6: Bash"
+  ],
+  "correct": 0,
+  "difficulty": 1,
+  "explanation": "Lesson jadvali bo'yicha Day-3 mavzusi Jarayonlar bo'lib, `ps` va `kill` commandlari unda o'rganilgan."
+ },
+ {
+  "q": "Bash skriptida o'zgaruvchi, if va for tushunchalari qaysi kunda o'rganilgan?",
+  "options": [
+   "Day-6",
+   "Day-4",
+   "Day-3",
+   "Day-5"
+  ],
+  "correct": 0,
+  "difficulty": 1,
+  "explanation": "Lesson jadvalida Day-6 Bash mavzusi bo'lib, o'zgaruvchi, if, for va funksiya o'rganilgan."
+ },
+ {
+  "q": "Health-Check loyihasining asosiy skript fayli qaysi to'liq yo'lda joylashgan?",
+  "options": [
+   "health/bin/check.sh",
+   "health/logs/check.sh",
+   "bin/health/check.sh",
+   "health/check/bin.sh"
+  ],
+  "correct": 0,
+  "difficulty": 1,
+  "explanation": "Lesson da loyiha tuzilmasi aniq ko'rsatilgan: `health/bin/check.sh`."
+ },
+ {
+  "q": "`sed` va `awk` commandlari qaysi hafta mavzusiga kiradi?",
+  "options": [
+   "Day-4: Matn",
+   "Day-3: Jarayonlar",
+   "Day-6: Bash",
+   "Day-1: Navigatsiya"
+  ],
+  "correct": 0,
+  "difficulty": 1,
+  "explanation": "Lesson jadvali bo'yicha Day-4 Matn mavzusida `grep`, `sed`, `awk` va `|` o'rganilgan."
+ },
+ {
+  "q": "Loyiha yakunlanganda qaysi yangi kun ochiladi?",
+  "options": [
+   "Day-8 (Bash II)",
+   "Day-7 (Bash I)",
+   "Day-9 (Tarmoq II)",
+   "Day-8 (Linux II)"
+  ],
+  "correct": 0,
+  "difficulty": 1,
+  "explanation": "Lesson oxirida aniq yozilgan: barcha topshiriqlar tugasa Day-8 (Bash II) ochiladi."
+ },
+ {
+  "q": "Skriptni tekshirib, keyingi topshiriqqa o'tish uchun qaysi command ishlatiladi?",
+  "options": [
+   "devops verify",
+   "devops next",
+   "devops check",
+   "devops run"
+  ],
+  "correct": 0,
+  "difficulty": 2,
+  "explanation": "Lesson da `devops verify` tekshiradi va keyingi bosqichni ochadi deb ko'rsatilgan."
+ },
+ {
+  "q": "`ip` va `ss` commandlari qaysi mavzuga tegishli?",
+  "options": [
+   "Tarmoq (Day-5)",
+   "Navigatsiya (Day-1)",
+   "Jarayonlar (Day-3)",
+   "Ruxsatlar (Day-2)"
+  ],
+  "correct": 0,
+  "difficulty": 1,
+  "explanation": "Lesson jadvali bo'yicha Day-5 Tarmoq mavzusida `ip`, `ss`, `dns`, `curl` o'rganilgan."
+ },
+ {
+  "q": "Loyihada `grep` ishlatib `errors.txt` faylini hosil qilishdan maqsad nima?",
+  "options": [
+   "Loglardan ERROR so'zlarini sanab saqlash",
+   "Barcha log satrlarini ko'chirish",
+   "Loglarni tarmoqqa yuborish",
+   "Loglarni o'chirish"
+  ],
+  "correct": 0,
+  "difficulty": 2,
+  "explanation": "Lesson da `health/logs/errors.txt` — logdan ERROR soni (grep) deb aniq ta'riflangan."
+ },
+ {
+  "q": "Nima qilish kerakligini bilish uchun qaysi command ishlatiladi?",
+  "options": [
+   "devops next",
+   "devops verify",
+   "devops start",
+   "devops help"
+  ],
+  "correct": 0,
+  "difficulty": 2,
+  "explanation": "Lesson da `devops next` — nima qilishni aytadi deb ko'rsatilgan."
+ },
+ {
+  "q": "Health-Check loyihasida `health/bin/check.sh` skripti qanday ma'lumotlarni chiqaradi?",
+  "options": [
+   "hostname, CPU, disk holati",
+   "foydalanuvchilar ro'yxati, RAM, tarmoq tezligi",
+   "ochiq portlar, DNS, firewall holati",
+   "jarayonlar soni, swap, uptime"
+  ],
+  "correct": 0,
+  "difficulty": 1,
+  "explanation": "MISSION.md da aniq ko'rsatilganidek, check.sh hostname, CPU va disk holatini chiqaradi."
+ },
+ {
+  "q": "Skriptni bajariladigan qilish uchun qaysi buyruq ishlatiladi?",
+  "options": [
+   "chown check.sh",
+   "chmod +x check.sh",
+   "sudo run check.sh",
+   "bash --exec check.sh"
+  ],
+  "correct": 1,
+  "difficulty": 1,
+  "explanation": "2-kunda o'rganilgan `chmod +x` buyrug'i faylga bajarilish ruxsatini beradi."
+ }
+]

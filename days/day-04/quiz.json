@@ -1,0 +1,362 @@
+[
+ {
+  "q": "access.log faylida nechta qator borligini bilish uchun qaysi buyruq ishlatiladi?",
+  "options": [
+   "wc -l access.log",
+   "wc -w access.log",
+   "grep -l access.log",
+   "awk -l access.log"
+  ],
+  "correct": 0,
+  "difficulty": 1,
+  "explanation": "wc -l buyrug'i fayldagi qatorlar sonini hisoblaydi."
+ },
+ {
+  "q": "access.log faylining birinchi 10 qatorini ko'rish uchun qaysi buyruq to'g'ri?",
+  "options": [
+   "tail -10 access.log",
+   "head access.log",
+   "cat -10 access.log",
+   "grep -10 access.log"
+  ],
+  "correct": 1,
+  "difficulty": 1,
+  "explanation": "head buyrug'i standart holda faylning birinchi 10 qatorini ko'rsatadi."
+ },
+ {
+  "q": "grep -c ERROR access.log buyrug'i nima qaytaradi?",
+  "options": [
+   "ERROR bo'lgan birinchi qatorni",
+   "ERROR bo'lgan qatorlar sonini",
+   "ERROR bo'lmagan qatorlarni",
+   "Fayldagi barcha qatorlarni"
+  ],
+  "correct": 1,
+  "difficulty": 1,
+  "explanation": "grep -c bayrog'i moslik topilgan qatorlar sonini (count) qaytaradi."
+ },
+ {
+  "q": "access.log faylidan faqat 1-ustunni ajratib olish uchun qaysi buyruq to'g'ri?",
+  "options": [
+   "sed '{print $1}' access.log",
+   "cut $1 access.log",
+   "awk '{print $1}' access.log",
+   "grep '{$1}' access.log"
+  ],
+  "correct": 2,
+  "difficulty": 1,
+  "explanation": "awk '{print $1}' buyrug'i fayldagi har qatorning 1-ustunini chiqaradi."
+ },
+ {
+  "q": "sort | uniq -c zanjirida uniq -c buyrug'i nima qiladi?",
+  "options": [
+   "Qatorlarni alifbo tartibida saralaydi",
+   "Takroriy qatorlarni o'chirib, har birining necha marta uchraganini ko'rsatadi",
+   "Faqat unikal qatorlarni chiqaradi, sanasiz",
+   "Qatorlarni teskari tartibda chiqaradi"
+  ],
+  "correct": 1,
+  "difficulty": 2,
+  "explanation": "uniq -c ketma-ket takroriy qatorlarni birlashtiradi va oldiga uchrashuv sonini qo'yadi."
+ },
+ {
+  "q": "access.log faylida nechta so'z borligini sanash uchun qaysi buyruq ishlatiladi?",
+  "options": [
+   "wc -l access.log",
+   "wc -c access.log",
+   "wc -w access.log",
+   "grep -c . access.log"
+  ],
+  "correct": 2,
+  "difficulty": 1,
+  "explanation": "wc -w buyrug'i fayldagi so'zlar (word) sonini hisoblaydi."
+ },
+ {
+  "q": "access.log faylida ERROR so'zi bor qatorlar sonini hisoblash uchun qaysi buyruq to'g'ri?",
+  "options": [
+   "grep -v ERROR access.log | wc -l",
+   "grep -c ERROR access.log",
+   "awk '/ERROR/' access.log | sort",
+   "sed -n 'ERROR' access.log"
+  ],
+  "correct": 1,
+  "difficulty": 1,
+  "explanation": "grep -c to'g'ridan-to'g'ri ERROR bo'lgan qatorlar sonini qaytaradi."
+ },
+ {
+  "q": "access.log dan unikal IP manzillarini olish uchun (1-ustun IP) qaysi zanjir to'g'ri?",
+  "options": [
+   "awk '{print $1}' access.log | sort -u",
+   "grep $1 access.log | uniq",
+   "sed 's/$1//' access.log | sort",
+   "cut -f1 access.log | grep -c IP"
+  ],
+  "correct": 0,
+  "difficulty": 2,
+  "explanation": "awk '{print $1}' 1-ustunni (IP) chiqaradi, sort -u esa unikal qiymatlarni qaytaradi."
+ },
+ {
+  "q": "nginx.conf faylida port=80 ni port=8080 ga BARCHA joylarda almashtirish uchun qaysi buyruq to'g'ri?",
+  "options": [
+   "sed 's/port=80/port=8080/' nginx.conf",
+   "sed 's/port=80/port=8080/g' nginx.conf",
+   "grep 's/port=80/port=8080/g' nginx.conf",
+   "awk 's/port=80/port=8080/g' nginx.conf"
+  ],
+  "correct": 1,
+  "difficulty": 2,
+  "explanation": "sed 's/eski/yangi/g' buyrug'idagi /g belgisi barcha mosliklarda almashtirishni ta'minlaydi."
+ },
+ {
+  "q": "Eng ko'p so'rov yuborgan IP manzilni topish uchun qaysi zanjir to'g'ri?",
+  "options": [
+   "grep $1 access.log | sort -rn | head -1",
+   "awk '{print $1}' access.log | sort | uniq -c | sort -rn | head -1",
+   "awk '{print $1}' access.log | uniq -c | head -1",
+   "sort access.log | awk '{print $1}' | head -1"
+  ],
+  "correct": 1,
+  "difficulty": 3,
+  "explanation": "Klassik tahlil zanjiri: IP ajrat → sarala → sana → kattadan kichikka sarala → birinchisini ol."
+ },
+ {
+  "q": "o'rnatilgan paketlar ro'yxatini ko'rish uchun qaysi buyruq ishlatiladi?",
+  "options": [
+   "apt list --installed",
+   "apt show --all",
+   "sudo apt update",
+   "apt install --list"
+  ],
+  "correct": 0,
+  "difficulty": 1,
+  "explanation": "apt list --installed buyrug'i tizimda o'rnatilgan barcha paketlarni ko'rsatadi."
+ },
+ {
+  "q": "Barcha papka va pastki papkalardan TODO so'zi bor fayllarni topish uchun qaysi buyruq to'g'ri?",
+  "options": [
+   "grep TODO .",
+   "grep -r TODO .",
+   "grep -i TODO .",
+   "grep -v TODO ."
+  ],
+  "correct": 1,
+  "difficulty": 2,
+  "explanation": "grep -r bayrog'i rekursiv ravishda barcha pastki papkalar ichidan qidiradi."
+ },
+ {
+  "q": "ps buyrug'i natijasidagi jarayonlar sonini hisoblash uchun qaysi pipe zanjiri to'g'ri?",
+  "options": [
+   "ps aux | grep -c .",
+   "ps aux | wc -l",
+   "ps aux | sort | wc",
+   "ps | awk '{count}'"
+  ],
+  "correct": 1,
+  "difficulty": 2,
+  "explanation": "ps aux natijasini wc -l ga pipe qilish chiqishdagi qatorlar, ya'ni jarayonlar sonini beradi."
+ },
+ {
+  "q": "sed -n '2,5p' access.log buyrug'i nima qiladi?",
+  "options": [
+   "2 va 5-qatorlarni o'chiradi",
+   "2 dan 5 gacha bo'lgan qatorlarni chiqaradi",
+   "Faylni 2 va 5 qatorga qisqartiradi",
+   "2-qatorni 5 marta takrorlaydi"
+  ],
+  "correct": 1,
+  "difficulty": 2,
+  "explanation": "sed -n '2,5p' faqat 2-qatordan 5-qatorgacha bo'lgan qatorlarni chiqaradi (-n ortiqcha chiqishni o'chiradi)."
+ },
+ {
+  "q": "access.log dan eng faol 3 ta IP manzilni topish uchun zanjir oxirida qaysi buyruq ishlatiladi?",
+  "options": [
+   "tail -3",
+   "sort -3",
+   "head -3",
+   "uniq -3"
+  ],
+  "correct": 2,
+  "difficulty": 3,
+  "explanation": "sort -rn bilan kattadan kichikka saralaganidan so'ng head -3 birinchi 3 ta eng faol IP ni qaytaradi."
+ },
+ {
+  "q": "`access.log` faylida nechta qator borligini aniqlash uchun qaysi buyruq to'g'ri?",
+  "options": [
+   "wc -l access.log",
+   "wc -w access.log",
+   "grep -c access.log",
+   "awk -l access.log"
+  ],
+  "correct": 0,
+  "difficulty": 1,
+  "explanation": "`wc -l` fayldagi qatorlar sonini hisoblaydi."
+ },
+ {
+  "q": "`access.log` faylining dastlabki 5 qatorini ko'rish uchun qaysi buyruq ishlatiladi?",
+  "options": [
+   "tail -5 access.log",
+   "head -5 access.log",
+   "sed -n '5p' access.log",
+   "grep -n 5 access.log"
+  ],
+  "correct": 1,
+  "difficulty": 1,
+  "explanation": "`head -5` faylning boshidan 5 qatorni ko'rsatadi."
+ },
+ {
+  "q": "`access.log` faylida `ERROR` so'zi necha marta uchrashini hisoblash uchun to'g'ri buyruq qaysi?",
+  "options": [
+   "grep ERROR access.log | head",
+   "grep -c ERROR access.log",
+   "grep -r ERROR access.log",
+   "grep -v ERROR access.log"
+  ],
+  "correct": 1,
+  "difficulty": 1,
+  "explanation": "`grep -c` mos qatorlar sonini (countini) qaytaradi."
+ },
+ {
+  "q": "Quyidagi buyruq nima qiladi? `awk '{print $1}' access.log`",
+  "options": [
+   "Faylning barcha ustunlarini chiqaradi",
+   "Faylning 1-ustunini (birinchi maydonini) chiqaradi",
+   "Faylning 1-qatorini chiqaradi",
+   "Faylning oxirgi ustunini chiqaradi"
+  ],
+  "correct": 1,
+  "difficulty": 1,
+  "explanation": "`awk '{print $1}'` har qatordagi birinchi maydonni (ustunni) chiqaradi."
+ },
+ {
+  "q": "`sed 's/ERROR/WARNING/g' fayl.log` buyrug'i nima qiladi?",
+  "options": [
+   "Faylda faqat birinchi `ERROR` ni `WARNING` ga almashtiradi",
+   "Fayldan `ERROR` bo'lgan qatorlarni o'chiradi",
+   "Fayldagi barcha `ERROR` larni `WARNING` ga almashtiradi",
+   "Fayldagi `WARNING` ni `ERROR` ga almashtiradi"
+  ],
+  "correct": 2,
+  "difficulty": 1,
+  "explanation": "`/g` flag (global) barcha mos kelishlarni almashtiradi."
+ },
+ {
+  "q": "Pipe ( | ) operatori nima vazifani bajaradi?",
+  "options": [
+   "Faylni serverga yuboradi",
+   "Bir buyruq natijasini ikkinchi buyruqqa kirish sifatida uzatadi",
+   "Ikki faylni birlashtiradi",
+   "Buyruqni fon rejimida ishlatadi"
+  ],
+  "correct": 1,
+  "difficulty": 1,
+  "explanation": "Pipe (`|`) birinchi buyruq chiqishini ikkinchi buyruqning kirishiga yo'naltiradi."
+ },
+ {
+  "q": "`access.log` faylidan faqat `INFO` bo'LMAGAN qatorlarni ko'rsatish uchun qaysi buyruq to'g'ri?",
+  "options": [
+   "grep -i INFO access.log",
+   "grep -c INFO access.log",
+   "grep -v INFO access.log",
+   "grep -r INFO access.log"
+  ],
+  "correct": 2,
+  "difficulty": 2,
+  "explanation": "`grep -v` mos kelmaydigan qatorlarni (inverted match) chiqaradi."
+ },
+ {
+  "q": "`sort | uniq -c` zanjiri nima uchun ishlatiladi?",
+  "options": [
+   "Qatorlarni alifbo tartibida saralash va har bir unikal qator necha marta takrorlanganini hisoblash",
+   "Faqat unikal qatorlarni o'chirish",
+   "Qatorlarni teskari tartibda saralash",
+   "Faylni siqish"
+  ],
+  "correct": 0,
+  "difficulty": 2,
+  "explanation": "`sort` qatorlarni tartibga solib, `uniq -c` har bir unikal qatorning takrorlanish sonini hisoblaydi."
+ },
+ {
+  "q": "Quyidagi buyruq nima qiladi? `awk '$3 > 500' access.log`",
+  "options": [
+   "3-ustundagi qiymati 500 dan katta bo'lgan qatorlarni chiqaradi",
+   "Faylning 3 dan 500 gacha qatorlarini chiqaradi",
+   "3-ustundagi barcha qiymatlarni 500 ga almashtiradi",
+   "Faylning 500-qatoridan boshlab chiqaradi"
+  ],
+  "correct": 0,
+  "difficulty": 2,
+  "explanation": "`awk '$3 > 500'` 3-ustun qiymati 500 dan katta bo'lgan qatorlarni filtrlaydi."
+ },
+ {
+  "q": "Barcha o'rnatilgan paketlar ro'yxatini ko'rsatish uchun qaysi buyruq ishlatiladi?",
+  "options": [
+   "sudo apt update",
+   "sudo apt install --list",
+   "apt list --installed",
+   "apt show all"
+  ],
+  "correct": 2,
+  "difficulty": 1,
+  "explanation": "`apt list --installed` tizimda o'rnatilgan paketlarni ro'yxatini ko'rsatadi."
+ },
+ {
+  "q": "`sed -n '2,5p' fayl.log` buyrug'i nima chiqaradi?",
+  "options": [
+   "Faylning boshidan 5 qatorini",
+   "Faylning 2 va 5-qatorlarini",
+   "Faylning 2 dan 5 gacha (shu qatorlar ham kiritilgan) qatorlarini",
+   "Faylning oxirgi 2 qatorini"
+  ],
+  "correct": 2,
+  "difficulty": 2,
+  "explanation": "`sed -n '2,5p'` 2-qatordan 5-qatorgacha bo'lgan qatorlarni chiqaradi."
+ },
+ {
+  "q": "Eng faol IP manzillarni topish uchun ishlatilgan klassik zanjir qaysi?",
+  "options": [
+   "grep IP access.log | wc -l | sort",
+   "awk '{print $1}' access.log | sort | uniq -c | sort -rn | head",
+   "cat access.log | grep -c IP | head",
+   "sed 's/IP//' access.log | sort -u"
+  ],
+  "correct": 1,
+  "difficulty": 2,
+  "explanation": "Klassik tahlil zanjiri: ustunni ajrat → sarala → sana → kattadan kichikka → top."
+ },
+ {
+  "q": "`grep -r TODO .` buyrug'i nima qiladi?",
+  "options": [
+   "Joriy papkadan `TODO` nomli faylni qidiradi",
+   "Faqat joriy papkadagi fayllardan `TODO` so'zini qidiradi",
+   "Joriy papka va barcha ichki papkalardan `TODO` so'zi bor qatorlarni qidiradi",
+   "Joriy papkadagi `TODO` faylini o'chiradi"
+  ],
+  "correct": 2,
+  "difficulty": 2,
+  "explanation": "`grep -r` rekursiv ravishda papka ichidagi barcha fayllardan qidiradi."
+ },
+ {
+  "q": "Quyidagi buyruq nima qiladi? `cat access.log | grep ERROR | wc -l`",
+  "options": [
+   "access.log dagi barcha qatorlarni sanaydi",
+   "access.log dagi ERROR bo'lgan qatorlar sonini chiqaradi",
+   "access.log dagi ERROR bo'lmagan qatorlarni chiqaradi",
+   "ERROR so'zini access.log dan o'chiradi"
+  ],
+  "correct": 1,
+  "difficulty": 2,
+  "explanation": "Pipe zanjiri: fayl o'qiladi → ERROR qatorlar filtrlanadi → soni hisoblanadi."
+ },
+ {
+  "q": "`git --version` buyrug'i qaysi maqsadda ishlatiladi?",
+  "options": [
+   "git ni yangilash uchun",
+   "git ni o'rnatish uchun",
+   "o'rnatilgan git versiyasini tekshirish uchun",
+   "git sozlamalarini ko'rsatish uchun"
+  ],
+  "correct": 2,
+  "difficulty": 1,
+  "explanation": "`--version` flagi o'rnatilgan dastur versiyasini ko'rsatadi."
+ }
+]
