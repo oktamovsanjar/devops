@@ -8,7 +8,7 @@ kuniga o'nlab marta uchratadigan narsa.
 
 ---
 
-## 📚 Nazariya (faqat tushuncha — topshiriqlar `devops task`da)
+## 📚 Nazariya (faqat tushuncha — topshiriqlar `devops next`da)
 
 ### 1. `ls -l` ni o'qish
 ```
@@ -55,4 +55,4 @@ sudo cat /etc/shadow            # root huquqi bilan o'qish
 devops next       # nima qilishni aytadi
 devops verify     # AI tekshiradi → keyingisi
 ```
-Kun tugagach: `devops done`.
+Hamma topshiriq bajarilsa — kun avtomatik yakunlanadi.

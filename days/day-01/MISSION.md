@@ -8,7 +8,7 @@ o'qish. Bu — qolgan hamma narsaning poydevori.
 
 ---
 
-## 📚 Nazariya (faqat tushuncha — topshiriqlar `devops task`da)
+## 📚 Nazariya (faqat tushuncha — topshiriqlar `devops next`da)
 
 ### 1. Fayl tizimi — bitta daraxt
 Linuxда hamma narsa `/` (root) dan boshlanadigan bitta daraxt. `C:`, `D:` yo'q.
@@ -47,9 +47,8 @@ Har disk shu daraxtning bir shoxiga "ulanadi" (mount).
 ## ▶️ Endi ishga
 Nazariyani o'qiding — **topshiriqlarga o't:**
 ```
-devops task          # bugungi topshiriqlar (boy, avto-tekshiriladi)
-devops task 1        # birinchisini batafsil ko'r
-devops task check    # bajarganingni tekshir
+devops next       # nima qilishni aytadi + ish-papkani ko'rsatadi
+devops verify     # bajarganingni tekshiradi → keyingisiga o'tkazadi
 ```
-Jumboq (BOSS) `devops task`da 5-topshiriq sifatida ko'rsatilgan.
-Kun tugagach: `devops done`.
+Jumboq (BOSS) topshiriqlar orasида keladi — `devops next` o'zi olib boradi.
+Hamma topshiriq bajarilsa — kun avtomatik yakunlanadi.

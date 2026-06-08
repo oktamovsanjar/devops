@@ -4,7 +4,7 @@
   "tasks": [
     {"id": "secret", "type": "real", "xp": 25, "title": "Maxfiy fayl (600)",
      "why": "Parol/kalit fayllari faqat egasiga ochiq bo'lishi kerak — xavfsizlik asosi.",
-     "steps": ["Ishchi papkangga o't:  cd ~/devops/days/day-02/work  (yo'q bo'lsa: devops lab)",
+     "steps": ["Ishchi papkangga o't:  cd ~/devops/days/day-02/work",
                "secret.txt yarat (touch)",
                "Ruxsatini AYNAN 600 qil:  chmod 600 secret.txt",
                "Tekshir:  ls -l secret.txt  →  -rw-------"],
@@ -44,7 +44,7 @@
      "why": "Ruxsatlarni real to'siqda yengish:  chmod (read) → chmod +x → sudo.",
      "steps": ["cd ~/devops/days/day-02/quest && cat START.txt",
                "4 bosqichni yech, DEVOPS{...} flagni top",
-               "Topshir:  devops flag <kod>"],
+               "Topshir:  devops verify"],
      "expect": "DEVOPS{...} flag topiladi va topshiriladi",
      "flag": "DEVOPS{permission_master_rwx_unlocked}"},
 

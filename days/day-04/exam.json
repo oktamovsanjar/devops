@@ -1,0 +1,23 @@
+{
+  "title": "Day-04: Matn ustasi — grep, sed, awk, pipe",
+  "workspace": "days/day-04/exam",
+  "pass_score": 70,
+  "time_limit_min": 15,
+  "tasks": [
+    {"id": "t1", "points": 20,
+     "prompt": "Ish papkangда 'log.txt' yarat — kamida 3 qator, ulardan kamida 2 tasida 'ERROR' so'zi bo'lsin. So'ng ERROR qatorlari SONINI (grep -c bilan) 'count.txt' ga yoz.",
+     "check": "[ \"$(cat $EXAM/count.txt 2>/dev/null)\" = \"$(grep -c ERROR $EXAM/log.txt 2>/dev/null)\" ] && [ \"$(grep -c ERROR $EXAM/log.txt 2>/dev/null)\" -ge 2 ]"},
+    {"id": "t2", "points": 20,
+     "prompt": "'data.txt' yarat — har qator '<ism> <son>' ko'rinishida (2 ustun, kamida 3 qator). FAQAT 2-ustunni (awk bilan) 'nums.txt' ga yoz.",
+     "check": "[ -s $EXAM/nums.txt ] && diff -q <(awk '{print $2}' $EXAM/data.txt) $EXAM/nums.txt >/dev/null"},
+    {"id": "t3", "points": 20,
+     "prompt": "'conf.txt' yarat, ichида 'env=dev' qatori bo'lsin. sed bilan 'dev' ni 'prod' ga almashtirib natijani 'conf2.txt' ga yoz.",
+     "check": "grep -qx 'env=prod' $EXAM/conf2.txt 2>/dev/null && ! grep -q 'env=dev' $EXAM/conf2.txt"},
+    {"id": "t4", "points": 20,
+     "prompt": "'names.txt' yarat — kamida 4 qator, ba'zilari takrorlangan. UNIKAL qatorlar SONINI (sort -u | wc -l) 'uniq.txt' ga yoz.",
+     "check": "[ \"$(cat $EXAM/uniq.txt 2>/dev/null)\" = \"$(sort -u $EXAM/names.txt | wc -l)\" ] && [ -s $EXAM/names.txt ]"},
+    {"id": "t5", "points": 20,
+     "prompt": "'mix.txt' yarat — ba'zи qatorlарда '@' belgisi bor (email kabi), ba'zilarида yo'q. FAQAT '@' bor qatorlarni (grep) 'emails.txt' ga yoz.",
+     "check": "[ -s $EXAM/emails.txt ] && diff -q <(grep '@' $EXAM/mix.txt) $EXAM/emails.txt >/dev/null"}
+  ]
+}

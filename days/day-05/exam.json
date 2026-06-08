@@ -1,0 +1,23 @@
+{
+  "title": "Day-05: Tarmoq asoslari — ip, ss, dns, curl",
+  "workspace": "days/day-05/exam",
+  "pass_score": 70,
+  "time_limit_min": 15,
+  "tasks": [
+    {"id": "t1", "points": 20,
+     "prompt": "Serveringning birinchi IP manzilini 'ip.txt' ga yoz (hostname -I yoki ip a — buyruq bilan).",
+     "check": "grep -q \"$(hostname -I | awk '{print $1}')\" $EXAM/ip.txt 2>/dev/null"},
+    {"id": "t2", "points": 20,
+     "prompt": "Tinglanayotgan (LISTEN) TCP portlarini 'listen.txt' ga yoz (ss -tlnp).",
+     "check": "grep -q LISTEN $EXAM/listen.txt 2>/dev/null"},
+    {"id": "t3", "points": 20,
+     "prompt": "'cloudflare.com' domenini IP ga aylantirib 'dns.txt' ga yoz (getent / nslookup / dig).",
+     "check": "[ -s $EXAM/dns.txt ] && grep -qE '[0-9a-f]+[:.][0-9a-f]+' $EXAM/dns.txt"},
+    {"id": "t4", "points": 20,
+     "prompt": "https://example.com ga so'rov yuborib, javob HEADER'larini 'resp.txt' ga yoz (curl -sI). Ichида HTTP javob qatori bo'lsin.",
+     "check": "grep -qi 'HTTP/' $EXAM/resp.txt 2>/dev/null"},
+    {"id": "t5", "points": 20,
+     "prompt": "SSH xizmati standart qaysi portда ishlaydi? Faqat raqamni 'sshport.txt' ga yoz.",
+     "check": "grep -qx 22 $EXAM/sshport.txt 2>/dev/null"}
+  ]
+}

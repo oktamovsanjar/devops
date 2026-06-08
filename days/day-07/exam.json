@@ -1,0 +1,23 @@
+{
+  "title": "Day-07: 1-hafta yakuniy imtihon (aralash)",
+  "workspace": "days/day-07/exam",
+  "pass_score": 70,
+  "time_limit_min": 20,
+  "tasks": [
+    {"id": "t1", "points": 20,
+     "prompt": "Bitta buyruqда 'proj' papka yarat, ichида 'bin' va 'data' bo'lsin (mkdir -p).",
+     "check": "[ -d $EXAM/proj/bin ] && [ -d $EXAM/proj/data ]"},
+    {"id": "t2", "points": 20,
+     "prompt": "'proj/bin/run.sh' skript yarat: ishga tushganда serverning hostname'ini chiqarsin (#!/bin/bash). So'ng uni BAJARILADIGAN (executable) qil.",
+     "check": "[ -x $EXAM/proj/bin/run.sh ] && bash $EXAM/proj/bin/run.sh 2>/dev/null | grep -q \"$(hostname)\""},
+    {"id": "t3", "points": 20,
+     "prompt": "'proj/data/app.log' yarat — kamida 2 qаторда 'WARN' so'zi bo'lsin. WARN qatorlari SONINI 'proj/data/warns.txt' ga yoz (grep -c).",
+     "check": "[ \"$(cat $EXAM/proj/data/warns.txt 2>/dev/null)\" = \"$(grep -c WARN $EXAM/proj/data/app.log 2>/dev/null)\" ] && [ \"$(grep -c WARN $EXAM/proj/data/app.log 2>/dev/null)\" -ge 2 ]"},
+    {"id": "t4", "points": 20,
+     "prompt": "'proj/bin/run.sh' ni ishga tushirib, chiqishini 'proj/data/report.txt' ga saqla (ichида hostname bo'lsin).",
+     "check": "grep -q \"$(hostname)\" $EXAM/proj/data/report.txt 2>/dev/null"},
+    {"id": "t5", "points": 20,
+     "prompt": "'proj/data/nums.txt' yarat — har qатор bitta son (kamida 4 qator). Eng KATTA sonni topib 'proj/data/max.txt' ga yoz (sort -n | tail -1).",
+     "check": "[ \"$(cat $EXAM/proj/data/max.txt 2>/dev/null)\" = \"$(sort -n $EXAM/proj/data/nums.txt | tail -1)\" ] && [ -s $EXAM/proj/data/nums.txt ]"}
+  ]
+}

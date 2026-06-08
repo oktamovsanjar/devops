@@ -1,0 +1,23 @@
+{
+  "title": "Day-06: Bash skripting — o'zgaruvchi, if, for, funksiya",
+  "workspace": "days/day-06/exam",
+  "pass_score": 70,
+  "time_limit_min": 15,
+  "tasks": [
+    {"id": "t1", "points": 20,
+     "prompt": "'g.sh' skript yoz: o'zgaruvchiga o'z isming ber va 'Salom <ism>' chiqarsin (#!/bin/bash bilan).",
+     "check": "bash $EXAM/g.sh 2>/dev/null | grep -qi salom"},
+    {"id": "t2", "points": 20,
+     "prompt": "'even.sh' yoz: for sikli bilan FAQAT juft sonlarni chiqarsin: 2 4 6 8 10.",
+     "check": "[ \"$(bash $EXAM/even.sh 2>/dev/null | tr -d '[:space:]')\" = '246810' ]"},
+    {"id": "t3", "points": 20,
+     "prompt": "'num.sh' yoz: o'zgaruvchiga 7 ber, agar 5 dan KATTA bo'lsa 'katta', aks holda 'kichik' chiqarsin (if).",
+     "check": "bash $EXAM/num.sh 2>/dev/null | grep -qi katta"},
+    {"id": "t4", "points": 20,
+     "prompt": "'cube.sh' yoz: sonni KUBga oshiradigan funksiya (n*n*n). 3 ni bersang 27 chiqsin.",
+     "check": "bash $EXAM/cube.sh 2>/dev/null | grep -qw 27"},
+    {"id": "t5", "points": 20,
+     "prompt": "'greet.sh' yoz: $1 argumentni olib 'Salom, $1' chiqarsin. Tekshir:  bash greet.sh dunyo  →  'Salom, dunyo'.",
+     "check": "[ \"$(bash $EXAM/greet.sh dunyo 2>/dev/null)\" = 'Salom, dunyo' ]"}
+  ]
+}

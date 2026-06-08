@@ -4,7 +4,7 @@
   "tasks": [
     {"id": "ws", "type": "real", "xp": 20, "title": "Ish maydonini tayyorla",
      "why": "Har real loyiha tartibli papka tuzilmasidan boshlanadi — keyin chalkashmaysan.",
-     "steps": ["Ishchi papkangga o't:  cd ~/devops/days/day-01/work  (yo'q bo'lsa: devops lab)",
+     "steps": ["Ishchi papkangga o't:  cd ~/devops/days/day-01/work",
                "Bitta buyruqda 'project' va uning ichida src, logs, config papkalarini yarat (mkdir -p)"],
      "expect": "days/day-01/work/project/{src,logs,config} mavjud",
      "check": "[ -d $LAB/project/src ] && [ -d $LAB/project/logs ] && [ -d $LAB/project/config ]"},
@@ -58,7 +58,7 @@
      "why": "Navigatsiya mahoratini to'liq sinash: ls -a → grep -r → find → tail.",
      "steps": ["cd ~/devops/days/day-01/quest && cat START.txt",
                "Zanjirni yech, DEVOPS{...} flagni top",
-               "Topshir:  devops flag <kod>"],
+               "Topshir:  devops verify"],
      "expect": "DEVOPS{...} flag topiladi va topshiriladi",
      "flag": "DEVOPS{linux_explorer_unlocked__sen_endi_haqiqiy_navigatorsan}"},
 
