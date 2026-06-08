@@ -421,13 +421,16 @@ def mission_path(day):
 
 
 def mission_title(day):
+    data = load_tasks(day)                       # eng ishonchli: tasks.json "theme"
+    if data and data.get("theme"):
+        return data["theme"]
     p = mission_path(day)
-    if not os.path.exists(p):
-        return None
-    with open(p, encoding="utf-8") as f:
-        for line in f:
-            if line.startswith("### Mavzu:"):
-                return line.replace("### Mavzu:", "").strip()
+    if os.path.exists(p):
+        with open(p, encoding="utf-8") as f:
+            for line in f:
+                if line.startswith("# "):        # birinchi H1 sarlavhasi
+                    t = line[2:].strip()
+                    return t.split("—", 1)[1].strip() if "—" in t else t
     return None
 
 
@@ -486,15 +489,14 @@ def show_dashboard(con, day):
         print(f"   🎯 Topshiriqlar:  devops task   [{bar}] {nd}/{len(tasks)}")
     else:
         print(f"   🎯 Topshiriqlar:  MISSION.md ni o'qi")
-    print(f"   🧪 Laboratoriya:  devops lab    (ishchi papkang)")
+    print(f"   🧪 Ish papkang:   days/day-{day:02d}/work")
     print(f"   🧠 SRS takror:    devops review ({c(due, 'yellow')} ta kutyapti)")
     print(f"   📲 Quiz/drill:    devops quiz   ({t} savol bankda)")
 
     print()
-    if status == "pending":
-        print(c("  ▶️  BOSHLASH:  devops start", "yellow"))
-    elif status == "active":
-        print(c("  🏁 TUGATGACH:  devops done", "yellow"))
+    if status in ("pending", "active"):
+        print(c("  ▶️  OQIM:  devops next  →  (ishni bajar)  →  devops verify", "yellow"))
+        print(c("  Hamma topshiriq bajarilsa — kun avtomatik yakunlanadi.", "dim"))
     else:
         print(c("  ✅ Bu kun tugadi. Keyingi kun avtomatik ochildi — devops today", "green"))
     print()
@@ -796,7 +798,7 @@ def cmd_deadline(args):
     con.close()
     print(c(f"\n  ⏳ DAY {day:02d} — MUHLAT & VAQT", "bold"))
     if not dp or dp["status"] == "pending":
-        print(c("  Kun hali boshlanmagan. `devops start` bilan boshla — muhlat o'shanda yoqiladi.\n", "yellow"))
+        print(c("  Kun hali boshlanmagan. `devops next` bilan boshla — muhlat o'shanda yoqiladi.\n", "yellow"))
         return
     print(f"  ⏱️  Bugun ishlangan: {c(str(act['minutes'])+' daqiqa', 'green')}"
           f"  (birinchi: {act['first'] or '—'}, oxirgi: {act['last'] or '—'})")
@@ -807,7 +809,7 @@ def cmd_deadline(args):
             if mins >= 0:
                 print(f"  ⏳ Muhlat: {dp['deadline'][11:16]} gacha — {c(f'{mins//60}s {mins%60}d qoldi', 'yellow')}")
             else:
-                print(c(f"  ⚠️  Muhlat o'tdi ({-mins//60}s {-mins%60}d oldin). Tezroq `devops done`!", "red"))
+                print(c(f"  ⚠️  Muhlat o'tdi ({-mins//60}s {-mins%60}d oldin). Tezroq tugat:  devops next", "red"))
     print()
 
 

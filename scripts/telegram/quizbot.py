@@ -104,40 +104,36 @@ def _recent_qids(con, n=12):
             con.execute("SELECT question_id FROM sent_polls ORDER BY ts DESC LIMIT ?", (n,))}
 
 
-def pick_qid_at_level(con, level):
-    learned = set(profile.learned_topics(con))           # faqat kunliklarда o'rganilgan mavzular
-    rows = con.execute("SELECT id, topic FROM questions WHERE difficulty=?", (level,)).fetchall()
-    rows = [r for r in rows if r["topic"] in learned]    # o'rganilmagan mavzu (masalan kubernetes) yuborilmaydi
-    if not rows:
-        return None
-    weak = set(quizplan.weak_topics(con))
-    recent = _recent_qids(con)
-    cands = [r for r in rows if r["id"] not in recent] or rows
-    pool = []
-    for r in cands:
-        pool.append(r["id"])
-        if r["topic"] in weak:
-            pool.append(r["id"])          # zaif mavzu 2x og'irlik
-    return random.choice(pool)
+def _learned_questions(con):
+    """Faqat kunliklarда o'rganilgan mavzulardagi savollar (kubernetes h.k. yo'q)."""
+    learned = set(profile.learned_topics(con))
+    rows = con.execute("SELECT id, topic, difficulty FROM questions").fetchall()
+    return [r for r in rows if r["topic"] in learned]
 
 
 def next_adaptive_question(con):
-    level, levels = get_level(con)
-    if not levels:
+    rows = _learned_questions(con)
+    if not rows:
         return None
-    if level not in levels:
-        level = min(levels, key=lambda x: abs(x - level))
+    avail = sorted({r["difficulty"] for r in rows})
+    level, _ = get_level(con)
+    if level not in avail:
+        level = min(avail, key=lambda x: abs(x - level))
     target = level
-    if level > levels[0] and random.random() < REVIEW_PROB:     # orada past daraja takrori
-        target = min(levels, key=lambda x: (abs(x - (level - random.choice([1, 2]))), x))
-    qid = pick_qid_at_level(con, target)
-    if qid is None:                                             # eng yaqin mavjud daraja
-        for d in sorted(levels, key=lambda x: abs(x - target)):
-            qid = pick_qid_at_level(con, d)
-            if qid:
-                break
-    if qid is None:
-        return None
+    if level > avail[0] and random.random() < REVIEW_PROB:        # orada past daraja takrori
+        target = max(avail[0], level - random.choice([1, 2]))
+    recent = _recent_qids(con, n=25)                              # yaqinda yuborilganlarni chetla
+    weak = set(quizplan.weak_topics(con))
+    fresh = [r for r in rows if r["id"] not in recent] or rows    # takror FAQAT hammasi ishlatilganda
+    nearest = min((r["difficulty"] for r in fresh),               # target'ga eng yaqin, fresh daraja
+                  key=lambda d: (abs(d - target), d))
+    band = [r for r in fresh if r["difficulty"] == nearest]
+    pool = []
+    for r in band:
+        pool.append(r["id"])
+        if r["topic"] in weak:
+            pool.append(r["id"])                                  # zaif mavzu 2x og'irlik
+    qid = random.choice(pool)
     return con.execute("SELECT * FROM questions WHERE id=?", (qid,)).fetchone()
 
 
