@@ -1,10 +1,26 @@
-# Day-03 — Jarayonlar va servislar
+# Day-03 — Jarayonlar va servislar (to'liq kun)
 
 ### 🎯 Bugungi maqsad
 Serverdagi **jarayonlarni** (processes) ko'rish, boshqarish, signal yuborish; va
 **systemd servislari** + **journald loglar**ni o'qish.
 
-> 📦 **Natija:** o'lik servisni topib, sababini logдан bilib, qayta tiklash mahorati.
+> 📦 **Natija:** drill bilan tezlik + shubhali jarayonni topish + "Process Monitor" mini-loyihasi.
+
+---
+
+## 🗓️ Bugungi kun rejasi (~7 soat, 6 blok)
+
+| Blok | Nima | Taxminiy |
+|------|------|----------|
+| 1️⃣ Yo'naltirish | ps, xotira eng och jarayonlar | ~20 daq |
+| 2️⃣ Drill | fon jarayon / pgrep / pkill — tezlik | ~45 daq |
+| 3️⃣ Asosiy ko'nikmalar | bg/pid/kill, systemctl, journald, CPU | ~90 daq |
+| 4️⃣ Callback | Day-1 grep + Day-2 chmod — jarayon ustида | ~45 daq |
+| 5️⃣ Mini-loyiha | "Process Monitor" — boshidan oxirigacha qur | ~90 daq |
+| 6️⃣ Yakuniy sinov | BOSS (SIGUSR1 signal) + xulosa + `devops exam` | ~60 daq |
+
+> 🔁 **Callback bloki:** bugun Day-1 (grep) va Day-2 (chmod +x) ko'nikmalaringни jarayon
+> kontekstida qayta ishlatasan — eski bilim mustahkamlanadi.
 
 ---
 
