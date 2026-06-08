@@ -20,9 +20,9 @@ __pycache__/
 *.log
 *.tmp
 
-# ISTISNO: kurs namuna loglari (fixtures) — material, saqlanishi SHART
+# ISTISNO: kurs namuna fayllari (fixtures) — material, saqlanishi SHART
 !days/*/fixtures/
-!days/*/fixtures/*.log
+!days/*/fixtures/**
 
 # ═══ Secret easter-egg javoblari (puzzle yechimlari) ═══
 .day02_secret

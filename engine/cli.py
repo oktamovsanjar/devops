@@ -570,7 +570,11 @@ def cmd_task(args):
     print(c(f"  {data.get('theme', '')}", "cyan"))
     print(c("  batafsil: devops task <raqam>  ·  tekshir: devops task check\n", "dim"))
     total = got = 0
+    cur_block = None
     for i, t in enumerate(tasks, 1):
+        if t.get("block") and t["block"] != cur_block:
+            cur_block = t["block"]
+            print(c(f"\n  ── 📦 {cur_block} ──", "mag"))
         total += t.get("xp", 0)
         is_done = t["id"] in done
         got += t.get("xp", 0) if is_done else 0
@@ -707,6 +711,16 @@ def cmd_next(args):
         con.close(); return
     n, task = pend[0]
     print(c(f"\n  👉 KEYINGI ISH  ({sum(1 for t in tasks if t['id'] in done)}/{len(tasks)} bajarilgan)", "bold"))
+    if task.get("block"):
+        blocks = []
+        for t in tasks:
+            b = t.get("block", "")
+            if b and (not blocks or blocks[-1] != b):
+                blocks.append(b)
+        bi = blocks.index(task["block"]) + 1 if task["block"] in blocks else 0
+        bdone = sum(1 for t in tasks if t.get("block") == task["block"] and t["id"] in done)
+        btot = sum(1 for t in tasks if t.get("block") == task["block"])
+        print(c(f"  📦 Blok {bi}/{len(blocks)}: {task['block']}  ({bdone}/{btot})", "mag"))
     _task_detail(task, n, day, done)
     print(c("  Bajargach:  devops verify\n", "yellow"))
     con.close()
