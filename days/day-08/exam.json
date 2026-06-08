@@ -1,0 +1,23 @@
+{
+  "title": "Day-08: Bash skripting II",
+  "workspace": "days/day-08/exam",
+  "pass_score": 70,
+  "time_limit_min": 20,
+  "tasks": [
+    {"id": "t1", "points": 20,
+     "prompt": "'args.sh' yarat: berilgan argumentlar SONINI chiqarsin ($#). Tekshir:  args.sh a b c  →  3.",
+     "check": "[ \"$(bash $EXAM/args.sh a b c 2>/dev/null)\" = 3 ]"},
+    {"id": "t2", "points": 20,
+     "prompt": "'def.sh' yarat: ${1:-mehmon} bilan 'Salom, mehmon' chiqarsin (argumentsiz ishlaganда).",
+     "check": "bash $EXAM/def.sh 2>/dev/null | grep -qi mehmon"},
+    {"id": "t3", "points": 20,
+     "prompt": "'opt.sh' yarat: getopts bilan -n flag qabul qilsin, 'Name: <qiymat>' chiqarsin. Tekshir:  opt.sh -n bob  →  'Name: bob'.",
+     "check": "[ \"$(bash $EXAM/opt.sh -n bob 2>/dev/null)\" = 'Name: bob' ]"},
+    {"id": "t4", "points": 20,
+     "prompt": "'fail.sh' yarat: argument BO'LMASA exit 1 (xato), argument bo'lsa exit 0 (muvaffaqiyat) qilsin.",
+     "check": "! bash $EXAM/fail.sh >/dev/null 2>&1 && bash $EXAM/fail.sh ok >/dev/null 2>&1"},
+    {"id": "t5", "points": 20,
+     "prompt": "'trap.sh' yarat: trap bilan EXIT'да 'bye' chiqarsin va asosiy qismда 'ish' chiqarsin.",
+     "check": "bash $EXAM/trap.sh 2>/dev/null | grep -q bye"}
+  ]
+}

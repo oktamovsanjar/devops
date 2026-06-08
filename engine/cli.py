@@ -1267,6 +1267,12 @@ def sync_day_quizzes(con):
         if not os.path.exists(f):
             continue
         topic = (day_topics(d) or ["linux"])[0]
+        tj = os.path.join(base, f"day-{d:02d}", "tasks.json")     # kun o'z mavzusini bersa — o'sha
+        if os.path.exists(tj):
+            try:
+                topic = json.load(open(tj, encoding="utf-8")).get("topic", topic)
+            except Exception:
+                pass
         try:
             items = json.load(open(f, encoding="utf-8"))
         except Exception:
