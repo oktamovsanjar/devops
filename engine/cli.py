@@ -705,7 +705,7 @@ def _task_ai_verify(task, day, shell_result):
             "files/folders are missing. Empty folders in the tree are valid. Honest, specific, "
             "encouraging. Tech terms in English.")
     ans = ai_ask(sysp, goal + note + "\n\nO'quvchi ishi (labs fayllari):\n" + _lab_evidence(day),
-                 max_tokens=400)
+                 max_tokens=400, quiet=True)
     passed = bool(ans) and ans.strip().upper().startswith("NATIJA: PASS")
     return passed, ans
 
@@ -750,12 +750,25 @@ def cmd_verify(args):
             except (EOFError, KeyboardInterrupt):
                 ans = ""
             if ans:
-                fb = ai_ask("You are Ustoz evaluating a learner's short answer. Reply Uzbek. FIRST "
-                            "line 'NATIJA: PASS' or 'NATIJA: FAIL', then 1-2 lines feedback.",
-                            f"Topshiriq: {task['title']} ({task.get('why','')})\nJavob: {ans}", max_tokens=250)
-                passed = bool(fb) and fb.strip().upper().startswith("NATIJA: PASS")
-                if fb:
+                fb = ""
+                if load_key():
+                    try:
+                        fb = ai_ask("You are Ustoz evaluating a learner's short answer. Reply Uzbek. FIRST "
+                                    "line 'NATIJA: PASS' or 'NATIJA: FAIL', then 1-2 lines feedback.",
+                                    f"Topshiriq: {task['title']} ({task.get('why','')})\nJavob: {ans}",
+                                    max_tokens=250, quiet=True) or ""
+                    except Exception:
+                        fb = ""
+                up = fb.strip().upper()
+                if up.startswith("NATIJA: PASS") or up.startswith("NATIJA: FAIL"):
+                    passed = up.startswith("NATIJA: PASS")
                     print(c("  🧑‍🏫 " + "\n".join(fb.splitlines()[1:]).strip(), "cyan"))
+                else:                                       # AI o'chiq — mazmunli javobni qabul qilamiz
+                    passed = len(ans.split()) >= 3
+                    if passed:
+                        print(c("  🧑‍🏫 (AI hozir o'chiq) Javobing qabul qilindi — o'zing tushunganingга ishonch hosil qil.", "cyan"))
+                    else:
+                        print(c("  🧑‍🏫 Javob juda qisqa — kamida bir-ikki jumla yoz.", "yellow"))
         else:                                               # shell-check + AI fikr
             print(c(f"\n  🧠 Tekshiryapti: {task['title']}...", "dim"))
             _, fb = _task_ai_verify(task, day, shell)
@@ -965,16 +978,19 @@ def cmd_exam(args):
 
 # ═══════════════ AI MENTOR funksiyalari (markaziy, robust) ═══════════════
 
-def ai_ask(system, prompt, max_tokens=700):
-    """Markaziy AI chaqiruv — xatolarni chiroyli boshqaradi. Matn yoki None qaytaradi."""
+def ai_ask(system, prompt, max_tokens=700, quiet=False):
+    """Markaziy AI chaqiruv — xatolarni chiroyli boshqaradi. Matn yoki None qaytaradi.
+    quiet=True — xato bo'lsa ogohlantirish chiqarmaydi (feedback ixtiyoriy joylarда)."""
     key = load_key()
     if not key:
-        print(c("  ⚠️  AI uchun API key kerak (engine/config.json).", "yellow"))
+        if not quiet:
+            print(c("  ⚠️  AI uchun API key kerak (engine/config.json).", "yellow"))
         return None
     try:
         return call_api(key, AI_MODEL, prompt, system=system, max_tokens=max_tokens).strip()
     except Exception as e:
-        print(c(f"  ⚠️  AI javob bera olmadi: {e}", "yellow"))
+        if not quiet:
+            print(c(f"  ⚠️  AI javob bera olmadi: {e}", "yellow"))
         return None
 
 
