@@ -1,0 +1,23 @@
+{
+  "title": "Day-11: Git jamoa (remote, PR, conflict)",
+  "workspace": "days/day-11/exam",
+  "pass_score": 70,
+  "time_limit_min": 25,
+  "tasks": [
+    {"id": "t1", "points": 20,
+     "prompt": "Bare repo yarat (git init --bare r.git) va uni klonla (git clone r.git wc).",
+     "check": "[ -f $EXAM/r.git/HEAD ] && [ -d $EXAM/wc/.git ]"},
+    {"id": "t2", "points": 20,
+     "prompt": "'wc' ичида config sozlab, bir fayl commit qilib, remote'ga push qil.",
+     "check": "[ \"$(git -C $EXAM/r.git rev-list --all --count 2>/dev/null)\" -ge 1 ]"},
+    {"id": "t3", "points": 20,
+     "prompt": "'wc' ичида 'feature' branch yarat.",
+     "check": "cd $EXAM/wc && git branch | grep -q feature"},
+    {"id": "t4", "points": 20,
+     "prompt": "'wc' ичида .gitignore yaratib '*.log' ni ignore qil; 'x.log' yaratganда u ko'rinmasin.",
+     "check": "cd $EXAM/wc && grep -q log .gitignore && ! git status --porcelain | grep -q 'x.log'"},
+    {"id": "t5", "points": 20,
+     "prompt": "'wc' repo'sида kamida 2 ta commit bo'lsin.",
+     "check": "cd $EXAM/wc && [ \"$(git rev-list --count HEAD 2>/dev/null)\" -ge 2 ]"}
+  ]
+}
