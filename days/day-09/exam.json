@@ -1,0 +1,23 @@
+{
+  "title": "Day-09: Cron & maintenance",
+  "workspace": "days/day-09/exam",
+  "pass_score": 70,
+  "time_limit_min": 20,
+  "tasks": [
+    {"id": "t1", "points": 20,
+     "prompt": "'daily.txt' yarat: har kuni soat 04:00 da ishlaydigan cron qatori bo'lsin (bir buyruq bilan).",
+     "check": "grep -qE '^0 4 \\* \\* \\*' $EXAM/daily.txt"},
+    {"id": "t2", "points": 20,
+     "prompt": "'five.txt' yarat: har 5 daqiqada ishlaydigan cron qatori (*/5).",
+     "check": "grep -qE '^\\*/5 ' $EXAM/five.txt"},
+    {"id": "t3", "points": 20,
+     "prompt": "'today.txt' ga bugungi sanani YYYY-MM-DD formatда yoz (date +%F bilan).",
+     "check": "grep -qE '^[0-9]{4}-[0-9]{2}-[0-9]{2}$' $EXAM/today.txt"},
+    {"id": "t4", "points": 20,
+     "prompt": "'clean.sh' yarat: 30 kundan eski .log fayllarni topadigan find buyrug'i bo'lsin (-mtime +30).",
+     "check": "grep -q find $EXAM/clean.sh && grep -q mtime $EXAM/clean.sh"},
+    {"id": "t5", "points": 20,
+     "prompt": "'run.log' ga sana bilan bir qator qo'sh:  echo \"$(date +%F) bajarildi\" >> run.log",
+     "check": "grep -qE '[0-9]{4}-[0-9]{2}-[0-9]{2}' $EXAM/run.log"}
+  ]
+}
