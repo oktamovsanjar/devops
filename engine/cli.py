@@ -1277,14 +1277,21 @@ def sync_day_quizzes(con):
             items = json.load(open(f, encoding="utf-8"))
         except Exception:
             continue
+        hashes = []
         for it in items:
-            rid = db.add_question(con, topic, it["q"], it["options"], it["correct"],
-                                  it.get("explanation", ""), it.get("difficulty", 1),
-                                  source="day", day=d)
-            if rid is None:                       # dup hash — borini day bilan tagla
-                con.execute("UPDATE questions SET day=? WHERE hash=? AND day IS NULL",
-                            (d, db.q_hash(it["q"])))
-            changed = True
+            hashes.append(db.q_hash(it["q"]))
+            db.add_question(con, topic, it["q"], it["options"], it["correct"],
+                            it.get("explanation", ""), it.get("difficulty", 1),
+                            source="day", day=d)
+        if not hashes:
+            continue
+        qm = ",".join("?" * len(hashes))
+        # AUTHORITATIVE: day=d AYNAN shu fayldagi savollarga teng bo'lsin
+        con.execute(f"UPDATE questions SET day=NULL WHERE day=? AND hash NOT IN ({qm})",
+                    (d, *hashes))                           # eski (faylda yo'q) savollardan day'ni ol
+        con.execute(f"UPDATE questions SET day=?, topic=? WHERE hash IN ({qm})",
+                    (d, topic, *hashes))                    # fayldagilarni to'g'ri day+topic bilan tagla
+        changed = True
     if changed:
         con.commit()
 
