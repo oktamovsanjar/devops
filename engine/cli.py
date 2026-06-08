@@ -273,8 +273,8 @@ def cmd_quiz(args):
     con = db.connect()
     topic = args.topic
     category = topics = None
-    label = args.topic or "aralash"
-    if topic == "today":                      # faqat bugungi kun mavzu(lar)i
+    label = topic or "bugungi"
+    if topic in (None, "today", "kun", "kunlik"):   # DEFAULT = bugungi kun mavzu(lar)i
         day = current_day(con)
         cand = day_topics(day)
         topics = [t for t in cand if con.execute(
@@ -283,6 +283,10 @@ def cmd_quiz(args):
         label = f"BUGUN Day {day} ({', '.join(topics) or 'umumiy'})"
         if not topics:
             print(c("\n  ℹ️  Bugungi mavzuda hali savol yo'q — umumiy rejimga o'tdim.", "yellow"))
+    elif topic in ("all", "mix", "aralash"):        # hamma O'RGANILGAN mavzu
+        topics = learner.learned_topics(con) or None
+        topic = None
+        label = "aralash (o'rganilgan)"
     elif topic in ("devops", "python", "english"):
         category, topic = topic, None
     if args.n and args.n > 0:                 # cheklangan sessiya
@@ -1254,7 +1258,7 @@ def print_help_uz():
             ("task", "Barcha topshiriqlar ro'yxati  (task N = batafsil)"),
         ]),
         ("📚 O'RGANISH & MASHQ", [
-            ("quiz", "Mashq quiz  (quiz today = bugungi mavzu)"),
+            ("quiz", "Mashq quiz — default kunlik  (quiz <mavzu> · quiz all)"),
             ("review", "SRS takror — eski mavzularni unutmaslik"),
             ("focus", "AI zaif mavzuingga shaxsiy topshiriq beradi"),
         ]),

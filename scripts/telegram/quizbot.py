@@ -31,13 +31,14 @@ from generate import load_key  # noqa: E402
 
 API = "https://api.telegram.org/bot{token}/{method}"
 HELP = (
-    "🤖 <b>DevOps Quiz Bot (adaptiv)</b>\n\n"
-    "/quiz yoki /start — quiz oqimini boshlash\n"
-    "Javob ber → keyingisi keladi 🔁\n"
-    "To'g'ri qilsang daraja 📈 oshadi, xato qilsang 📉 tushadi.\n\n"
-    "/stop — to'xtatish\n"
-    "/reset — darajani 1 ga qaytarish\n"
-    "/help — yordam"
+    "🤖 <b>DevOps Quiz Bot</b>\n\n"
+    "▸ /quiz — bugungi mavzu quizini boshlash\n"
+    "   Javob ber → keyingisi avtomatik keladi 🔁\n"
+    "   To'g'ri → daraja 📈  ·  xato → 📉\n\n"
+    "▸ /topic &lt;mavzu&gt; — boshqa mavzuni tanlash\n"
+    "▸ /daily — bugungi mavzuga qaytish\n"
+    "▸ /stop — to'xtatish  ·  /reset — daraja 1 ga\n"
+    "▸ /help — yordam"
 )
 
 
@@ -104,15 +105,32 @@ def _recent_qids(con, n=12):
             con.execute("SELECT question_id FROM sent_polls ORDER BY ts DESC LIMIT ?", (n,))}
 
 
-def _learned_questions(con):
-    """Faqat kunliklarда o'rganilgan mavzulardagi savollar (kubernetes h.k. yo'q)."""
+TOPIC_EMOJI = {
+    "linux": "🐧", "bash": "💻", "git": "🌿", "networking": "🌐", "docker": "🐳",
+    "cicd": "🔁", "kubernetes": "☸️", "terraform": "🏗️", "ansible": "📜",
+    "aws": "☁️", "monitoring": "📈", "python": "🐍", "english": "🔤",
+}
+
+
+def _pool_topics(con):
+    """DEFAULT = bugungi kun mavzu(lar)i. /topic bilan o'zgartirilgan bo'lsa — o'sha."""
     learned = set(profile.learned_topics(con))
+    override = db.get_meta(con, "tg_topic")
+    if override and override in learned:
+        return {override}
+    day = int(db.get_meta(con, "current_day", "1"))
+    wk = {t for t in profile.WEEK_TOPICS.get(profile.current_week(day), []) if t in learned}
+    return wk or learned                      # zaxira: o'rganilgan hammasi
+
+
+def _pool_questions(con):
+    topics = _pool_topics(con)
     rows = con.execute("SELECT id, topic, difficulty FROM questions").fetchall()
-    return [r for r in rows if r["topic"] in learned]
+    return [r for r in rows if r["topic"] in topics]
 
 
 def next_adaptive_question(con):
-    rows = _learned_questions(con)
+    rows = _pool_questions(con)
     if not rows:
         return None
     avail = sorted({r["difficulty"] for r in rows})
@@ -143,6 +161,20 @@ def level_msg(change, level):
     return f"📉 <b>Daraja tushdi → {level}</b>\nShu darajani mustahkamlaymiz (takror)."
 
 
+def start_banner(con):
+    day = int(db.get_meta(con, "current_day", "1"))
+    topics = sorted(_pool_topics(con))
+    level, _ = get_level(con)
+    r = con.execute("SELECT COUNT(*) n, SUM(correct) ok FROM attempts "
+                    "WHERE date(ts)=date('now')").fetchone()
+    n, ok = r["n"] or 0, r["ok"] or 0
+    tline = ", ".join(f"{TOPIC_EMOJI.get(t, '•')} {t.capitalize()}" for t in topics) or "umumiy"
+    return ("🎯 <b>Bugungi quiz boshlandi</b>\n"
+            f"📅 Day {day}/56  ·  mavzu: {tline}\n"
+            f"📊 Daraja: <b>{level}</b>  ·  bugun: {ok}/{n} to'g'ri\n\n"
+            "Javob ber — keyingisi avtomatik keladi.  /help")
+
+
 def send_quiz(token, chat_id, con, key):
     q = next_adaptive_question(con)
     if not q:
@@ -153,9 +185,12 @@ def send_quiz(token, chat_id, con, key):
     random.shuffle(order)
     display = [opts[i] for i in order]
     correct = order.index(q["correct"])
+    emoji = TOPIC_EMOJI.get(q["topic"], "•")
+    stars = "⭐" * int(q["difficulty"])
+    header = f"{emoji} {q['topic'].capitalize()} · {stars}"
     res = api(token, "sendPoll", {
         "chat_id": chat_id,
-        "question": f"[{q['topic']} · d{q['difficulty']}] {q['question']}"[:300],
+        "question": f"{header}\n\n{q['question']}"[:300],
         "options": json.dumps([o[:100] for o in display], ensure_ascii=False),
         "type": "quiz",
         "correct_option_id": correct,
@@ -200,16 +235,27 @@ def process(con, token, chat_id, key, u):
         if str(m.get("chat", {}).get("id")) != str(chat_id):
             return
         text = (m.get("text") or "").strip().lower()
-        if text in ("/start", "/quiz", "/next"):
+        if text in ("/start", "/quiz", "/next", "/daily"):
+            if text == "/daily":
+                db.set_meta(con, "tg_topic", "")          # override'ni tozalab, kunlikка qaytar
             db.set_meta(con, "tg_active", "1")
-            level, _ = get_level(con)
-            send_msg(token, chat_id,
-                     f"🎯 Quiz boshlandi! Joriy daraja: <b>{level}</b>. "
-                     "Javob ber — daraja shunga qarab o'zgaradi.")
+            send_msg(token, chat_id, start_banner(con))
             send_quiz(token, chat_id, con, key)
+        elif text.startswith("/topic"):
+            learned = sorted(profile.learned_topics(con))
+            parts = text.split()
+            if len(parts) >= 2 and parts[1] in learned:
+                db.set_meta(con, "tg_topic", parts[1])
+                send_msg(token, chat_id, f"✅ Mavzu tanlandi: <b>{parts[1]}</b>. "
+                                         "Kunlikка qaytish: /daily")
+                send_quiz(token, chat_id, con, key)
+            else:
+                tl = ", ".join(learned) or "—"
+                send_msg(token, chat_id, f"📚 O'rganilgan mavzular: {tl}\n"
+                                         f"Misol:  /topic {learned[-1] if learned else 'linux'}")
         elif text == "/stop":
             db.set_meta(con, "tg_active", "0")
-            send_msg(token, chat_id, "⏸️ Quiz oqimi to'xtatildi. Qayta boshlash: /quiz")
+            send_msg(token, chat_id, "⏸️ Quiz to'xtatildi. Qayta boshlash: /quiz")
         elif text == "/reset":
             lv = available_levels(con)
             db.set_meta(con, "tg_level", lv[0] if lv else 1)

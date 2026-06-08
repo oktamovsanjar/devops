@@ -1,18 +1,446 @@
 [
-  {"q": "Yangi git repozitoriya yaratish?", "options": ["git start", "git init", "git new", "git create"], "correct": 1, "difficulty": 1, "explanation": "git init — joriy papkada bo'sh repo yaratadi."},
-  {"q": "Faylni keyingi commit uchun tayyorlash (stage)?", "options": ["git add fayl", "git stage fayl", "git commit fayl", "git push fayl"], "correct": 0, "difficulty": 1, "explanation": "git add — o'zgarishni staging area'ga qo'shadi."},
-  {"q": "Izoh bilan commit qilish?", "options": ["git commit -m \"xabar\"", "git commit \"xabar\"", "git save -m", "git push -m"], "correct": 0, "difficulty": 1, "explanation": "git commit -m \"...\" — o'zgarishni izoh bilan tarixga yozadi."},
-  {"q": "Hozirgi holatni (qaysi fayllar o'zgargan) ko'rish?", "options": ["git log", "git status", "git show", "git info"], "correct": 1, "difficulty": 1, "explanation": "git status — staged/unstaged va kuzatilmagan fayllarni ko'rsatadi."},
-  {"q": "Commit tarixini ko'rish?", "options": ["git history", "git log", "git list", "git commits"], "correct": 1, "difficulty": 1, "explanation": "git log — commitlar ro'yxati (eng yangisi yuqorida)."},
-  {"q": "Yangi branch yaratib, unga o'tish (bitta buyruqda)?", "options": ["git branch -c x", "git checkout -b x", "git new x", "git switch x"], "correct": 1, "difficulty": 2, "explanation": "git checkout -b x — yaratadi va o'tadi. (Yangi: git switch -c x)."},
-  {"q": "Boshqa branch'ni hozirgisiga birlashtirish?", "options": ["git join", "git merge x", "git combine x", "git add x"], "correct": 1, "difficulty": 2, "explanation": "git merge x — x branch'ini joriy branch'ga qo'shadi."},
-  {"q": "Lokal commitlarni masofaviy serverga yuborish?", "options": ["git send", "git push", "git upload", "git sync"], "correct": 1, "difficulty": 1, "explanation": "git push — local commitlarni remote (GitHub) ga yuboradi."},
-  {"q": "Masofaviy o'zgarishlarni olib, birlashtirish?", "options": ["git fetch", "git pull", "git get", "git download"], "correct": 1, "difficulty": 2, "explanation": "git pull = fetch + merge. fetch faqat oladi, birlashtirmaydi."},
-  {"q": "Mavjud masofaviy repozitoriyani nusxalash?", "options": ["git copy URL", "git clone URL", "git get URL", "git init URL"], "correct": 1, "difficulty": 1, "explanation": "git clone URL — reponi to'liq tarixi bilan yuklab oladi."},
-  {"q": "Git kuzatmasligi kerak bo'lgan fayllarni qaysi fayl belgilaydi?", "options": [".gitconfig", ".gitignore", ".ignore", "git.cfg"], "correct": 1, "difficulty": 2, "explanation": ".gitignore — bu yerdagi naqshlar git tomonidan e'tiborga olinmaydi."},
-  {"q": "Masofaviy manzilni 'origin' nomi bilan qo'shish?", "options": ["git remote add origin URL", "git add origin URL", "git origin URL", "git push origin URL"], "correct": 0, "difficulty": 3, "explanation": "git remote add origin URL — remote'ga nom (alias) beradi."},
-  {"q": "Tugatilmagan o'zgarishlarni vaqtincha chetga olib qo'yish?", "options": ["git save", "git stash", "git hide", "git drop"], "correct": 1, "difficulty": 3, "explanation": "git stash — o'zgarishlarni vaqtincha saqlaydi (keyin stash pop)."},
-  {"q": "Hali stage qilinmagan o'zgarishlarni ko'rish?", "options": ["git diff", "git status", "git log -p", "git show"], "correct": 0, "difficulty": 3, "explanation": "git diff — ish papkasidagi (unstaged) o'zgarishlar."},
-  {"q": "HEAD git'da nimani bildiradi?", "options": ["Birinchi commit", "Hozirgi branch/commit ko'rsatkichi", "Oxirgi fayl", "Remote server"], "correct": 1, "difficulty": 4, "explanation": "HEAD — hozir qayerda turganingni (qaysi commit) ko'rsatadi."},
-  {"q": "Bitta faylning lokal o'zgarishlarini bekor qilib, oxirgi commit holatiga qaytarish?", "options": ["git delete fayl", "git restore fayl", "git remove fayl", "git reset --all"], "correct": 1, "difficulty": 4, "explanation": "git restore fayl (yoki git checkout -- fayl) — o'zgarishni bekor qiladi."}
+ {
+  "q": "Yangi git repozitoriya yaratish?",
+  "options": [
+   "git start",
+   "git init",
+   "git new",
+   "git create"
+  ],
+  "correct": 1,
+  "difficulty": 1,
+  "explanation": "git init — joriy papkada bo'sh repo yaratadi."
+ },
+ {
+  "q": "Faylni keyingi commit uchun tayyorlash (stage)?",
+  "options": [
+   "git add fayl",
+   "git stage fayl",
+   "git commit fayl",
+   "git push fayl"
+  ],
+  "correct": 0,
+  "difficulty": 1,
+  "explanation": "git add — o'zgarishni staging area'ga qo'shadi."
+ },
+ {
+  "q": "Izoh bilan commit qilish?",
+  "options": [
+   "git commit -m \"xabar\"",
+   "git commit \"xabar\"",
+   "git save -m",
+   "git push -m"
+  ],
+  "correct": 0,
+  "difficulty": 1,
+  "explanation": "git commit -m \"...\" — o'zgarishni izoh bilan tarixga yozadi."
+ },
+ {
+  "q": "Hozirgi holatni (qaysi fayllar o'zgargan) ko'rish?",
+  "options": [
+   "git log",
+   "git status",
+   "git show",
+   "git info"
+  ],
+  "correct": 1,
+  "difficulty": 1,
+  "explanation": "git status — staged/unstaged va kuzatilmagan fayllarni ko'rsatadi."
+ },
+ {
+  "q": "Commit tarixini ko'rish?",
+  "options": [
+   "git history",
+   "git log",
+   "git list",
+   "git commits"
+  ],
+  "correct": 1,
+  "difficulty": 1,
+  "explanation": "git log — commitlar ro'yxati (eng yangisi yuqorida)."
+ },
+ {
+  "q": "Lokal commitlarni masofaviy serverga yuborish?",
+  "options": [
+   "git send",
+   "git push",
+   "git upload",
+   "git sync"
+  ],
+  "correct": 1,
+  "difficulty": 1,
+  "explanation": "git push — local commitlarni remote (GitHub) ga yuboradi."
+ },
+ {
+  "q": "Mavjud masofaviy repozitoriyani nusxalash?",
+  "options": [
+   "git copy URL",
+   "git clone URL",
+   "git get URL",
+   "git init URL"
+  ],
+  "correct": 1,
+  "difficulty": 1,
+  "explanation": "git clone URL — reponi to'liq tarixi bilan yuklab oladi."
+ },
+ {
+  "q": "Git'da yangi branch yaratish uchun qaysi buyruq ishlatiladi?",
+  "options": [
+   "git branch yangi-branch",
+   "git commit -b yangi-branch",
+   "git push yangi-branch",
+   "git merge yangi-branch"
+  ],
+  "correct": 0,
+  "difficulty": 1,
+  "explanation": "'git branch <nom>' buyrug'i yangi branch yaratadi, lekin unga o'tmaydi."
+ },
+ {
+  "q": "Fayllardagi o'zgarishlarni local repositoryga saqlash uchun qaysi buyruq ishlatiladi?",
+  "options": [
+   "git push",
+   "git pull",
+   "git commit -m 'xabar'",
+   "git clone"
+  ],
+  "correct": 2,
+  "difficulty": 1,
+  "explanation": "'git commit' buyrug'i staging area'dagi o'zgarishlarni local repositoryga saqlaydi."
+ },
+ {
+  "q": "Remote repositorydan o'zgarishlarni yuklab olish va avtomatik birlashtirish uchun qaysi buyruq ishlatiladi?",
+  "options": [
+   "git fetch",
+   "git clone",
+   "git pull",
+   "git push"
+  ],
+  "correct": 2,
+  "difficulty": 1,
+  "explanation": "'git pull' buyrug'i remote'dan o'zgarishlarni yuklab ('fetch') keyin avtomatik birlashtiradi ('merge')."
+ },
+ {
+  "q": "Pull request nima maqsadda ishlatiladi?",
+  "options": [
+   "Local o'zgarishlarni remote'ga yuklash uchun",
+   "Bir branch'dagi o'zgarishlarni boshqa branch'ga birlashtirish so'rovini yuborish uchun",
+   "Yangi branch yaratish uchun",
+   "Commit tarixini o'chirish uchun"
+  ],
+  "correct": 1,
+  "difficulty": 1,
+  "explanation": "Pull request — bir branch'dagi o'zgarishlarni boshqa branch'ga qo'shish uchun jamoa a'zolaridan ruxsat so'rash mexanizmi."
+ },
+ {
+  "q": "'git merge feature' buyrug'i nima qiladi?",
+  "options": [
+   "'feature' branch'ini o'chiradi",
+   "Joriy branch'ga 'feature' branch'idagi o'zgarishlarni birlashtiradi",
+   "'feature' branch'iga o'tadi",
+   "Remote'ga 'feature' branch'ini yuklaydi"
+  ],
+  "correct": 1,
+  "difficulty": 1,
+  "explanation": "'git merge' buyrug'i ko'rsatilgan branch'dagi o'zgarishlarni joriy branch'ga birlashtiradi."
+ },
+ {
+  "q": "'git rebase' buyrug'ining asosiy maqsadi nima?",
+  "options": [
+   "Branch'ni o'chirish",
+   "Remote repositoryni klonlash",
+   "Commit tarixini boshqa branch'ning ustiga ko'chirish va tarihni toza saqlash",
+   "Fayl o'zgarishlarini bekor qilish"
+  ],
+  "correct": 2,
+  "difficulty": 1,
+  "explanation": "'git rebase' joriy branch'ning commit'larini boshqa branch'ning eng so'nggi commit'i ustiga ko'chirib, chiziqli tarix hosil qiladi."
+ },
+ {
+  "q": "Remote repository'ga o'zgarishlarni yuklash uchun qaysi buyruq ishlatiladi?",
+  "options": [
+   "git pull",
+   "git fetch",
+   "git commit",
+   "git push"
+  ],
+  "correct": 3,
+  "difficulty": 1,
+  "explanation": "'git push' buyrug'i local commit'larni remote repositoryga yuklaydi."
+ },
+ {
+  "q": "Yangi branch yaratib, unga o'tish (bitta buyruqda)?",
+  "options": [
+   "git branch -c x",
+   "git checkout -b x",
+   "git new x",
+   "git switch x"
+  ],
+  "correct": 1,
+  "difficulty": 2,
+  "explanation": "git checkout -b x — yaratadi va o'tadi. (Yangi: git switch -c x)."
+ },
+ {
+  "q": "Boshqa branch'ni hozirgisiga birlashtirish?",
+  "options": [
+   "git join",
+   "git merge x",
+   "git combine x",
+   "git add x"
+  ],
+  "correct": 1,
+  "difficulty": 2,
+  "explanation": "git merge x — x branch'ini joriy branch'ga qo'shadi."
+ },
+ {
+  "q": "Masofaviy o'zgarishlarni olib, birlashtirish?",
+  "options": [
+   "git fetch",
+   "git pull",
+   "git get",
+   "git download"
+  ],
+  "correct": 1,
+  "difficulty": 2,
+  "explanation": "git pull = fetch + merge. fetch faqat oladi, birlashtirmaydi."
+ },
+ {
+  "q": "Git kuzatmasligi kerak bo'lgan fayllarni qaysi fayl belgilaydi?",
+  "options": [
+   ".gitconfig",
+   ".gitignore",
+   ".ignore",
+   "git.cfg"
+  ],
+  "correct": 1,
+  "difficulty": 2,
+  "explanation": ".gitignore — bu yerdagi naqshlar git tomonidan e'tiborga olinmaydi."
+ },
+ {
+  "q": "O'zgarishlarni local repoga saqlash uchun qaysi buyruq ishlatiladi?",
+  "options": [
+   "git push",
+   "git save",
+   "git commit -m 'xabar'",
+   "git add ."
+  ],
+  "correct": 2,
+  "difficulty": 2,
+  "explanation": "'git commit' staging areadagi o'zgarishlarni snapshot sifatida local repoga saqlaydi."
+ },
+ {
+  "q": "'git merge feature-branch' buyrug'i nima qiladi?",
+  "options": [
+   "feature-branch'ni o'chirib yuboradi",
+   "feature-branch'dagi o'zgarishlarni joriy branchga birlashtiradi",
+   "feature-branch'ga o'tadi",
+   "feature-branch'ni remote'ga yuboradi"
+  ],
+  "correct": 1,
+  "difficulty": 2,
+  "explanation": "'git merge' ko'rsatilgan branch tarixini joriy branchga birlashtirib qo'shadi."
+ },
+ {
+  "q": "'git rebase' va 'git merge' o'rtasidagi asosiy farq nima?",
+  "options": [
+   "Rebase faqat remote branchlar bilan ishlaydi",
+   "Merge commit tarixini o'chiradi, rebase esa saqlaydi",
+   "Rebase commit tarixini chiziqli (linear) qilib qayta yozadi",
+   "Ular bir xil ishlaydi, faqat nomlari farqli"
+  ],
+  "correct": 2,
+  "difficulty": 2,
+  "explanation": "'git rebase' commitlarni baza commit ustiga ko'chirib, tarixni tekis chiziqli ko'rinishga keltiradi."
+ },
+ {
+  "q": "Remote repoga o'zgarishlarni yuborish uchun qaysi buyruq ishlatiladi?",
+  "options": [
+   "git fetch origin",
+   "git pull origin main",
+   "git push origin main",
+   "git upload origin main"
+  ],
+  "correct": 2,
+  "difficulty": 2,
+  "explanation": "'git push origin main' local main branchdagi commitlarni 'origin' remote'ga yuboradi."
+ },
+ {
+  "q": "Pull Request (PR) asosan qaysi maqsadda ishlatiladi?",
+  "options": [
+   "Local o'zgarishlarni saqlash uchun",
+   "Branchni o'chirish uchun",
+   "Kod ko'rib chiqish (code review) va branchni asosiy branchga qo'shish uchun",
+   "Remote reponi local'ga nusxalash uchun"
+  ],
+  "correct": 2,
+  "difficulty": 2,
+  "explanation": "Pull Request jamoa a'zolariga kodni ko'rib chiqish imkonini beradi va tasdiqlangach branchni merge qiladi."
+ },
+ {
+  "q": "'git clone <url>' buyrug'i nima qiladi?",
+  "options": [
+   "Mavjud repoga yangi branch qo'shadi",
+   "Remote reponi to'liq nusxasini local'ga yuklaydi",
+   "Faqat oxirgi commitni yuklaydi",
+   "Local reponi remote'ga yuklaydi"
+  ],
+  "correct": 1,
+  "difficulty": 2,
+  "explanation": "'git clone' remote reponing barcha tarixi va fayllari bilan to'liq nusxasini local kompyuterga yaratadi."
+ },
+ {
+  "q": "'git pull' buyrug'i aslida qaysi ikki buyruqning birikmasidan iborat?",
+  "options": [
+   "git fetch + git rebase",
+   "git clone + git merge",
+   "git fetch + git merge",
+   "git push + git merge"
+  ],
+  "correct": 2,
+  "difficulty": 2,
+  "explanation": "'git pull' avval 'git fetch' bilan remote o'zgarishlarni oladi, so'ng 'git merge' bilan joriy branchga birlashtiradi."
+ },
+ {
+  "q": "Masofaviy manzilni 'origin' nomi bilan qo'shish?",
+  "options": [
+   "git remote add origin URL",
+   "git add origin URL",
+   "git origin URL",
+   "git push origin URL"
+  ],
+  "correct": 0,
+  "difficulty": 3,
+  "explanation": "git remote add origin URL — remote'ga nom (alias) beradi."
+ },
+ {
+  "q": "Tugatilmagan o'zgarishlarni vaqtincha chetga olib qo'yish?",
+  "options": [
+   "git save",
+   "git stash",
+   "git hide",
+   "git drop"
+  ],
+  "correct": 1,
+  "difficulty": 3,
+  "explanation": "git stash — o'zgarishlarni vaqtincha saqlaydi (keyin stash pop)."
+ },
+ {
+  "q": "Hali stage qilinmagan o'zgarishlarni ko'rish?",
+  "options": [
+   "git diff",
+   "git status",
+   "git log -p",
+   "git show"
+  ],
+  "correct": 0,
+  "difficulty": 3,
+  "explanation": "git diff — ish papkasidagi (unstaged) o'zgarishlar."
+ },
+ {
+  "q": "Git'da `git commit --amend` buyrug'i qanday vazifani bajaradi?",
+  "options": [
+   "Yangi branch yaratadi va unga o'tadi",
+   "Oxirgi commit'ni o'zgartirish imkonini beradi",
+   "Barcha staged fayllarni unstage qiladi",
+   "Remote repository'ga o'zgarishlarni yuboradi"
+  ],
+  "correct": 1,
+  "difficulty": 3,
+  "explanation": "`git commit --amend` oxirgi commit xabarini yoki tarkibini qayta yozish uchun ishlatiladi, yangi commit yaratmaydi."
+ },
+ {
+  "q": "`git rebase main` va `git merge main` o'rtasidagi asosiy farq nima?",
+  "options": [
+   "Rebase faqat remote branch'lar bilan ishlaydi",
+   "Merge commit tarixini o'zgartiradi, rebase esa o'zgartirmaydi",
+   "Rebase commit tarixini chiziqli (linear) ko'rinishga keltiradi, merge esa birlashtirish commit'i yaratadi",
+   "Rebase va merge bir xil natija beradi, faqat tezligi farq qiladi"
+  ],
+  "correct": 2,
+  "difficulty": 3,
+  "explanation": "`git rebase` commit'larni qayta yozib tarixni chiziqli qiladi, `git merge` esa ikkala branch tarixini saqlab merge commit yaratadi."
+ },
+ {
+  "q": "Quyidagi vaziyatda qaysi buyruq to'g'ri: siz `feature` branch'idasiz va `main` branch'idagi o'zgarishlarni o'z branch'ingizga qo'shmoqchisiz, lekin tarixni chiziqli saqlashni xohlaysiz.",
+  "options": [
+   "git merge feature",
+   "git rebase main",
+   "git pull origin feature",
+   "git cherry-pick main"
+  ],
+  "correct": 1,
+  "difficulty": 3,
+  "explanation": "`git rebase main` joriy branch'dagi commit'larni main ustiga qayta qo'yib, tarixni chiziqli saqlaydi."
+ },
+ {
+  "q": "`git pull` buyrug'i aslida qaysi ikki buyruqning kombinatsiyasi hisoblanadi?",
+  "options": [
+   "git fetch + git rebase",
+   "git clone + git merge",
+   "git fetch + git merge",
+   "git push + git merge"
+  ],
+  "correct": 2,
+  "difficulty": 3,
+  "explanation": "`git pull` ichida `git fetch` (remote'dan yuklab olish) va `git merge` (lokal branch'ga birlashtirish) bajariladi."
+ },
+ {
+  "q": "Pull Request (PR) yaratishning asosiy maqsadi nima?",
+  "options": [
+   "Remote repository'ni lokal mashina bilan sinxronlashtirish",
+   "Kod o'zgarishlarini review qilish va asosiy branch'ga birlashtirish uchun jarayon boshlash",
+   "Yangi remote repository yaratish",
+   "Commit'larni belgilangan vaqtga rejalash"
+  ],
+  "correct": 1,
+  "difficulty": 3,
+  "explanation": "Pull Request — jamoa a'zolari kod o'zgarishlarini ko'rib chiqishi (code review) va tasdiqlashi uchun mo'ljallangan hamkorlik jarayoni."
+ },
+ {
+  "q": "`git branch -d feature-login` buyrug'i ishlamayapti va xato chiqarapti. Buning eng keng tarqalgan sababi nima?",
+  "options": [
+   "Branch nomi noto'g'ri formatda yozilgan",
+   "`feature-login` branch'i hali main (yoki boshqa branch) ga merge qilinmagan",
+   "Remote repository'ga ulanish yo'q",
+   "Git versiyasi eskirgan"
+  ],
+  "correct": 1,
+  "difficulty": 3,
+  "explanation": "Git `-d` flag bilan merge qilinmagan branch'ni o'chirishni rad etadi; bu xavfsizlik chorasi bo'lib, o'chirish uchun `-D` flag ishlatiladi."
+ },
+ {
+  "q": "`git cherry-pick <commit-hash>` buyrug'i qanday vazifani bajaradi?",
+  "options": [
+   "Belgilangan commit'ni butunlay o'chiradi",
+   "Faqat belgilangan bitta commit'ning o'zgarishlarini joriy branch'ga qo'llaydi",
+   "Barcha branch'larni ko'rsatib, tanlanganni delete qiladi",
+   "Commit xabarini o'zgartirmasdan fayllarni stage qiladi"
+  ],
+  "correct": 1,
+  "difficulty": 3,
+  "explanation": "`git cherry-pick` boshqa branch'dagi ma'lum bir commit'ning o'zgarishlarini butun branch'ni merge qilmasdan joriy branch'ga ko'chiradi."
+ },
+ {
+  "q": "HEAD git'da nimani bildiradi?",
+  "options": [
+   "Birinchi commit",
+   "Hozirgi branch/commit ko'rsatkichi",
+   "Oxirgi fayl",
+   "Remote server"
+  ],
+  "correct": 1,
+  "difficulty": 4,
+  "explanation": "HEAD — hozir qayerda turganingni (qaysi commit) ko'rsatadi."
+ },
+ {
+  "q": "Bitta faylning lokal o'zgarishlarini bekor qilib, oxirgi commit holatiga qaytarish?",
+  "options": [
+   "git delete fayl",
+   "git restore fayl",
+   "git remove fayl",
+   "git reset --all"
+  ],
+  "correct": 1,
+  "difficulty": 4,
+  "explanation": "git restore fayl (yoki git checkout -- fayl) — o'zgarishni bekor qiladi."
+ }
 ]
