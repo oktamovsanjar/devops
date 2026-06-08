@@ -1,0 +1,362 @@
+[
+ {
+  "q": "Qaysi `dig` buyrug'i `github.com` ning IPv4 manzilini qisqa ko'rinishda chiqaradi?",
+  "options": [
+   "dig +short github.com A",
+   "dig +short github.com MX",
+   "dig +short github.com TXT",
+   "dig +short github.com AAAA"
+  ],
+  "correct": 0,
+  "difficulty": 1,
+  "explanation": "A yozuvi nom → IPv4 manzilini ko'rsatadi, `+short` esa faqat natijani chiqaradi."
+ },
+ {
+  "q": "DNS yozuv turlaridan qaysi biri pochta serverini ko'rsatadi?",
+  "options": [
+   "A",
+   "TXT",
+   "MX",
+   "CNAME"
+  ],
+  "correct": 2,
+  "difficulty": 1,
+  "explanation": "MX (Mail Exchange) yozuvi domenning pochta serverini ko'rsatadi."
+ },
+ {
+  "q": "`dig +short TXT google.com` buyrug'i nima maqsadda ishlatiladi?",
+  "options": [
+   "Google ning IPv4 manzilini olish",
+   "Google ning pochta serverlarini ko'rish",
+   "Google ning TXT yozuvlarini (SPF va boshqalar) ko'rish",
+   "Google ning IPv6 manzilini olish"
+  ],
+  "correct": 2,
+  "difficulty": 1,
+  "explanation": "TXT yozuvlari matn ko'rinishidagi ma'lumotlarni (SPF, tasdiqlash) saqlaydi."
+ },
+ {
+  "q": "`curl -s -o /dev/null -w \"%{http_code}\\n\" https://github.com` buyrug'i nima chiqaradi?",
+  "options": [
+   "Sahifaning to'liq HTML kodini",
+   "Faqat HTTP status kodini",
+   "Barcha HTTP headerlarini",
+   "TLS sertifikat ma'lumotlarini"
+  ],
+  "correct": 1,
+  "difficulty": 1,
+  "explanation": "`-o /dev/null` javob tanasini o'chiradi, `-w \"%{http_code}\"` esa faqat status kodni chiqaradi."
+ },
+ {
+  "q": "HTTP 404 status kodi qaysi toifaga kiradi?",
+  "options": [
+   "2xx — muvaffaqiyatli",
+   "3xx — yo'naltirish",
+   "4xx — mijoz xatosi",
+   "5xx — server xatosi"
+  ],
+  "correct": 2,
+  "difficulty": 1,
+  "explanation": "4xx kodlari mijoz tomonidagi xatolarni bildiradi, 404 esa resurs topilmaganligini ko'rsatadi."
+ },
+ {
+  "q": "Port ochiq yoki yopiqligini tekshirish uchun qaysi buyruq ishlatiladi?",
+  "options": [
+   "curl -I host:443",
+   "dig +short host A",
+   "nc -z host 443",
+   "openssl s_client -connect host:443"
+  ],
+  "correct": 2,
+  "difficulty": 1,
+  "explanation": "`nc -z` buyrug'i ma'lumot jo'natmasdan portga ulanish imkoniyatini tekshiradi."
+ },
+ {
+  "q": "`openssl s_client -connect github.com:443` natijasini `openssl x509 -noout -dates` ga uzatishdan maqsad nima?",
+  "options": [
+   "HTTP status kodini ko'rish",
+   "TLS sertifikatning amal qilish muddatini ko'rish",
+   "DNS A yozuvini tekshirish",
+   "Routing jadvalini ko'rish"
+  ],
+  "correct": 1,
+  "difficulty": 2,
+  "explanation": "`openssl x509 -noout -dates` sertifikatning `notBefore` va `notAfter` sanalarini ko'rsatadi."
+ },
+ {
+  "q": "\"Sayt ochilmayapti\" muammosini debug qilishda to'g'ri tartib qaysi?",
+  "options": [
+   "curl → openssl → nc → dig → ip route",
+   "dig → nc -z → openssl → curl -I → ip route",
+   "ip route → curl → dig → openssl → nc",
+   "nc → dig → curl → ip route → openssl"
+  ],
+  "correct": 1,
+  "difficulty": 2,
+  "explanation": "Debug tartibi: avval DNS, so'ng port, TLS, HTTP javobi va routing tekshiriladi."
+ },
+ {
+  "q": "HTTP 301 status kodi nimani bildiradi?",
+  "options": [
+   "So'rov muvaffaqiyatli bajarildi",
+   "Server xatosi yuz berdi",
+   "Resurs boshqa manzilga doimiy ko'chirilgan (yo'naltirish)",
+   "Autentifikatsiya talab qilinadi"
+  ],
+  "correct": 2,
+  "difficulty": 2,
+  "explanation": "301 kodi 3xx toifasiga kiradi va resursning doimiy yo'naltirilganligini bildiradi."
+ },
+ {
+  "q": "CNAME DNS yozuvi qanday ishlaydi?",
+  "options": [
+   "Nom → IPv4 manzilga ko'rsatadi",
+   "Nom → boshqa nomga (taxallus) ko'rsatadi",
+   "Domenning pochta serverini ko'rsatadi",
+   "Matn ma'lumotlarini saqlaydi"
+  ],
+  "correct": 1,
+  "difficulty": 2,
+  "explanation": "CNAME (Canonical Name) yozuvi bir domenni boshqa domennomiga taxallus sifatida bog'laydi."
+ },
+ {
+  "q": "`curl -sI https://github.com` buyrug'i nima chiqaradi?",
+  "options": [
+   "Faqat HTTP status kodi",
+   "Sahifaning to'liq HTML mazmuni",
+   "Barcha HTTP response headerlarini",
+   "TLS sertifikat muddati"
+  ],
+  "correct": 2,
+  "difficulty": 2,
+  "explanation": "`-I` (HEAD metodi) faqat headerlarni so'raydi, `-s` esa progress chiqarmaslik uchun."
+ },
+ {
+  "q": "`dig +short MX gmail.com` buyrug'i qanday natija qaytaradi?",
+  "options": [
+   "gmail.com ning IPv4 manzillarini",
+   "gmail.com ning TXT yozuvlarini",
+   "gmail.com ning pochta serverlarini",
+   "gmail.com ning IPv6 manzillarini"
+  ],
+  "correct": 2,
+  "difficulty": 1,
+  "explanation": "MX so'rovi domenning pochta qabul qiluvchi serverlarini ro'yxatini qaytaradi."
+ },
+ {
+  "q": "HTTP 502 status kodi qaysi toifaga kiradi va nima ma'no anglatadi?",
+  "options": [
+   "4xx — resurs topilmadi",
+   "3xx — vaqtincha yo'naltirish",
+   "5xx — server xatosi (Bad Gateway)",
+   "2xx — muvaffaqiyatli yaratildi"
+  ],
+  "correct": 2,
+  "difficulty": 2,
+  "explanation": "502 kodi 5xx server xatolari toifasiga kiradi va gateway/proxy xatosini bildiradi."
+ },
+ {
+  "q": "TXT DNS yozuvlari odatda qanday ma'lumotlarni saqlaydi?",
+  "options": [
+   "Serverning IPv4 manzili",
+   "Pochta serveri prioriteti",
+   "SPF qoidalari va domain tasdiqlash ma'lumotlari",
+   "IPv6 manzili"
+  ],
+  "correct": 2,
+  "difficulty": 2,
+  "explanation": "TXT yozuvlari erkin matn saqlaydi, ko'pincha SPF, DKIM va domain tasdiqlash uchun ishlatiladi."
+ },
+ {
+  "q": "Quyidagi buyruqlar ketma-ketligida `2>/dev/null` qismining vazifasi nima?\n`echo | openssl s_client -connect github.com:443 2>/dev/null | openssl x509 -noout -dates`",
+  "options": [
+   "Sertifikat ma'lumotlarini faylga saqlaydi",
+   "Xato va debug xabarlarini ekranga chiqmaslik uchun yo'q qiladi",
+   "Buyruqni fon rejimida ishlatadi",
+   "openssl natijasini keyingi buyruqqa uzatadi"
+  ],
+  "correct": 1,
+  "difficulty": 3,
+  "explanation": "`2>/dev/null` stderr oqimini yo'q qiladi, shuning uchun openssl ning qo'shimcha debug xabarlari ko'rinmaydi."
+ },
+ {
+  "q": "Qaysi `dig` buyrug'i faqat github.com ning IPv4 manzilini qisqa ko'rinishda chiqaradi?",
+  "options": [
+   "dig +short github.com A",
+   "dig +short github.com MX",
+   "dig +short github.com TXT",
+   "dig +short github.com CNAME"
+  ],
+  "correct": 0,
+  "difficulty": 1,
+  "explanation": "A yozuvi nom → IPv4 manzilni ko'rsatadi, +short esa faqat natijani chiqaradi."
+ },
+ {
+  "q": "HTTP status kodi 404 qaysi toifaga kiradi?",
+  "options": [
+   "2xx — muvaffaqiyatli",
+   "3xx — yo'naltirish",
+   "4xx — mijoz xatosi",
+   "5xx — server xatosi"
+  ],
+  "correct": 2,
+  "difficulty": 1,
+  "explanation": "404 Not Found — bu mijoz tomonidagi xato (4xx toifasi)."
+ },
+ {
+  "q": "TXT yozuvlari asosan nimaga ishlatiladi?",
+  "options": [
+   "IPv6 manzilni saqlash uchun",
+   "Pochta serverini aniqlash uchun",
+   "SPF va tasdiqlash ma'lumotlarini saqlash uchun",
+   "Boshqa nomga taxallus berish uchun"
+  ],
+  "correct": 2,
+  "difficulty": 1,
+  "explanation": "TXT yozuvi matn (SPF, domen tasdiqlash va boshqa) ma'lumotlarni saqlaydi."
+ },
+ {
+  "q": "Port ochiqligini tekshirish uchun qaysi buyruq ishlatiladi?",
+  "options": [
+   "dig -z host 443",
+   "nc -z host 443",
+   "curl -z host 443",
+   "openssl -z host 443"
+  ],
+  "correct": 1,
+  "difficulty": 1,
+  "explanation": "nc (netcat) -z bayrog'i bilan faqat port ochiq-ochiqmasligi tekshiriladi."
+ },
+ {
+  "q": "HTTP status kodi 301 qaysi holatni bildiradi?",
+  "options": [
+   "Muvaffaqiyatli so'rov",
+   "Doimiy yo'naltirish",
+   "Sahifa topilmadi",
+   "Server ichki xatosi"
+  ],
+  "correct": 1,
+  "difficulty": 2,
+  "explanation": "301 Moved Permanently — 3xx toifasiga kiruvchi doimiy yo'naltirish kodi."
+ },
+ {
+  "q": "TLS sertifikatning amal qilish muddatini ko'rish uchun qaysi buyruq ishlatiladi?",
+  "options": [
+   "dig +short github.com A",
+   "curl -sI https://github.com",
+   "echo | openssl s_client -connect github.com:443 2>/dev/null | openssl x509 -noout -dates",
+   "nc -z github.com 443"
+  ],
+  "correct": 2,
+  "difficulty": 2,
+  "explanation": "openssl s_client bilan ulanib, x509 -dates buyrug'i notBefore/notAfter muddatlarini chiqaradi."
+ },
+ {
+  "q": "'Sayt ochilmayapti' muammosini debug qilishda to'g'ri tartib qaysi?",
+  "options": [
+   "TLS → HTTP → DNS → Port → Routing",
+   "DNS → Port → TLS → HTTP → Routing",
+   "HTTP → DNS → Routing → Port → TLS",
+   "Port → Routing → HTTP → TLS → DNS"
+  ],
+  "correct": 1,
+  "difficulty": 2,
+  "explanation": "Darsda ko'rsatilgan tartib: DNS → Port → TLS → HTTP → Routing."
+ },
+ {
+  "q": "CNAME yozuvi nima vazifani bajaradi?",
+  "options": [
+   "Nomni IPv4 ga o'giradi",
+   "Pochta serverini ko'rsatadi",
+   "Nomga boshqa nom uchun taxallus beradi",
+   "Matn ma'lumotlarini saqlaydi"
+  ],
+  "correct": 2,
+  "difficulty": 2,
+  "explanation": "CNAME (Canonical Name) yozuvi bir domen nomini boshqa domen nomiga yo'naltiradi."
+ },
+ {
+  "q": "HTTP 502 status kodi qaysi toifaga kiradi va nima degan ma'no bildiradi?",
+  "options": [
+   "4xx — mijoz so'rov xatosi",
+   "3xx — vaqtinchalik yo'naltirish",
+   "5xx — server xatosi (Bad Gateway)",
+   "2xx — muvaffaqiyatli javob"
+  ],
+  "correct": 2,
+  "difficulty": 2,
+  "explanation": "502 Bad Gateway server tomonidagi xato bo'lib, 5xx toifasiga kiradi."
+ },
+ {
+  "q": "`dig +short TXT google.com` buyrug'i nima qaytaradi?",
+  "options": [
+   "google.com ning IPv4 manzillarini",
+   "google.com ning pochta serverlarini",
+   "google.com ning TXT yozuvlarini (SPF va boshqalar)",
+   "google.com ning IPv6 manzillarini"
+  ],
+  "correct": 2,
+  "difficulty": 2,
+  "explanation": "dig +short TXT ko'rsatilgan domen uchun TXT yozuvlarini qisqa formatda chiqaradi."
+ },
+ {
+  "q": "openssl s_client buyrug'ida `-servername` parametri nima uchun kerak?",
+  "options": [
+   "Port raqamini belgilash uchun",
+   "SNI (Server Name Indication) orqali to'g'ri sertifikat so'rash uchun",
+   "HTTP header'larni ko'rish uchun",
+   "DNS so'rovini yuborish uchun"
+  ],
+  "correct": 1,
+  "difficulty": 3,
+  "explanation": "Darsda buyruqda -servername ishlatilgan — bu SNI uchun bo'lib, bir IP da bir nechta domen bo'lsa to'g'ri sertifikat qaytariladi."
+ },
+ {
+  "q": "Qaysi buyruq routing jadvalini ko'rish uchun ishlatiladi?",
+  "options": [
+   "dig +short route",
+   "nc -z route 80",
+   "ip route",
+   "curl -sI route"
+  ],
+  "correct": 2,
+  "difficulty": 3,
+  "explanation": "Darsda routing tekshiruvi uchun `ip route` buyrug'i ko'rsatilgan."
+ },
+ {
+  "q": "Quyidagi `dig` buyrug'i qanday ma'lumot qaytaradi?\n`dig +short MX gmail.com`",
+  "options": [
+   "Gmail'ning pochta serverlari ro'yxatini",
+   "Gmail'ning IPv4 manzilini",
+   "Gmail'ning TLS sertifikat muddatini",
+   "Gmail'ning IPv6 manzilini"
+  ],
+  "correct": 0,
+  "difficulty": 1,
+  "explanation": "MX yozuvi domen uchun pochta serverlarini ko'rsatadi."
+ },
+ {
+  "q": "HTTP javob kodi `302` qaysi kategoriyaga kiradi?",
+  "options": [
+   "Server xatosi",
+   "Mijoz xatosi",
+   "Yo'naltirish (redirect)",
+   "Muvaffaqiyatli javob"
+  ],
+  "correct": 2,
+  "difficulty": 1,
+  "explanation": "3xx kodlar yo'naltirish (redirect) kategoriyasiga kiradi, 302 esa vaqtinchalik yo'naltirishdir."
+ },
+ {
+  "q": "`nc -z github.com 443` buyrug'i nimani tekshiradi?",
+  "options": [
+   "github.com'da 443-port ochiq yoki yo'qligini",
+   "github.com'ning TLS sertifikat muddatini",
+   "github.com'ning A yozuvini",
+   "github.com'ga routing yo'lini"
+  ],
+  "correct": 0,
+  "difficulty": 2,
+  "explanation": "`nc -z` ko'rsatilgan host va portga ulanish imkoniyatini (port ochiqligini) tekshiradi."
+ }
+]

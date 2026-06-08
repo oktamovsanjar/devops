@@ -1,0 +1,362 @@
+[
+ {
+  "q": "Yangi lokal Git repozitoriyasini yaratish uchun qaysi buyruq ishlatiladi?",
+  "options": [
+   "git init",
+   "git start",
+   "git create",
+   "git new"
+  ],
+  "correct": 0,
+  "difficulty": 1,
+  "explanation": "'git init' buyrug'i joriy papkada yangi lokal Git repozitoriyasini yaratadi."
+ },
+ {
+  "q": "Git'da foydalanuvchi ismini lokal sozlash uchun to'g'ri buyruq qaysi?",
+  "options": [
+   "git config user.name \"Ali\"",
+   "git set name \"Ali\"",
+   "git user --name \"Ali\"",
+   "git init --name \"Ali\""
+  ],
+  "correct": 0,
+  "difficulty": 1,
+  "explanation": "'git config user.name' buyrug'i lokal repozitoriy uchun foydalanuvchi ismini sozlaydi."
+ },
+ {
+  "q": "Faylni staging maydoniga (keyingi commitga tayyorlash uchun) qo'shish buyrug'i qaysi?",
+  "options": [
+   "git commit fayl.txt",
+   "git add fayl.txt",
+   "git stage fayl.txt",
+   "git push fayl.txt"
+  ],
+  "correct": 1,
+  "difficulty": 1,
+  "explanation": "'git add' buyrug'i faylni staging maydoniga qo'shadi — ya'ni uni keyingi commitga tayyorlaydi."
+ },
+ {
+  "q": "Staging maydonidagi o'zgarishlarni snapshot sifatida saqlash uchun qaysi buyruq ishlatiladi?",
+  "options": [
+   "git save -m \"xabar\"",
+   "git add -m \"xabar\"",
+   "git commit -m \"xabar\"",
+   "git log -m \"xabar\""
+  ],
+  "correct": 2,
+  "difficulty": 1,
+  "explanation": "'git commit -m' buyrug'i staging maydonidagi o'zgarishlarni xabar bilan birga snapshot qilib saqlaydi."
+ },
+ {
+  "q": "Commit tarixini qisqa (bir qatorli) ko'rish uchun qaysi buyruq ishlatiladi?",
+  "options": [
+   "git history",
+   "git log --oneline",
+   "git show --short",
+   "git status --log"
+  ],
+  "correct": 1,
+  "difficulty": 1,
+  "explanation": "'git log --oneline' har bir commitni bitta qatorda ko'rsatib, tarixni qisqa ko'rish imkonini beradi."
+ },
+ {
+  "q": "'git status' buyrug'i nima ko'rsatadi?",
+  "options": [
+   "Faqat oxirgi commit xabarini",
+   "Reponing hozirgi holatini — qaysi fayllar o'zgargan yoki staging'da ekanligini",
+   "Barcha branch'lar ro'yxatini",
+   "Remote server bilan bog'lanish holatini"
+  ],
+  "correct": 1,
+  "difficulty": 1,
+  "explanation": "'git status' joriy reponing holatini — o'zgartirilgan, staging'dagi va kuzatilmagan fayllarni ko'rsatadi."
+ },
+ {
+  "q": "'feature' nomli yangi tarmoq (branch) yaratish uchun to'g'ri buyruq qaysi?",
+  "options": [
+   "git new feature",
+   "git create feature",
+   "git branch feature",
+   "git init feature"
+  ],
+  "correct": 2,
+  "difficulty": 1,
+  "explanation": "'git branch feature' buyrug'i 'feature' nomli yangi tarmoq yaratadi."
+ },
+ {
+  "q": "'feature' tarmoqqa o'tish uchun qaysi buyruqlardan biri ishlatilishi MUMKIN?",
+  "options": [
+   "git go feature",
+   "git move feature",
+   "git checkout feature",
+   "git branch --go feature"
+  ],
+  "correct": 2,
+  "difficulty": 2,
+  "explanation": "'git checkout feature' (yoki 'git switch feature') buyrug'i 'feature' tarmoqqa o'tish uchun ishlatiladi."
+ },
+ {
+  "q": "'feature' tarmoqdagi o'zgarishlarni 'main' tarmoqqa qo'shish uchun avval 'main' tarmoqqa o'tib, keyin qaysi buyruq ishlatiladi?",
+  "options": [
+   "git join feature",
+   "git merge feature",
+   "git pull feature",
+   "git combine feature"
+  ],
+  "correct": 1,
+  "difficulty": 2,
+  "explanation": "'git merge feature' buyrug'i 'feature' tarmoqdagi o'zgarishlarni joriy (main) tarmoqqa birlashtiradi."
+ },
+ {
+  "q": "'secret.txt' faylini Git kuzatuvidan chiqarib, .gitignore'ga qo'shish uchun qaysi buyruq ishlatiladi?",
+  "options": [
+   "git ignore secret.txt",
+   "git rm secret.txt",
+   "echo \"secret.txt\" >> .gitignore",
+   "git add --ignore secret.txt"
+  ],
+  "correct": 2,
+  "difficulty": 2,
+  "explanation": "'.gitignore' fayliga fayl nomini yozish orqali Git uni kuzatishni to'xtatadi — 'echo' buyrug'i shu maqsadda ishlatiladi."
+ },
+ {
+  "q": "Barcha '.log' kengaytmali fayllarni Git'dan yashirish uchun .gitignore'ga qaysi qatorni qo'shish kerak?",
+  "options": [
+   ".log",
+   "ignore *.log",
+   "*.log",
+   "log/*"
+  ],
+  "correct": 2,
+  "difficulty": 2,
+  "explanation": "'*.log' pattern barcha .log kengaytmali fayllarni .gitignore orqali Git kuzatuvidan chiqaradi."
+ },
+ {
+  "q": "O'zgarishlarni staging'ga qo'shmasdan turib, so'nggi commit bilan joriy fayl orasidagi farqni ko'rish uchun qaysi buyruq ishlatiladi?",
+  "options": [
+   "git log --diff",
+   "git diff",
+   "git show --changes",
+   "git status --verbose"
+  ],
+  "correct": 1,
+  "difficulty": 2,
+  "explanation": "'git diff' buyrug'i commit qilinmagan (staging'ga qo'shilmagan) o'zgarishlarni ko'rsatadi."
+ },
+ {
+  "q": ".gitignore fayliga parol va kalit (masalan, .env) fayllarini kiritish NIMA UCHUN muhim?",
+  "options": [
+   "Fayllarni tezroq commitlash uchun",
+   "Maxfiy ma'lumotlarning repozitoriy tarixiga tushib qolmasligi uchun",
+   "Branch yaratishni osonlashtirish uchun",
+   "Git log'ni qisqartirish uchun"
+  ],
+  "correct": 1,
+  "difficulty": 2,
+  "explanation": "Maxfiy fayllar .gitignore'ga qo'shiladi, shunda ular hech qachon commit tarixiga tushib, oshkor bo'lmaydi."
+ },
+ {
+  "q": "Quyidagi oqimda qaysi qadam NOTO'G'RI tartibda joylashgan?\n1) git init  2) git commit -m \"msg\"  3) git add fayl.txt",
+  "options": [
+   "Tartib to'g'ri: init → commit → add",
+   "To'g'ri tartib: init → add → commit; berilgan tartibda commit add'dan oldin — bu noto'g'ri",
+   "git init kerak emas, faqat add va commit yetarli",
+   "git add va git commit bir xil narsa"
+  ],
+  "correct": 1,
+  "difficulty": 3,
+  "explanation": "To'g'ri oqim: git init → git add → git commit; fayl avval staging'ga qo'shilmasa commit qilib bo'lmaydi."
+ },
+ {
+  "q": "Dasturchi 'feature' tarmoqda yangi funksiya yozdi va commitladi. Endi 'main' tarmoqqa o'tib merge qilmoqchi. To'g'ri buyruqlar ketma-ketligi qaysi?",
+  "options": [
+   "git merge feature → git checkout main",
+   "git checkout main → git merge feature",
+   "git branch main → git merge feature",
+   "git merge main → git checkout feature"
+  ],
+  "correct": 1,
+  "difficulty": 3,
+  "explanation": "Merge qilish uchun avval maqsad tarmoqqa (main) o'tish, keyin 'git merge feature' buyrug'ini berish kerak."
+ },
+ {
+  "q": "Yangi lokal Git repozitoriyasi yaratish uchun qaysi buyruq ishlatiladi?",
+  "options": [
+   "git init",
+   "git start",
+   "git create",
+   "git new"
+  ],
+  "correct": 0,
+  "difficulty": 1,
+  "explanation": "'git init' buyrug'i joriy papkada yangi lokal repo yaratadi."
+ },
+ {
+  "q": "Faqat lokal repo uchun foydalanuvchi ismini sozlash uchun to'g'ri buyruq qaysi?",
+  "options": [
+   "git config user.name \"Ali\"",
+   "git set name \"Ali\"",
+   "git user --name \"Ali\"",
+   "git init user.name \"Ali\""
+  ],
+  "correct": 0,
+  "difficulty": 1,
+  "explanation": "'git config user.name' lokal repo uchun foydalanuvchi ismini belgilaydi."
+ },
+ {
+  "q": "'git add fayl.txt' buyrug'i nimani bajaradi?",
+  "options": [
+   "fayl.txt ni staging areaga qo'shadi",
+   "fayl.txt ni commitga saqlaydi",
+   "fayl.txt ni o'chiradi",
+   "fayl.txt ni branch'ga yuboradi"
+  ],
+  "correct": 0,
+  "difficulty": 1,
+  "explanation": "'git add' faylni staging areaga (keyingi commitga tayyorlov maydoniga) qo'shadi."
+ },
+ {
+  "q": "Staging areadagi o'zgarishlarni snapshot sifatida saqlash uchun qaysi buyruq ishlatiladi?",
+  "options": [
+   "git commit -m \"xabar\"",
+   "git save -m \"xabar\"",
+   "git push -m \"xabar\"",
+   "git add -m \"xabar\""
+  ],
+  "correct": 0,
+  "difficulty": 1,
+  "explanation": "'git commit -m' buyrug'i staging dagi o'zgarishlarni xabar bilan birga saqlaydi."
+ },
+ {
+  "q": "Reponing joriy holatini (qaysi fayllar o'zgargan, qaysi staging da) ko'rish uchun qaysi buyruq ishlatiladi?",
+  "options": [
+   "git status",
+   "git log",
+   "git diff",
+   "git show"
+  ],
+  "correct": 0,
+  "difficulty": 1,
+  "explanation": "'git status' buyrug'i reponing joriy holatini — o'zgartirilgan va staging dagi fayllarni ko'rsatadi."
+ },
+ {
+  "q": "'feature' nomli yangi tarmoq yaratish uchun to'g'ri buyruq qaysi?",
+  "options": [
+   "git branch feature",
+   "git new feature",
+   "git init feature",
+   "git checkout --new feature"
+  ],
+  "correct": 0,
+  "difficulty": 1,
+  "explanation": "'git branch feature' buyrug'i 'feature' nomli yangi tarmoq yaratadi."
+ },
+ {
+  "q": "'feature' tarmoqiga o'tish uchun quyidagilardan qaysi IKKI buyruq to'g'ri? (bitta eng to'g'ri javobni tanlang)",
+  "options": [
+   "git checkout feature yoki git switch feature",
+   "git move feature yoki git go feature",
+   "git branch feature yoki git log feature",
+   "git merge feature yoki git pull feature"
+  ],
+  "correct": 0,
+  "difficulty": 2,
+  "explanation": "Tarmoqqa o'tish uchun 'git checkout' yoki 'git switch' buyruqlari ishlatiladi."
+ },
+ {
+  "q": "'feature' tarmoqidagi o'zgarishlarni 'main' tarmoqqa birlashtirish uchun 'main' da turib qaysi buyruq ishlatiladi?",
+  "options": [
+   "git merge feature",
+   "git branch merge feature",
+   "git join feature",
+   "git add feature"
+  ],
+  "correct": 0,
+  "difficulty": 2,
+  "explanation": "'git merge feature' buyrug'i 'feature' tarmoqini joriy (main) tarmoqqa birlashtiradi."
+ },
+ {
+  "q": "'.gitignore' fayliga '*.log' qo'shilsa nima bo'ladi?",
+  "options": [
+   ".log kengaytmali barcha fayllar git tomonidan kuzatilmaydi",
+   "Barcha fayllar o'chiriladi",
+   "Faqat 'main.log' fayli o'chiriladi",
+   ".log fayllar avtomatik commit qilinadi"
+  ],
+  "correct": 0,
+  "difficulty": 2,
+  "explanation": "'.gitignore' dagi '*.log' shablon barcha .log fayllarni git kuzatuvidan chiqaradi."
+ },
+ {
+  "q": "Maxfiy ma'lumotlar (parollar, .env fayllar) bilan nima qilish kerak?",
+  "options": [
+   ".gitignore ga qo'shib, hech qachon commit qilmaslik kerak",
+   "Har doim commit qilish kerak",
+   "Faqat feature branch'da commit qilish kerak",
+   "git log bilan ko'rish kerak"
+  ],
+  "correct": 0,
+  "difficulty": 2,
+  "explanation": "Maxfiy fayllar .gitignore orqali kuzatuvdan chiqarilishi va hech qachon commit qilinmasligi kerak."
+ },
+ {
+  "q": "Bugungi darsda barcha amallar qayerda bajariladi?",
+  "options": [
+   "Lokal repoda (work/ ichida), internet kerak emas",
+   "GitHub serverida, internet kerak",
+   "Cloud storage da",
+   "Virtual machineda, internet kerak"
+  ],
+  "correct": 0,
+  "difficulty": 1,
+  "explanation": "Darsda barcha amallar faqat lokal repoda bajariladi, internet talab qilinmaydi."
+ },
+ {
+  "q": "'git diff' buyrug'i asosan nima uchun ishlatiladi?",
+  "options": [
+   "O'zgarishlarni (qo'shilgan/o'chirilgan qatorlarni) ko'rish uchun",
+   "Yangi branch yaratish uchun",
+   "Commit saqlash uchun",
+   "Repo o'chirish uchun"
+  ],
+  "correct": 0,
+  "difficulty": 2,
+  "explanation": "'git diff' buyrug'i fayllarning commit qilinmagan o'zgarishlarini ko'rsatadi."
+ },
+ {
+  "q": "Quyidagi buyruqlar to'g'ri tartibda berilgan qaysi variant asosiy Git oqimini ifodalaydi?",
+  "options": [
+   "git init → git add → git commit",
+   "git commit → git add → git init",
+   "git add → git init → git commit",
+   "git init → git commit → git add"
+  ],
+  "correct": 0,
+  "difficulty": 2,
+  "explanation": "Asosiy Git oqimi: avval repo yaratiladi (init), keyin fayl qo'shiladi (add), so'ng saqlanadi (commit)."
+ },
+ {
+  "q": "Feature branch workflow da to'g'ri ketma-ketlik qaysi?",
+  "options": [
+   "branch yarat → checkout → o'zgarish commit qil → main ga qayt → merge",
+   "merge → branch yarat → checkout → commit",
+   "commit → branch yarat → merge → checkout",
+   "checkout → commit → branch yarat → merge"
+  ],
+  "correct": 0,
+  "difficulty": 3,
+  "explanation": "To'g'ri workflow: yangi branch yaratish, unga o'tish, o'zgarish commit qilish, asosiy tarmoqqa qaytib merge qilish."
+ },
+ {
+  "q": "Git'da yangi lokal repo yaratish uchun qaysi buyruq ishlatiladi?",
+  "options": [
+   "git start",
+   "git init",
+   "git create",
+   "git new"
+  ],
+  "correct": 1,
+  "difficulty": 1,
+  "explanation": "git init buyrug'i joriy papkada yangi lokal Git repository yaratadi."
+ }
+]

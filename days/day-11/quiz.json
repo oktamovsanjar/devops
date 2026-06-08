@@ -1,0 +1,362 @@
+[
+ {
+  "q": "\"Bare\" repo (`git init --bare`) nima uchun ishlatiladi?",
+  "options": [
+   "Faqat tarix saqlash uchun, ishchi nusxasiz markaziy repo sifatida",
+   "Faqat bitta faylni kuzatish uchun",
+   "Konfliktlarni avtomatik yechish uchun",
+   "Branch yaratishni taqiqlash uchun"
+  ],
+  "correct": 0,
+  "difficulty": 1,
+  "explanation": "Bare repo ishchi nusxasiz faqat git tarixini saqlaydi va markaziy (remote) repo vazifasini bajaradi."
+ },
+ {
+  "q": "`git init --bare` buyrug'i qanday repo yaratadi?",
+  "options": [
+   "Oddiy ishchi papkali repo",
+   "Ishchi nusxasiz, faqat tarix saqlovchi markaziy repo",
+   "Yangi branch yaratadi",
+   "Remote'ni o'chiradi"
+  ],
+  "correct": 1,
+  "difficulty": 1,
+  "explanation": "`--bare` bayrog'i ishchi papkasiz, faqat git tarixini saqlaydigan bare repo yaratadi."
+ },
+ {
+  "q": "Mavjud remote reponi lokal papkaga ko'chirish uchun qaysi buyruq ishlatiladi?",
+  "options": [
+   "git pull origin main",
+   "git remote add origin <url>",
+   "git clone <url> papka",
+   "git fetch origin"
+  ],
+  "correct": 2,
+  "difficulty": 1,
+  "explanation": "`git clone <url> papka` remote reponing to'liq nusxasini lokal papkaga oladi."
+ },
+ {
+  "q": "`git remote -v` buyrug'i nima ko'rsatadi?",
+  "options": [
+   "Barcha commit tarixini",
+   "Ulangan remote'lar va ularning URL'larini",
+   "Joriy branch nomini",
+   "O'zgartirilgan fayllar ro'yxatini"
+  ],
+  "correct": 1,
+  "difficulty": 1,
+  "explanation": "`git remote -v` joriy repoga ulangan barcha remote nomlarini va URL manzillarini ko'rsatadi."
+ },
+ {
+  "q": "Lokal o'zgarishlarni remote `origin` dagi `main` branchga yuborish uchun to'g'ri buyruq qaysi?",
+  "options": [
+   "git pull origin main",
+   "git fetch origin main",
+   "git merge origin main",
+   "git push origin main"
+  ],
+  "correct": 3,
+  "difficulty": 1,
+  "explanation": "`git push origin main` lokal commitlarni remote `origin`ning `main` branchiga yuboradi."
+ },
+ {
+  "q": "`git pull` buyrug'i nima qiladi?",
+  "options": [
+   "Lokal o'zgarishlarni remote'ga yuboradi",
+   "Remote'dan yangilik olib, lokal branchga birlashtiradi",
+   "Yangi branch yaratadi",
+   "Conflict belgilarini o'chiradi"
+  ],
+  "correct": 1,
+  "difficulty": 1,
+  "explanation": "`git pull` remote repodan yangi o'zgarishlarni yuklab, lokal branch bilan merge qiladi."
+ },
+ {
+  "q": "Pull Request (PR) oqimida birinchi qadam qaysi?",
+  "options": [
+   "Remote'da PR ochish",
+   "main branchga to'g'ridan-to'g'ri push qilish",
+   "feature branch yaratib, unda ishlash",
+   "Conflict'ni yechish"
+  ],
+  "correct": 2,
+  "difficulty": 2,
+  "explanation": "PR oqimi `git checkout -b feature` bilan feature branch yaratishdan boshlanadi."
+ },
+ {
+  "q": "Feature branch yaratilgandan so'ng PR oqimining ikkinchi qadami nima?",
+  "options": [
+   "feature branchdagi o'zgarishlarni remote'ga push qilish",
+   "main branchni o'chirish",
+   "bare repo yaratish",
+   "git pull bajarish"
+  ],
+  "correct": 0,
+  "difficulty": 2,
+  "explanation": "Feature branch'da ishlangan commitlar `git push origin feature` bilan remote'ga yuboriladi, so'ng PR ochiladi."
+ },
+ {
+  "q": "Git conflict (to'qnashuv) qachon yuzaga keladi?",
+  "options": [
+   "Bitta kishi ikkita branch yaratganda",
+   "Ikki kishi bitta faylning bir xil qatorini o'zgartirganda",
+   "Remote'ga push qilishda internet uzilganda",
+   "Bare repo klonlanganda"
+  ],
+  "correct": 1,
+  "difficulty": 2,
+  "explanation": "Git ikki kishining bir xil qatorda qilgan o'zgarishlarini avtomatik birlashtira olmaydi va conflict yuzaga keladi."
+ },
+ {
+  "q": "Conflict vaqtida faylda qanday belgilar paydo bo'ladi?",
+  "options": [
+   "`### HEAD` va `--- feature`",
+   "`<<<<<<< HEAD`, `=======`, `>>>>>>> feature`",
+   "`[CONFLICT]` va `[MERGE]`",
+   "`*** main` va `+++ feature`"
+  ],
+  "correct": 1,
+  "difficulty": 2,
+  "explanation": "Git conflict markerлari `<<<<<<<`, `=======`, `>>>>>>>` ko'rinishida faylga yoziladi."
+ },
+ {
+  "q": "Conflict'ni yechgandan so'ng qanday amallar bajarilishi kerak?",
+  "options": [
+   "git reset --hard, so'ng git push",
+   "Faqat git commit",
+   "git add fayl, so'ng git commit",
+   "git clone qaytadan bajarish"
+  ],
+  "correct": 2,
+  "difficulty": 2,
+  "explanation": "Conflict belgilarini o'chirib kerakli kodni qoldirgandan so'ng `git add fayl && git commit` bilan yechim saqlanadi."
+ },
+ {
+  "q": "Conflict faylini qo'lda tuzatgandan so'ng `git add` qilmasdan `git commit` bajarsak nima bo'ladi?",
+  "options": [
+   "Commit muvaffaqiyatli yaratiladi",
+   "Git conflict'ni avtomatik hal qiladi",
+   "Git hali conflict mavjudligini ko'rsatadi va commit rad etiladi",
+   "Remote'ga avtomatik push bo'ladi"
+  ],
+  "correct": 2,
+  "difficulty": 3,
+  "explanation": "Conflict yechilgandan so'ng `git add` bilan fayl stage'ga qo'shilmasa, git conflict hali ham hal etilmagan deb hisoblaydi."
+ },
+ {
+  "q": "Lokal merge mantig'ida feature branchni main'ga qo'shish uchun to'g'ri ketma-ketlik qaysi?",
+  "options": [
+   "`git checkout feature` → `git merge main`",
+   "`git checkout main` → `git merge feature`",
+   "`git push origin feature` → `git pull`",
+   "`git clone` → `git merge feature`"
+  ],
+  "correct": 1,
+  "difficulty": 2,
+  "explanation": "main branchga o'tib (`checkout main`), keyin feature branchni unga merge qilish (`merge feature`) to'g'ri tartib."
+ },
+ {
+  "q": "Ikkinchi ishchi (nusxa) remote'dagi yangi o'zgarishlarni olishi uchun qaysi buyruqni ishlatadi?",
+  "options": [
+   "git push origin main",
+   "git remote -v",
+   "git pull",
+   "git init --bare"
+  ],
+  "correct": 2,
+  "difficulty": 1,
+  "explanation": "`git pull` remote'dan yangi commitlarni yuklab lokal reponi sinxronlashtiradi."
+ },
+ {
+  "q": "Ushbu darsda GitHub o'rniga nima ishlatilgan va buning asosiy sababi nima?",
+  "options": [
+   "GitLab, chunki u bepul",
+   "Lokal bare repo, internet va akkaunt kerak emas, xavfsiz mashq qilish mumkin",
+   "Masofaviy server, tezroq ishlash uchun",
+   "SVN server, chunki git bilan mos"
+  ],
+  "correct": 1,
+  "difficulty": 3,
+  "explanation": "Darsda lokal bare repo ishlatilgan, chunki bu GitHub mantig'ini internet yoki akkaunt talab qilmasdan xavfsiz simulyatsiya qiladi."
+ },
+ {
+  "q": "\"Bare\" repo (`git init --bare`) nima maqsadda ishlatiladi?",
+  "options": [
+   "Faqat tarix saqlovchi markaziy repo sifatida, ishchi nusxasiz",
+   "Fayllarni tahrirlash uchun maxsus papka yaratish",
+   "Git log'ni o'chirish uchun",
+   "Faqat bitta foydalanuvchi uchun lokal repo"
+  ],
+  "correct": 0,
+  "difficulty": 1,
+  "explanation": "Bare repo ishchi nusxasiz faqat tarix saqlaydi va markaziy (remote) repo sifatida xizmat qiladi."
+ },
+ {
+  "q": "`git clone <url> papka` buyrug'i nima qiladi?",
+  "options": [
+   "Remote'ga o'zgarishlarni yuboradi",
+   "Remote repo'dan lokal nusxa oladi",
+   "Yangi bare repo yaratadi",
+   "Mavjud branch'ni o'chiradi"
+  ],
+  "correct": 1,
+  "difficulty": 1,
+  "explanation": "`git clone` remote manzildan lokal kompyuterga to'liq nusxa (klon) olish uchun ishlatiladi."
+ },
+ {
+  "q": "O'zgarishlarni remote'ga yuborish uchun to'g'ri buyruq qaysi?",
+  "options": [
+   "`git pull origin main`",
+   "`git fetch origin main`",
+   "`git push origin main`",
+   "`git merge origin main`"
+  ],
+  "correct": 2,
+  "difficulty": 1,
+  "explanation": "`git push origin <branch>` lokal commit'larni remote'dagi ko'rsatilgan branch'ga yuboradi."
+ },
+ {
+  "q": "`git pull` buyrug'i aslida qaysi ikki amaldan iborat?",
+  "options": [
+   "`git add` + `git commit`",
+   "`git fetch` + `git merge`",
+   "`git clone` + `git push`",
+   "`git branch` + `git checkout`"
+  ],
+  "correct": 1,
+  "difficulty": 2,
+  "explanation": "`git pull` remote'dan o'zgarishlarni `fetch` qilib, keyin lokal branch'ga `merge` qiladi."
+ },
+ {
+  "q": "PR oqimida feature branch'ni remote'ga yuborish uchun qaysi buyruq ishlatiladi?",
+  "options": [
+   "`git push origin feature`",
+   "`git pull origin feature`",
+   "`git merge feature`",
+   "`git clone feature`"
+  ],
+  "correct": 0,
+  "difficulty": 1,
+  "explanation": "Feature branch'ni remote'ga yuborish uchun `git push origin feature` buyrug'i ishlatiladi."
+ },
+ {
+  "q": "Conflict (to'qnashuv) qachon yuzaga keladi?",
+  "options": [
+   "Bitta kishi bitta faylga commit qilganda",
+   "Ikki kishi bir xil qatorni o'zgartirganda git o'zi hal qila olmasa",
+   "Remote'ga push qilinganda tarmoq uzilsa",
+   "Bare repo yaratilganda"
+  ],
+  "correct": 1,
+  "difficulty": 2,
+  "explanation": "Ikki kishi bir xil qatorni o'zgartirganda git avtomatik birlashtira olmaydi va conflict yuzaga keladi."
+ },
+ {
+  "q": "Conflict belgilari orasida `=======` nima vazifasini bajaradi?",
+  "options": [
+   "Conflict'ni avtomatik hal qiladi",
+   "HEAD va boshqa branch o'zgarishlarini ajratib ko'rsatadi",
+   "Faylni o'chirish signali",
+   "Yangi commit yaratadi"
+  ],
+  "correct": 1,
+  "difficulty": 2,
+  "explanation": "`=======` belgi `<<<<<<< HEAD` va `>>>>>>> feature` orasida ikki tomondagi o'zgarishlarni ajratib ko'rsatadi."
+ },
+ {
+  "q": "Conflict yechilgandan so'ng to'g'ri tartib qaysi?",
+  "options": [
+   "`git commit` → `git add fayl`",
+   "`git push` → `git add fayl` → `git commit`",
+   "Faylni tahrirlash → `git add fayl` → `git commit`",
+   "Faylni tahrirlash → `git clone`"
+  ],
+  "correct": 2,
+  "difficulty": 2,
+  "explanation": "Conflict yechilganda avval fayl tahrirlanadi (belgilar o'chiriladi), keyin `git add`, so'ng `git commit` qilinadi."
+ },
+ {
+  "q": "Conflict faylida `<<<<<<< HEAD` dan `=======` gacha bo'lgan qism nimani anglatadi?",
+  "options": [
+   "Remote branch'dagi o'zgarish",
+   "Joriy (HEAD) branch'dagi o'zgarish",
+   "Avtomatik hal qilingan qism",
+   "O'chirilishi kerak bo'lgan bo'sh qator"
+  ],
+  "correct": 1,
+  "difficulty": 2,
+  "explanation": "`<<<<<<< HEAD` va `=======` orasidagi qism joriy branch'dagi (sizning) o'zgarishni ko'rsatadi."
+ },
+ {
+  "q": "Lokal'da PR merge mantig'ini simulyatsiya qilish uchun qaysi buyruqlar to'g'ri ketma-ketlikda?",
+  "options": [
+   "`git push origin feature` → `git clone`",
+   "`git checkout main` → `git merge feature`",
+   "`git branch feature` → `git remote -v`",
+   "`git pull` → `git init --bare`"
+  ],
+  "correct": 1,
+  "difficulty": 2,
+  "explanation": "Lokal'da merge uchun avval main branch'ga o'tiladi, keyin `git merge feature` bilan feature qo'shiladi."
+ },
+ {
+  "q": "Bugungi darsda GitHub'siz remote'ni simulyatsiya qilish uchun nima ishlatiladi?",
+  "options": [
+   "GitHub Desktop",
+   "Lokal bare repo (`git init --bare`)",
+   "SSH tunnel",
+   "Git submodule"
+  ],
+  "correct": 1,
+  "difficulty": 1,
+  "explanation": "Dars GitHub mantig'ini internet/akkauntсиз lokal bare repo yordamida simulyatsiya qiladi."
+ },
+ {
+  "q": "Jamoa repo'sida boshqa ishchi nusxani yangilash uchun qaysi buyruq ishlatiladi?",
+  "options": [
+   "`git push origin main`",
+   "`git init --bare`",
+   "`git pull`",
+   "`git checkout -b feature`"
+  ],
+  "correct": 2,
+  "difficulty": 1,
+  "explanation": "`git pull` remote'dagi yangi o'zgarishlarni lokal nusxaga tortib oladi va sinxronlashni ta'minlaydi."
+ },
+ {
+  "q": "Conflict'ni yechgandan so'ng `git add fayl` buyrug'i nima uchun zarur?",
+  "options": [
+   "Faylni remote'ga yuborish uchun",
+   "Yechilgan faylni staging area'ga qo'shib, conflict hal qilinganligini git'ga bildirish uchun",
+   "Yangi branch yaratish uchun",
+   "Bare repo'ni yangilash uchun"
+  ],
+  "correct": 1,
+  "difficulty": 3,
+  "explanation": "`git add fayl` conflict yechilgan faylni staging'ga qo'shadi va git'ga bu fayl endi tayyor ekanligini bildiradi."
+ },
+ {
+  "q": "'Bare' repo qanday yaratiladi?",
+  "options": [
+   "git init --bare",
+   "git init --empty",
+   "git clone --bare",
+   "git remote --bare"
+  ],
+  "correct": 0,
+  "difficulty": 1,
+  "explanation": "Bare repo yaratish uchun 'git init --bare' buyrug'i ishlatiladi — u ishchi nusxasiz faqat tarix saqlaydi."
+ },
+ {
+  "q": "Remote'ga ulangan manzillarni ko'rish uchun qaysi buyruq ishlatiladi?",
+  "options": [
+   "git remote show",
+   "git remote -v",
+   "git push --list",
+   "git origin list"
+  ],
+  "correct": 1,
+  "difficulty": 1,
+  "explanation": "'git remote -v' ulangan barcha remote'lar va ularning URL'larini ko'rsatadi."
+ }
+]
