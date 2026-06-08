@@ -1,0 +1,23 @@
+{
+  "title": "Day-14: 2-hafta yakuniy (deploy)",
+  "workspace": "days/day-14/exam",
+  "pass_score": 70,
+  "time_limit_min": 25,
+  "tasks": [
+    {"id": "t1", "points": 20,
+     "prompt": "'deploy.sh' yarat (#!/bin/bash, set -e): $1 env argumentini olib 'Deploying to <env>' chiqarsin.",
+     "check": "grep -q 'set -e' $EXAM/deploy.sh && bash $EXAM/deploy.sh prod 2>/dev/null | grep -qi deploy"},
+    {"id": "t2", "points": 20,
+     "prompt": "Ish papkangда git repo yarat va bir fayl commit qil (init+config+add+commit).",
+     "check": "[ -d $EXAM/.git ] && [ \"$(git -C $EXAM rev-list --count HEAD 2>/dev/null)\" -ge 1 ]"},
+    {"id": "t3", "points": 20,
+     "prompt": "'site.conf' yarat: listen 80 + proxy_pass http://localhost:3000; (reverse proxy).",
+     "check": "grep -qE 'listen +80' $EXAM/site.conf && grep -q proxy_pass $EXAM/site.conf"},
+    {"id": "t4", "points": 20,
+     "prompt": "'cron.txt' yarat: deploy.sh ni har kuni 02:00 da ishlatadigan cron qatori.",
+     "check": "grep -qE '^0 2 \\* \\* \\*' $EXAM/cron.txt && grep -q deploy $EXAM/cron.txt"},
+    {"id": "t5", "points": 20,
+     "prompt": "github.com HTTP status qatorini 'health.txt' ga yoz (curl -sI ... | grep HTTP).",
+     "check": "grep -qi 'HTTP/' $EXAM/health.txt"}
+  ]
+}

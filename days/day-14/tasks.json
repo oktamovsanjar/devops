@@ -1,0 +1,93 @@
+{
+  "day": 14,
+  "topic": "bash",
+  "theme": "2-hafta BOSS — Deploy tizimi (git+bash+nginx+cron+tarmoq)",
+  "tasks": [
+    {"id": "ws", "type": "real", "xp": 15, "block": "1️⃣ Yo'naltirish", "title": "Deploy loyiha tuzilmasi",
+     "why": "Capstone: real deploy loyiha. Avval tartibli tuzilma (Day-1).",
+     "steps": ["Ishchi papkangga o't:  cd ~/devops/days/day-14/work",
+               "mkdir -p deploy/app deploy/bin deploy/config"],
+     "expect": "deploy/{app,bin,config} mavjud",
+     "check": "[ -d $LAB/deploy/app ] && [ -d $LAB/deploy/bin ] && [ -d $LAB/deploy/config ]"},
+
+    {"id": "r_git", "type": "real", "xp": 20, "block": "2️⃣ Hafta takrori", "title": "Day-10/11: git'ga ol",
+     "why": "Loyihani versiyalash: git init + config + birinchi commit.",
+     "steps": ["cd deploy && git init && git config user.email d@d.uz && git config user.name d",
+               "echo '# Deploy' > README.md && git add . && git commit -m 'init'"],
+     "expect": "deploy/.git + kamida 1 commit",
+     "check": "[ -d $LAB/deploy/.git ] && [ \"$(git -C $LAB/deploy rev-list --count HEAD 2>/dev/null)\" -ge 1 ]"},
+
+    {"id": "r_bash", "type": "real", "xp": 20, "block": "2️⃣ Hafta takrori", "title": "Day-8: robust deploy skript",
+     "why": "set -e + argument: xatoga chidamli deploy skript.",
+     "steps": ["deploy/bin/deploy.sh yoz (#!/bin/bash, set -e): env=${1:-prod}; echo \"Deploying to $env\"",
+               "Sinab ko'r:  bash deploy/bin/deploy.sh prod"],
+     "expect": "deploy.sh ичида 'set -e' va ishlaganда 'Deploying'",
+     "check": "grep -q 'set -e' $LAB/deploy/bin/deploy.sh && bash $LAB/deploy/bin/deploy.sh prod 2>/dev/null | grep -qi deploy"},
+
+    {"id": "r_nginx", "type": "real", "xp": 20, "block": "2️⃣ Hafta takrori", "title": "Day-13: nginx config",
+     "why": "Ilova oldiga reverse proxy nginx config.",
+     "steps": ["deploy/config/site.conf yoz: listen 80 + location / { proxy_pass http://localhost:3000; }"],
+     "expect": "site.conf — listen + proxy_pass",
+     "check": "grep -qE 'listen +80' $LAB/deploy/config/site.conf && grep -q proxy_pass $LAB/deploy/config/site.conf"},
+
+    {"id": "r_net", "type": "real", "xp": 20, "block": "2️⃣ Hafta takrori", "title": "Day-12: erishuvchanlikni tekshir",
+     "why": "Deploy oldidan: tarmoq/sayt javob beryaptimi (curl status).",
+     "steps": ["curl -sI https://github.com | grep -i '^HTTP' > deploy/health.txt"],
+     "expect": "health.txt — HTTP status qatori",
+     "check": "grep -qi 'HTTP/' $LAB/deploy/health.txt"},
+
+    {"id": "r_cron", "type": "real", "xp": 15, "block": "2️⃣ Hafta takrori", "title": "Day-9: cron avtomatika",
+     "why": "Deploy'ni rejalashtirish: cron yozuvi.",
+     "steps": ["deploy/config/cron.txt ga yoz:  echo '0 4 * * * bash deploy/bin/deploy.sh' > deploy/config/cron.txt"],
+     "expect": "cron.txt — 5 maydonli cron + deploy",
+     "check": "grep -qE '^[0-9*]+ [0-9*]+ \\* \\* \\*' $LAB/deploy/config/cron.txt && grep -q deploy $LAB/deploy/config/cron.txt"},
+
+    {"id": "app_commit", "type": "real", "xp": 25, "block": "3️⃣ Deploy loyiha", "title": "Ilovani commit qil",
+     "why": "Ilova fayllarini git tarixiga olish.",
+     "steps": ["echo '<h1>Salom</h1>' > deploy/app/index.html",
+               "cd deploy && git add . && git commit -m 'add app'"],
+     "expect": "index.html git'ga commit qilingan",
+     "check": "git -C $LAB/deploy ls-files | grep -q 'app/index.html'"},
+
+    {"id": "version", "type": "real", "xp": 20, "block": "3️⃣ Deploy loyiha", "title": "Versiya fayli",
+     "why": "Har deploy versiyalanadi.",
+     "steps": ["echo '1.0.0' > deploy/VERSION",
+               "cd deploy && git add . && git commit -m 'v1.0.0'"],
+     "expect": "VERSION fayli + kamida 3 commit",
+     "check": "[ -f $LAB/deploy/VERSION ] && [ \"$(git -C $LAB/deploy rev-list --count HEAD 2>/dev/null)\" -ge 3 ]"},
+
+    {"id": "gitignore", "type": "real", "xp": 20, "block": "3️⃣ Deploy loyiha", "title": "Loglarni ignore qil",
+     "why": "Day-10: log fayllar git'ga ketmasin.",
+     "steps": ["cd deploy && echo '*.log' > .gitignore && touch deploy.log",
+               "Tekshir:  git status (deploy.log ko'rinmasligi kerak)"],
+     "expect": "deploy.log ignored",
+     "check": "cd $LAB/deploy && grep -q log .gitignore && ! git status --porcelain | grep -q deploy.log"},
+
+    {"id": "health", "type": "real", "xp": 25, "block": "4️⃣ Kengaytirish", "title": "Health-check skript",
+     "why": "Day-12 + Day-13: sayt javob beryaptimi va config to'g'rimi.",
+     "steps": ["deploy/bin/health.sh yoz: site.conf da proxy_pass bo'lsa 'HEALTHY' chiqarsin",
+               "grep -q proxy_pass deploy/config/site.conf && echo HEALTHY || echo SICK",
+               "Ishlat:  bash deploy/bin/health.sh"],
+     "expect": "health.sh 'HEALTHY' chiqaradi",
+     "check": "cd $LAB && bash deploy/bin/health.sh 2>/dev/null | grep -qi healthy"},
+
+    {"id": "automate", "type": "real", "xp": 20, "block": "4️⃣ Kengaytirish", "title": "Health'ni avtomatlashtir",
+     "why": "Day-9: health-check'ni har 5 daqiqada ishlatadigan cron.",
+     "steps": ["deploy/config/cron.txt ga yana bir qator qo'sh:",
+               "echo '*/5 * * * * bash deploy/bin/health.sh' >> deploy/config/cron.txt"],
+     "expect": "cron.txt ичида '*/5' (health)",
+     "check": "grep -qE '\\*/5 \\* \\* \\* \\*' $LAB/deploy/config/cron.txt && grep -q health $LAB/deploy/config/cron.txt"},
+
+    {"id": "boss", "type": "real", "xp": 35, "block": "5️⃣ Final BOSS", "title": "To'liq deploy ishga tushir",
+     "why": "Capstone yakuni: deploy skriptни ishlatib, natijani loglash.",
+     "steps": ["cd deploy && bash bin/deploy.sh prod > deploy.log 2>&1 && echo 'DEPLOY OK' >> deploy.log",
+               "Ko'r:  cat deploy.log"],
+     "expect": "deploy.log ичида 'DEPLOY OK'",
+     "check": "grep -q 'DEPLOY OK' $LAB/deploy/deploy.log"},
+
+    {"id": "explain", "type": "deep", "xp": 25, "block": "6️⃣ Yakuniy sinov", "title": "2-hafta xulosasi",
+     "why": "Haftani umumlashtirish — bilimni mustahkamlaydi.",
+     "steps": ["2-haftada o'rgangan eng muhim 3 narsani (bash/cron/git/tarmoq/nginx'dan) ustozга ayt"],
+     "expect": "O'z so'zlaring bilan haftaning xulosasi"}
+  ]
+}
