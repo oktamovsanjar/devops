@@ -88,6 +88,15 @@ CREATE TABLE IF NOT EXISTS exam_results (
   max INTEGER,
   passed INTEGER
 );
+CREATE TABLE IF NOT EXISTS checkpoints (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  topic TEXT,
+  ts TEXT DEFAULT (datetime('now')),
+  score INTEGER,
+  total INTEGER,
+  pct INTEGER,
+  passed INTEGER
+);
 CREATE INDEX IF NOT EXISTS idx_plan_date ON quiz_plan(date, consumed);
 CREATE INDEX IF NOT EXISTS idx_q_topic ON questions(topic);
 CREATE INDEX IF NOT EXISTS idx_srs_due ON srs(due);

@@ -34,6 +34,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import db  # noqa: E402
 import srs  # noqa: E402
 import worklog  # noqa: E402
+import profile as learner  # noqa: E402  (bilim profili — learner model)
 from generate import load_key, call_api  # noqa: E402
 
 TOTAL_DAYS = 56
@@ -110,8 +111,9 @@ def pick_questions(con, n, topic=None, category=None, topics=None):
     return fetch(con, [r["id"] for r in rows])
 
 
-def ask(con, q):
+def ask(con, q, hint=True):
     """Bitta savolni interaktiv beradi. Variantlar ARALASHTIRILADI.
+    hint=False -> AI yordam o'chiq (imtihon/checkpoint rejimi).
     (correct_bool, quit_bool) qaytaradi."""
     opts = json.loads(q["options"])
     order = list(range(len(opts)))
@@ -123,14 +125,16 @@ def ask(con, q):
     print(c(f"  {q['question']}", "bold"))
     for i, o in enumerate(display):
         print(f"    {c(chr(97+i), 'cyan')}) {o}")
+    prompt = ("  Javob (a/b/c/d · ?=AI yordam · q=chiqish): " if hint
+              else "  Javob (a/b/c/d · q=chiqish)  [HINTSIZ]: ")
     while True:
         try:
-            raw = input(c("  Javob (a/b/c/d · ?=AI yordam · q=chiqish): ", "yellow")).strip().lower()
+            raw = input(c(prompt, "yellow")).strip().lower()
         except (EOFError, KeyboardInterrupt):
             return None, True
         if raw in ("q", "quit", "exit"):
             return None, True
-        if raw in ("?", "yordam", "help"):
+        if hint and raw in ("?", "yordam", "help"):
             ai_hint(q["question"], q["topic"])
             continue
         if len(raw) == 1 and raw.isalpha():
@@ -297,6 +301,72 @@ def cmd_review(args):
     if not qs:
         print(c("\n  🎉 Bugun takrorlash uchun hech narsa yo'q! Hammasi yangi (due emas).\n", "green"))
     run_session(con, qs, "🧠 SRS TAKROR (eski mavzular)")
+    con.close()
+
+
+def checkpoint_questions(con, topic, n_topic=25, n_prior=5):
+    """Mastery-gate to'plami: shu mavzudan n_topic + oldingi mavzulardan n_prior (kümülatif)."""
+    prior = [t for t in learner.prior_topics(topic)
+             if con.execute("SELECT 1 FROM questions WHERE topic=? LIMIT 1", (t,)).fetchone()]
+    if not prior:                                  # birinchi mavzu — kümülatif yo'q
+        n_topic, n_prior = n_topic + n_prior, 0
+    qs = pick_questions(con, n_topic, topic=topic)
+    seen = {q["id"] for q in qs}
+    pri = [q for q in pick_questions(con, n_prior, topics=prior) if q["id"] not in seen] if prior else []
+    allq = qs + pri
+    random.shuffle(allq)
+    return allq, len(qs), len(pri)
+
+
+def checkpoint_finish(con, topic, correct, total):
+    pct = 100 * correct // max(total, 1)
+    passed = 1 if pct >= learner.MASTERY_PCT else 0
+    con.execute("INSERT INTO checkpoints(topic,score,total,pct,passed) VALUES(?,?,?,?,?)",
+                (topic, correct, total, pct, passed))
+    con.commit()
+    print(c("\n  ═══════════ MASTERY GATE ═══════════", "mag"))
+    print(c(f"  {topic}:  {correct}/{total}  ({pct}%)   ·   kerak: {learner.MASTERY_PCT}%", "bold"))
+    if passed:
+        print(c(f"  🔓 O'TDING! '{topic}' mastery tasdiqlandi. Keyingi bosqich ochiq.", "green"))
+    else:
+        print(c(f"  🔒 Hali emas. Zaif joyni mustahkamla:  devops quiz {topic}", "red"))
+        print(c("     SRS xato savollarni qaytaradi — keyin qayta:  devops checkpoint " + topic, "dim"))
+    print()
+    return bool(passed)
+
+
+def cmd_checkpoint(args):
+    """🎯 Mastery-gate — mavzu bo'yicha hintsiz, 95% talab qiladigan nazorat."""
+    con = db.connect()
+    topic = args.topic
+    if not topic:                                  # default: bugungi kun mavzusi
+        for t in day_topics(current_day(con)):
+            if con.execute("SELECT 1 FROM questions WHERE topic=? LIMIT 1", (t,)).fetchone():
+                topic = t; break
+        topic = topic or "linux"
+    qs, nt, npri = checkpoint_questions(con, topic)
+    if len(qs) < 10:
+        print(c(f"\n  ℹ️  '{topic}' uchun yetarli savol yo'q ({len(qs)} ta). "
+                "Boshqa mavzu tanla yoki keyinroq.\n", "yellow"))
+        con.close(); return
+    print(c(f"\n  ╔══════ 🎯 MASTERY GATE — {topic} ══════╗", "mag"))
+    print(c(f"  {len(qs)} savol ({nt} {topic}" + (f" + {npri} kümülatif takror)" if npri else ")")
+            + f"  ·  HINTSIZ  ·  o'tish: {learner.MASTERY_PCT}%", "bold"))
+    print(c("  Bu QUIZ emas — nazorat. AI yordam yo'q. 'q' = to'xtatish.", "red"))
+    try:
+        input(c("\n  Tayyormisan? Enter (yoki Ctrl+C bekor)... ", "yellow"))
+    except (EOFError, KeyboardInterrupt):
+        print(); con.close(); return
+    correct = total = 0
+    for i, q in enumerate(qs, 1):
+        print(c(f"\n  ── {i}/{len(qs)} ──", "dim"))
+        ok, quit_ = ask(con, q, hint=False)
+        if quit_:
+            print(c("  ⏹️ To'xtatildi.", "yellow")); break
+        total += 1
+        correct += 1 if ok else 0
+    if total:
+        checkpoint_finish(con, topic, correct, total)
     con.close()
 
 
@@ -749,33 +819,41 @@ def cmd_deadline(args):
     print()
 
 
+def _bar(pct, width=10):
+    fill = max(0, min(width, round(pct * width / 100)))
+    return "█" * fill + "░" * (width - fill)
+
+
 def cmd_profile(args):
     con = db.connect()
-    db.ensure_state(con)
     start = db.get_meta(con, "start_date")
-    day = current_day(con)
-    done_days = con.execute("SELECT COUNT(*) FROM day_progress WHERE status='done'").fetchone()[0]
-    att = con.execute("SELECT COUNT(*) n, SUM(correct) ok FROM attempts").fetchone()
-    n, ok = att["n"] or 0, att["ok"] or 0
-    rows = con.execute(
-        "SELECT q.topic, COUNT(*) n, SUM(a.correct) ok FROM attempts a "
-        "JOIN questions q ON q.id=a.question_id GROUP BY q.topic "
-        "ORDER BY (1.0*SUM(a.correct)/COUNT(*))"
-    ).fetchall()
+    p = learner.build(con)
     con.close()
 
-    print(c("\n  🧑‍🚀 MEN HAQIMDA (Learner Profile)", "bold"))
-    print(c("  — bu ma'lumotlar AI-coach va ustoz uchun 'sen haqingda data' —\n", "dim"))
-    print(f"  Boshlangan: {start}   ·   Joriy kun: {day}/{TOTAL_DAYS}   ·   Tugatilgan kun: {done_days}")
-    print(f"  Jami quiz javoblari: {n}   ·   Umumiy aniqlik: {c(str(100*ok//max(n,1))+'%', 'green')}")
-    if rows:
-        print(c("\n  Mavzular bo'yicha (zaifdan kuchligacha):", "bold"))
-        for r in rows:
-            pct = 100 * (r["ok"] or 0) // r["n"]
-            flag = c("⚠️ zaif", "red") if pct < 60 else (c("✅ kuchli", "green") if pct >= 85 else c("◔ o'rta", "yellow"))
-            print(f"   {r['topic']:<12} {r['ok'] or 0:>3}/{r['n']:<3} ({pct:>3}%)  {flag}")
+    print(c("\n  🧑‍🚀 MEN HAQIMDA (Bilim profili)", "bold"))
+    print(c("  — AI-coach va ustoz har muloqotда shu ma'lumotни o'qiydi —\n", "dim"))
+    print(f"  Boshlangan: {start}   ·   Joriy kun: {p['day']}/{TOTAL_DAYS}   ·   Tugatilgan: {p['done_days']}")
+    print(f"  🔥 Streak: {c(str(p['streak'])+' kun', 'mag')}   ·   Quiz javoblari: {p['answers']}"
+          f"   ·   Aniqlik: {c(str(p['accuracy'])+'%', 'green')}")
+    if p["due"]:
+        print(f"  🧠 SRS takror kutyapti: {c(str(p['due'])+' ta', 'yellow')}  (devops review)")
+
+    if p["topics"]:
+        print(c("\n  Mavzu mastery (gate: 95%):", "bold"))
+        order = sorted(p["topics"].items(), key=lambda kv: kv[1]["pct"])
+        for t, s in order:
+            pct = s["pct"]
+            gate = c("🔒 gate o'tilgan", "green") if t in p["passed"] else (
+                   c("⚠️ zaif", "red") if pct < 70 else (
+                   c("✅ tayyor", "green") if pct >= learner.MASTERY_PCT else c("◔ o'rta", "yellow")))
+            col = "green" if pct >= learner.MASTERY_PCT else ("red" if pct < 70 else "yellow")
+            print(f"   {t:<11} {c(_bar(pct), col)} {pct:>3}%  ({s['ok']}/{s['n']})  {gate}")
     else:
-        print(c("\n  Hali yetarli ma'lumot yo'q — quiz yechib ko'r (devops quiz).", "yellow"))
+        print(c("\n  Hali quiz ma'lumoti yo'q — boshla:  devops quiz today", "yellow"))
+
+    if p["weak"]:
+        print(c(f"\n  🎯 Tavsiya: avval shularni mustahkamla → {', '.join(p['weak'])}", "yellow"))
+        print(c(f"     Mashq:  devops quiz {p['weak'][0]}   ·   Gate:  devops checkpoint {p['weak'][0]}", "dim"))
     print()
 
 
@@ -883,12 +961,11 @@ def ai_ask(system, prompt, max_tokens=700):
 
 
 def learner_context(con):
-    day = current_day(con)
-    rows = con.execute(
-        "SELECT q.topic, COUNT(*) n, SUM(a.correct) ok FROM attempts a "
-        "JOIN questions q ON q.id=a.question_id GROUP BY q.topic").fetchall()
-    weak = [r["topic"] for r in rows if r["n"] >= 2 and 100 * (r["ok"] or 0) // r["n"] < 60]
-    return f"O'quvchi Day {day}/56 da. Zaif mavzular: {', '.join(weak) if weak else 'aniq yoq'}."
+    """Boy bilim profili (learner model) — AI har muloqotда shuni o'qiydi."""
+    try:
+        return learner.ai_text(con)
+    except Exception:
+        return f"O'quvchi Day {current_day(con)}/56 da."
 
 
 RANKS = [
@@ -1182,6 +1259,7 @@ def main():
     sub = p.add_subparsers(dest="cmd")
     pq = sub.add_parser("quiz"); pq.add_argument("topic", nargs="?"); pq.add_argument("-n", type=int, default=0, help="nechta savol (0 = cheksiz oqim, default)")
     pr = sub.add_parser("review"); pr.add_argument("-n", type=int, default=15)
+    pcp = sub.add_parser("checkpoint"); pcp.add_argument("topic", nargs="?")
     sub.add_parser("stats")
     sub.add_parser("today")
     sub.add_parser("deadline")
@@ -1209,7 +1287,7 @@ def main():
     _con.close()
 
     dispatch = {
-        "quiz": cmd_quiz, "review": cmd_review, "stats": cmd_stats,
+        "quiz": cmd_quiz, "review": cmd_review, "checkpoint": cmd_checkpoint, "stats": cmd_stats,
         "today": cmd_today, "task": cmd_task, "deadline": cmd_deadline,
         "profile": cmd_profile, "ai": cmd_ai, "exam": cmd_exam,
         "interview": cmd_interview, "rank": cmd_rank, "doctor": cmd_doctor,
