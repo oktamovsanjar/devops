@@ -1,0 +1,23 @@
+{
+  "title": "Day-10: Git asoslari",
+  "workspace": "days/day-10/exam",
+  "pass_score": 70,
+  "time_limit_min": 20,
+  "tasks": [
+    {"id": "t1", "points": 20,
+     "prompt": "Ish papkangда git repo yarat (git init), user.email sozla, bir fayl yaratib commit qil.",
+     "check": "cd $EXAM && [ -d .git ] && [ \"$(git rev-list --count HEAD 2>/dev/null)\" -ge 1 ]"},
+    {"id": "t2", "points": 20,
+     "prompt": "'feature' nomli yangi branch yarat.",
+     "check": "cd $EXAM && git branch | grep -q feature"},
+    {"id": "t3", "points": 20,
+     "prompt": "'.gitignore' yarat va 'secret.txt' ni unга qo'sh; 'secret.txt' faylни yarat — u git'ga e'tiborsiz (ignored) bo'lsin.",
+     "check": "cd $EXAM && grep -q secret .gitignore && ! git status --porcelain | grep -q secret.txt"},
+    {"id": "t4", "points": 20,
+     "prompt": "'data.txt' fayl yaratib commit qil (kuzatuvга olib, saqla).",
+     "check": "cd $EXAM && git ls-files | grep -q data.txt"},
+    {"id": "t5", "points": 20,
+     "prompt": "Repo'да kamida 2 ta commit bo'lsin (tarix yurit).",
+     "check": "cd $EXAM && [ \"$(git rev-list --count HEAD 2>/dev/null)\" -ge 2 ]"}
+  ]
+}
