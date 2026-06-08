@@ -1,11 +1,11 @@
 {
   "title": "Day-01: Linux navigatsiya",
-  "workspace": "exams/day-01",
+  "workspace": "days/day-01/exam",
   "pass_score": 70,
   "time_limit_min": 15,
   "tasks": [
     {"id": "t1", "points": 20,
-     "prompt": "Ish papkangда (exams/day-01/) 'notes.txt' fayl yarat va ichida AYNAN 'devops' so'zi (boshqa hech narsa) bo'lsin.",
+     "prompt": "Ish papkangда 'notes.txt' fayl yarat va ichida AYNAN 'devops' so'zi (boshqa hech narsa) bo'lsin.",
      "check": "grep -qx devops $EXAM/notes.txt 2>/dev/null"},
     {"id": "t2", "points": 20,
      "prompt": "Ish papkangда 'data' nomli papka yarat.",

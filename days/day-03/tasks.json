@@ -12,7 +12,7 @@
     {"id": "secret", "type": "secret", "xp": 50, "title": "SECRET — log ichidagi sir",
      "desc": "grep -rl 'SECRET{' ~/devops bilan faylni top, SECRET{...} ni ustozga ayt."},
     {"id": "py", "type": "track", "xp": 20, "title": "🐍 Python Drop — funksiyalar",
-     "desc": "labs/day-03/day03.py: status() funksiya + servislar dict'iga qo'lla."},
+     "desc": "days/day-03/work/day03.py: status() funksiya + servislar dict'iga qo'lla."},
     {"id": "en", "type": "track", "xp": 15, "title": "🇬🇧 English Drop",
      "desc": "5 so'z (process, service, restart, crash, log) + 2 jumla inglizcha."},
     {"id": "sh", "type": "track", "xp": 20, "title": "💻 Shell Drill — ps + sort",

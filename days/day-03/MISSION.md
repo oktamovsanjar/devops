@@ -161,7 +161,7 @@ Topib `SECRET{...}` ni менga ayt.
 ---
 
 ## 🐍 PYTHON DROP (+20)
-**Mavzu:** funksiyalar. `labs/day-03/day03.py`:
+**Mavzu:** funksiyalar. `days/day-03/work/day03.py`:
 ```python
 def status(name, running):
     holat = "✅ faol" if running else "❌ nofaol"

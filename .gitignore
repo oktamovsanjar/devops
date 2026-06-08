@@ -9,10 +9,10 @@ scripts/telegram/config.json
 engine/bootcamp.db
 
 # ═══ Runtime / shaxsiy / generatsiya (repo'ga kerak emas) ═══
-labs/
-logs/
-exams/
+days/*/work/
+days/*/exam/
 days/*/quest/
+logs/
 prayer-times.json
 .snake_high
 __pycache__/

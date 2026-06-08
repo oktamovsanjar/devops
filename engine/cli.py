@@ -2,17 +2,14 @@
 """
 DevOps Bootcamp — interaktiv terminal runner.
 
-  devops today                # ❶ ASOSIY: bugun nima qilaman? (kun, vaqt, muhlat, ish)
-  devops start                # kunni boshlash (vaqt va muhlatni yoqadi)
-  devops task [done N]        # bugungi topshiriqlar ro'yxati / N-ni bajarildi deb belgilash
-  devops lab                  # bugungi laboratoriya (ishchi papka) ni ochish
-  devops deadline             # muhlat, qolgan vaqt, bugun ishlangan vaqt
-  devops done                 # kunni yakunlash (keyingi kunga o'tadi)
-  devops profile              # men haqimda: kuchli/zaif mavzular, vaqt, progress
-  devops quiz [topic] [-n N]  # cheksiz quiz oqimi (javob ber -> keyingisi)
-  devops review [-n N]        # SRS: bugun takrorlash kerak bo'lganlar
-  devops stats / count        # bank statistikasi
-  devops init                 # bazani yaratish + seed import
+  KUNLIK OQIM:  devops next  ->  (ishni bajar)  ->  devops verify   (kun avtomatik yakunlanadi)
+
+  devops today                # bugun nima qilaman? (kun avtomatik boshlanadi)
+  devops next / verify        # keyingi ish / tekshirish (flag va qo'lda ham shu yerda)
+  devops task [N]             # topshiriqlar ro'yxati / batafsil
+  devops ai ["savol/mavzu"]   # AI: javob/tushuncha/shpargalka yoki bo'sh = loglardan
+  devops focus / quiz / review / exam / interview   # mashq
+  devops roadmap / profile / rank / deadline / stats / doctor
 
 (.bashrc ga `alias devops='python3 ~/devops/engine/cli.py'` qo'shilgan.)
 """
@@ -448,50 +445,45 @@ def show_dashboard(con, day):
     print()
 
 
+def _auto_start(con, day):
+    """Kun AVTOMATIK boshlanadi (alohida 'start' buyrug'i kerak emas)."""
+    dp = db.get_day(con, day)
+    if dp is None or dp["status"] == "pending":
+        now = now_tz()
+        deadline = now.replace(hour=23, minute=59, second=0, microsecond=0)
+        db.upsert_day(con, day, status="active",
+                      started_at=now.isoformat(timespec="seconds"),
+                      deadline=deadline.isoformat(timespec="seconds"))
+
+
+def _auto_complete(con, day, tasks):
+    """Barcha topshiriq bajarilsa, kun AVTOMATIK yakunlanadi va keyingisi ochiladi."""
+    done = db.done_task_ids(con, day)
+    if not (tasks and all(t["id"] in done for t in tasks)):
+        return False
+    dp = db.get_day(con, day)
+    if not dp or dp["status"] != "done":
+        db.upsert_day(con, day, status="done",
+                      completed_at=now_tz().isoformat(timespec="seconds"))
+        if day < TOTAL_DAYS:
+            db.set_meta(con, "current_day", day + 1)
+    return True
+
+
 def cmd_today(args):
     con = db.connect()
-    show_dashboard(con, current_day(con))
-    con.close()
-
-
-def cmd_start(args):
-    con = db.connect()
     day = current_day(con)
-    dp = db.get_day(con, day)
-    if dp and dp["status"] == "done":
-        print(c(f"\n  ✅ Day {day:02d} allaqachon tugagan. `devops today` keyingisini ko'rsatadi.\n", "green"))
-        con.close()
-        return
-    now = now_tz()
-    deadline = now.replace(hour=23, minute=59, second=0, microsecond=0)
-    db.upsert_day(con, day, status="active",
-                  started_at=now.isoformat(timespec="seconds"),
-                  deadline=deadline.isoformat(timespec="seconds"))
-    print(c(f"\n  🚀 Day {day:02d} BOSHLANDI! Soat {now.strftime('%H:%M')} (Toshkent).", "green"))
-    print(c("  Omad, agent. Avval mission'ni o'qi, keyin ishga.", "dim"))
+    _auto_start(con, day)
     show_dashboard(con, day)
     con.close()
 
 
-def cmd_done(args):
-    con = db.connect()
-    day = current_day(con)
-    now = now_tz()
-    db.upsert_day(con, day, status="done", completed_at=now.isoformat(timespec="seconds"))
-    nxt = min(day + 1, TOTAL_DAYS)
-    if day < TOTAL_DAYS:
-        db.set_meta(con, "current_day", nxt)
-    data = load_tasks(day)
-    done = len(db.done_task_ids(con, day))
-    print(c(f"\n  🎉 DAY {day:02d} YAKUNLANDI! Zo'r ish, agent. 🔥", "green"))
-    if data:
-        print(f"  ✅ Bajarilgan topshiriqlar: {done}/{len(data.get('tasks', []))}")
-    print(c(f"  ➡️  Keyingi: Day {nxt:02d}. Ertaga `devops start` bilan boshlaysan.", "cyan"))
-    print(c("  💡 Eslatma: ustozga 'day tugatdim' deb yozsang, tekshirib XP qo'shaman.\n", "dim"))
-    con.close()
-
-
 TASK_ICON = {"deep": "🎯", "drill": "🔁", "lab": "🧪", "track": "📚", "secret": "🔐", "real": "🏗️"}
+
+
+def ensure_work(day):
+    """UMUMIY QOIDA: kunning ish joyi (days/day-XX/work/) har doim mavjud bo'lsin."""
+    os.makedirs(os.path.join(db.DEVOPS_HOME, "days", f"day-{day:02d}", "work"), exist_ok=True)
 
 
 def _task_check(task, day):
@@ -499,7 +491,7 @@ def _task_check(task, day):
     check = task.get("check")
     if not check:
         return None
-    lab = os.path.join(db.DEVOPS_HOME, "labs", f"day-{day:02d}")
+    lab = os.path.join(db.DEVOPS_HOME, "days", f"day-{day:02d}", "work")
     os.makedirs(lab, exist_ok=True)
     env = {**os.environ, "LAB": lab,
            "DAY": os.path.join(db.DEVOPS_HOME, "days", f"day-{day:02d}")}
@@ -522,11 +514,9 @@ def _task_detail(t, n, day, done):
     if t.get("expect"):
         print(c(f"  🎯 Kutilgan natija: {t['expect']}", "dim"))
     if t.get("flag"):
-        print(c("  🏴 Flagni topib topshir:  devops flag <kod>", "yellow"))
-    elif t.get("check"):
-        print(c(f"  ✅ Tekshirish (avtomatik):  devops task check {n}", "yellow"))
+        print(c("  🏴 Quest'ni yech, flagni top — keyin:  devops verify", "yellow"))
     else:
-        print(c(f"  ✍️  Bajargach belgila:  devops task done {n}", "yellow"))
+        print(c("  ✅ Bajargach:  devops verify   (AI/tizim tekshiradi)", "yellow"))
     print()
 
 
@@ -597,7 +587,7 @@ def cmd_task(args):
 
 
 def _lab_evidence(day, maxlen=3000):
-    lab = os.path.join(db.DEVOPS_HOME, "labs", f"day-{day:02d}")
+    lab = os.path.join(db.DEVOPS_HOME, "days", f"day-{day:02d}", "work")
     if not os.path.isdir(lab):
         return "(ish maydoni bo'sh — hali hech narsa yaratilmagan)"
     tree, contents = [], []
@@ -639,9 +629,10 @@ def _task_ai_verify(task, day, shell_result):
 
 
 def cmd_verify(args):
-    """🧠 AI + tizim topshirig'ingni tekshiradi (kunlik oqimning asosiy qismi)."""
+    """🧠 Topshirig'ingni tekshiradi (shell+AI / flag / qo'lda). Hammasi tugasa kun yopiladi."""
     con = db.connect()
     day = current_day(con)
+    _auto_start(con, day)
     data = load_tasks(day)
     if not data:
         print(c("\n  ℹ️  Topshiriq yo'q.\n", "yellow")); con.close(); return
@@ -651,24 +642,53 @@ def cmd_verify(args):
     if n is None:
         pend = [(i, t) for i, t in enumerate(tasks, 1) if t["id"] not in done]
         if not pend:
-            print(c("\n  🎉 Barcha topshiriqlar bajarilgan! → devops done\n", "green"))
+            print(c("\n  🎉 Barcha topshiriqlar bajarilgan! Keyingi kun: devops today\n", "green"))
             con.close(); return
         n, task = pend[0]
     else:
         task = tasks[n - 1]
-    if task.get("flag"):
-        print(c("\n  🏴 Bu topshiriq flag bilan: devops flag <kod>\n", "yellow")); con.close(); return
-    shell = _task_check(task, day)
-    print(c(f"\n  🧠 AI {n}-topshiriqni tekshiryapti: {task['title']}...", "dim"))
-    ai_pass, fb = _task_ai_verify(task, day, shell)
-    final = shell if shell is not None else ai_pass
-    if fb:
-        body = "\n".join(fb.splitlines()[1:]).strip() or fb
-        print(c("\n  🧑‍🏫 USTOZ BAHOSI:", "bold"))
-        print("  " + body.replace("\n", "\n  "))
-    if final:
+
+    passed = False
+    if task.get("flag"):                                    # FLAG (avto-marker yoki kiritish)
+        if _task_check(task, day) is True:
+            passed = True
+        else:
+            try:
+                code = input(c(f"\n  🏴 '{task['title']}' — topgan flagni kirit: ", "yellow")).strip()
+            except (EOFError, KeyboardInterrupt):
+                code = ""
+            passed = bool(code) and code.lower() == task["flag"].strip().lower()
+            if code and not passed:
+                print(c("  ❌ Flag noto'g'ri.", "red"))
+    else:
+        shell = _task_check(task, day)
+        if shell is None:                                   # qo'lda (tushuntirish) — AI baholaydi
+            try:
+                ans = input(c(f"\n  ✍️  '{task['title']}' — javobingni yoz: ", "yellow")).strip()
+            except (EOFError, KeyboardInterrupt):
+                ans = ""
+            if ans:
+                fb = ai_ask("You are Ustoz evaluating a learner's short answer. Reply Uzbek. FIRST "
+                            "line 'NATIJA: PASS' or 'NATIJA: FAIL', then 1-2 lines feedback.",
+                            f"Topshiriq: {task['title']} ({task.get('why','')})\nJavob: {ans}", max_tokens=250)
+                passed = bool(fb) and fb.strip().upper().startswith("NATIJA: PASS")
+                if fb:
+                    print(c("  🧑‍🏫 " + "\n".join(fb.splitlines()[1:]).strip(), "cyan"))
+        else:                                               # shell-check + AI fikr
+            print(c(f"\n  🧠 Tekshiryapti: {task['title']}...", "dim"))
+            _, fb = _task_ai_verify(task, day, shell)
+            passed = shell
+            if fb:
+                print(c("  🧑‍🏫 " + "\n".join(fb.splitlines()[1:]).strip().replace("\n", "\n  "), "cyan"))
+
+    if passed:
         db.mark_task(con, day, task["id"])
-        print(c(f"\n  ✅ '{task['title']}' TASDIQLANDI (+{task.get('xp',0)} XP)  →  davom: devops next\n", "green"))
+        print(c(f"\n  ✅ '{task['title']}' TASDIQLANDI (+{task.get('xp',0)} XP)", "green"))
+        if _auto_complete(con, day, tasks):
+            nxt = min(day + 1, TOTAL_DAYS)
+            print(c(f"\n  🎉 DAY {day:02d} TO'LIQ YAKUNLANDI! Keyingi kun (Day {nxt:02d}) ochildi → devops today\n", "green"))
+        else:
+            print(c("  →  davom:  devops next\n", "yellow"))
     else:
         print(c(f"\n  ❌ Hali tayyor emas — tuzatib, qayta:  devops verify {n}\n", "red"))
     con.close()
@@ -678,6 +698,7 @@ def cmd_next(args):
     """👉 Keyingi bajariladigan topshiriqni aniq ko'rsatadi (chalkashliksiz oqim)."""
     con = db.connect()
     day = current_day(con)
+    _auto_start(con, day)
     data = load_tasks(day)
     if not data:
         print(c("\n  ℹ️  Topshiriq yo'q.\n", "yellow")); con.close(); return
@@ -685,36 +706,13 @@ def cmd_next(args):
     done = db.done_task_ids(con, day)
     pend = [(i, t) for i, t in enumerate(tasks, 1) if t["id"] not in done]
     if not pend:
-        print(c("\n  🎉 Bugungi barcha topshiriqlar bajarildi! Yakunla: devops done\n", "green"))
+        print(c("\n  🎉 Bugungi barcha topshiriqlar bajarildi! Keyingi kun: devops today\n", "green"))
         con.close(); return
     n, task = pend[0]
     print(c(f"\n  👉 KEYINGI ISH  ({len(done)}/{len(tasks)} bajarilgan)", "bold"))
     _task_detail(task, n, day, done)
-    print(c("  Bajargach:  devops verify   (AI tekshiradi)\n", "yellow"))
+    print(c("  Bajargach:  devops verify\n", "yellow"))
     con.close()
-
-
-def cmd_lab(args):
-    con = db.connect()
-    day = current_day(con)
-    data = load_tasks(day)
-    con.close()
-    labdir = os.path.join(db.DEVOPS_HOME, f"labs/day-{day:02d}")
-    os.makedirs(labdir, exist_ok=True)
-    print(c(f"\n  🧪 LABORATORIYA — Day {day:02d}", "bold"))
-    print(c("  ⚡ Muhim: bu SERVERNING O'ZI sening laboratoriyang!", "yellow"))
-    print("     DevOps real tizimda o'rganiladi — alohida sandbox shart emas.")
-    print(f"     Har kun uchun ishchi papka tayyor: {c(f'labs/day-{day:02d}/', 'cyan')}")
-    print(f"     U yerga o'tish:  cd ~/devops/labs/day-{day:02d}")
-    if data:
-        labs = [t for t in data.get("tasks", []) if t.get("type") == "lab"]
-        if labs:
-            print(c("\n  Bu kungi lab topshiriqlari:", "bold"))
-            for t in labs:
-                print(f"   🧪 {t['title']}")
-                if t.get("desc"):
-                    print(c(f"      {t['desc']}", "dim"))
-    print()
 
 
 def cmd_deadline(args):
@@ -770,30 +768,6 @@ def cmd_profile(args):
     print()
 
 
-def cmd_flag(args):
-    """Topilgan flag (DEVOPS{...}) ni topshirish — to'g'ri bo'lsa topshiriq bajariladi + XP."""
-    con = db.connect()
-    day = current_day(con)
-    data = load_tasks(day)
-    code = (args.code or "").strip()
-    if not data:
-        print(c("\n  ℹ️  Bu kun uchun flag-topshiriq yo'q.\n", "yellow")); con.close(); return
-    match = next((t for t in data.get("tasks", [])
-                  if t.get("flag") and t["flag"].strip().lower() == code.lower()), None)
-    if not match:
-        print(c("\n  ❌ Flag noto'g'ri yoki bu kunga tegishli emas.", "red"))
-        print(c("     To'liq nusxa ko'chirib qo'y: DEVOPS{...}\n", "dim"))
-        con.close(); return
-    if match["id"] in db.done_task_ids(con, day):
-        print(c(f"\n  ✅ Bu flag allaqachon topshirilgan: '{match['title']}'.\n", "green"))
-    else:
-        db.mark_task(con, day, match["id"])
-        print(c(f"\n  🏆 TO'G'RI FLAG!  '{match['title']}' bajarildi  (+{match.get('xp',0)} XP)!", "green"))
-        print(c("  Zo'r ish, agent — sen haqiqiy navigatorsan! 🧭🔥", "cyan"))
-        print(c("  Keyingi topshiriqlar: devops task\n", "dim"))
-    con.close()
-
-
 def _exam_check(check, exam_dir):
     """Topshiriq tekshiruvini bajaradi (bash). exit 0 = o'tdi. $EXAM = ish papkasi."""
     try:
@@ -835,7 +809,7 @@ def cmd_exam(args):
     maxpts = sum(t["points"] for t in tasks)
     passpct = data.get("pass_score", 70)
     limit = data.get("time_limit_min", 15)
-    rel_ws = data.get("workspace", f"exams/{name}")
+    rel_ws = data.get("workspace", f"days/{name}/exam")
     workspace = os.path.join(db.DEVOPS_HOME, rel_ws)
     os.makedirs(workspace, exist_ok=True)
 
@@ -904,63 +878,6 @@ def learner_context(con):
         "JOIN questions q ON q.id=a.question_id GROUP BY q.topic").fetchall()
     weak = [r["topic"] for r in rows if r["n"] >= 2 and 100 * (r["ok"] or 0) // r["n"] < 60]
     return f"O'quvchi Day {day}/56 da. Zaif mavzular: {', '.join(weak) if weak else 'aniq yoq'}."
-
-
-def cmd_ask(args):
-    """AI ustozdan istalgan savol so'rash."""
-    q = " ".join(args.text).strip() if args.text else ""
-    if not q:
-        print(c("\n  Foydalanish: devops ask \"savolingiz\"\n", "yellow"))
-        return
-    con = db.connect(); ctx = learner_context(con); con.close()
-    sysp = ("You are 'Ustoz', an expert DevOps mentor. Answer in Uzbek (latin); keep "
-            "commands and technical terms in English. Accurate, concise, practical; add a "
-            "short example/command if useful. No filler.")
-    print(c("\n  🤔 Ustoz o'ylayapti...", "dim"))
-    ans = ai_ask(sysp, f"{ctx}\n\nSavol: {q}", max_tokens=800)
-    if ans:
-        print(c("\n  🧑‍🏫 USTOZ:", "bold"))
-        print("  " + ans.replace("\n", "\n  ") + "\n")
-
-
-def cmd_explain(args):
-    """AI biror tushunchani chuqur tushuntiradi."""
-    concept = " ".join(args.text).strip() if args.text else ""
-    if not concept:
-        print(c("\n  Foydalanish: devops explain <tushuncha>\n", "yellow"))
-        return
-    con = db.connect(); ctx = learner_context(con); con.close()
-    sysp = ("You are Ustoz, a DevOps mentor. Explain the concept for a learner in Uzbek "
-            "(English terms). Use short bold headers: Nima? (1-2 jumla); Nega kerak?; "
-            "Oddiy analogiya; Amaliy misol (buyruq). Clear, not long.")
-    print(c("\n  🤔 Ustoz tayyorlayapti...", "dim"))
-    ans = ai_ask(sysp, f"{ctx}\n\nTushuntir: {concept}", max_tokens=900)
-    if ans:
-        print(c(f"\n  📖 {concept.upper()}", "bold"))
-        print("  " + ans.replace("\n", "\n  ") + "\n")
-
-
-def cmd_cheatsheet(args):
-    """AI mavzu bo'yicha shpargalka yaratadi va saqlaydi."""
-    topic = " ".join(args.text).strip() if args.text else ""
-    if not topic:
-        print(c("\n  Foydalanish: devops cheatsheet <mavzu>\n", "yellow"))
-        return
-    sysp = ("Create a concise DevOps cheat-sheet in Markdown. Uzbek labels, English "
-            "commands. Group by sub-area with short headers; each line: `command` — qisqa "
-            "izoh. Only the most-used essentials, no fluff.")
-    print(c("\n  🤔 Shpargalka tayyorlanyapti...", "dim"))
-    ans = ai_ask(sysp, f"Mavzu: {topic}. Ixcham, amaliy cheat-sheet yarat.", max_tokens=1200)
-    if not ans:
-        return
-    d = os.path.join(db.DEVOPS_HOME, "resources", "cheatsheets")
-    os.makedirs(d, exist_ok=True)
-    safe = "".join(ch if ch.isalnum() else "_" for ch in topic.lower())[:40]
-    with open(os.path.join(d, f"{safe}.md"), "w", encoding="utf-8") as f:
-        f.write(f"# Cheat-sheet: {topic}\n\n{ans}\n")
-    print(c(f"\n  📋 SHPARGALKA — {topic}", "bold"))
-    print("  " + ans.replace("\n", "\n  "))
-    print(c(f"\n  💾 Saqlandi: resources/cheatsheets/{safe}.md\n", "dim"))
 
 
 RANKS = [
@@ -1148,14 +1065,28 @@ def cmd_focus(args):
 
 
 def cmd_ai(args):
-    """Loglardagi oxirgi buyruqlarni o'qib, hozir nima qilayotganingга qisqa yordam."""
-    key = load_key()
-    if not key:
-        print(c("\n  ⚠️  AI uchun API key kerak (engine/config.json).\n", "yellow"))
+    """🤖 Yagona AI yordam: savol/tushuncha/shpargalka — yoki bo'sh bo'lsa loglardan maslahat."""
+    if not load_key():
+        print(c("\n  ⚠️  AI uchun API key kerak (engine/config.json).\n", "yellow")); return
+    q = " ".join(args.text).strip() if getattr(args, "text", None) else ""
+    con = db.connect(); ctx = learner_context(con); con.close()
+
+    if q:                                    # savol/mavzu berildi -> javob
+        sysp = ("You are 'Ustoz', an expert DevOps mentor. The learner gives a question OR a "
+                "topic. Answer in Uzbek (English terms/commands). If a concept → explain "
+                "(nima/nega/misol). If they want a cheat-sheet/quick reference → compact grouped "
+                "list. If a direct question → answer it. Practical, accurate, concise; add a short "
+                "command example when useful.")
+        print(c("\n  🤔 Ustoz o'ylayapti...", "dim"))
+        ans = ai_ask(sysp, f"{ctx}\n\nSo'rov: {q}", max_tokens=900)
+        if ans:
+            print(c("\n  🧑‍🏫 USTOZ:", "bold"))
+            print("  " + ans.replace("\n", "\n  ") + "\n")
         return
+
+    # argument yo'q -> oxirgi buyruqlarni o'qib kontekstli yordam
     import datetime as _dt
-    logf = os.path.join(db.DEVOPS_HOME, "logs", "activity",
-                        f"commands-{_dt.date.today().isoformat()}.log")
+    logf = os.path.join(db.DEVOPS_HOME, "logs", "activity", f"commands-{_dt.date.today().isoformat()}.log")
     cmds = []
     if os.path.exists(logf):
         with open(logf) as f:
@@ -1164,33 +1095,14 @@ def cmd_ai(args):
                 if len(parts) == 4:
                     cmds.append(parts[3].strip())
     if not cmds:
-        print(c("\n  ℹ️  Yaqinda terminal faoliyati yo'q. Avval biror ish qil, keyin `devops ai`.\n", "yellow"))
-        return
-    con = db.connect()
-    day = current_day(con)
-    data = load_tasks(day)
-    con.close()
-    tasks_ctx = ""
-    has_flag = False
-    if data:
-        tasks_ctx = "Bugungi (Day %d) topshiriqlar: " % day + \
-            "; ".join(t["title"] for t in data.get("tasks", []))
-        has_flag = any(t.get("flag") for t in data.get("tasks", []))
-    flag_note = ("\nDIQQAT: agar buyruqlarda DEVOPS{...} ko'rinishidagi flag chiqqan bo'lsa, "
-                 "foydalanuvchiga uni `devops flag <kod>` buyrug'i bilan topshirishni AYT "
-                 "(shunda topshiriq bajariladi + XP).") if has_flag else ""
-    prompt = (f"O'quvchi Day {day}/56 da.\n{tasks_ctx}\n\n"
-              "Oxirgi terminal buyruqlari:\n"
-              + "\n".join(f"- {x}" for x in cmds)
-              + "\n\nNima qilyapti? Qisqa yordam va aniq maslahat ber." + flag_note)
+        print(c("\n  💡 Foydalanish:  devops ai \"savol yoki mavzu\"\n", "yellow")); return
     print(c("\n  🤔 Ustoz loglaringni o'qiyapti...", "dim"))
-    try:
-        txt = call_api(key, AI_MODEL, prompt, system=AI_HELP_SYSTEM, max_tokens=400).strip()
+    txt = ai_ask(AI_HELP_SYSTEM, f"{ctx}\n\nOxirgi buyruqlar:\n"
+                 + "\n".join(f"- {x}" for x in cmds) + "\n\nNima qilyapti? Qisqa yordam ber.",
+                 max_tokens=400)
+    if txt:
         print(c("\n  🤖 USTOZ-AI:", "bold"))
-        print("  " + txt.replace("\n", "\n  "))
-        print()
-    except Exception as e:
-        print(c(f"  ⚠️  Xato: {e}\n", "yellow"))
+        print("  " + txt.replace("\n", "\n  ") + "\n")
 
 
 def ensure_ready(con):
@@ -1206,32 +1118,25 @@ def print_help_uz():
     rows = [
         ("roadmap", "🗺️ Butun 56 kunlik yo'l — qayerdasan, oldinda nima bor"),
         ("today", "Bugun nima qilaman? (kun, vaqt, muhlat, ish)  ⭐ shu yerdan boshla"),
-        ("start", "Kunni boshlash — vaqt hisobi va muhlat yoqiladi"),
-        ("next", "👉 Keyingi ishni aniq ko'rsatadi (chalkashliksiz)  ⭐ kunlik oqim"),
-        ("verify", "🧠 AI + tizim topshirig'ingni tekshiradi → keyingisiga o'tasan"),
+        ("next", "👉 Keyingi ishni aniq ko'rsatadi  ⭐ kunlik oqim"),
+        ("verify", "🧠 Topshirig'ingni tekshiradi (AI/flag) → keyingisiga o'tasan"),
         ("task", "Barcha topshiriqlar ro'yxati  ·  task <N> = batafsil"),
         ("focus", "🧠 AI zaif mavzuingga moslangan shaxsiy topshiriq beradi"),
-        ("lab", "Bugungi laboratoriya (ishchi papka) ni ochish"),
-        ("quiz", "Cheksiz quiz  ·  quiz today = faqat bugungi mavzu  ·  quiz docker = mavzu"),
+        ("quiz", "Cheksiz quiz  ·  quiz today = bugungi mavzu  ·  quiz docker = mavzu"),
         ("review", "SRS takror — eski mavzularni mustahkamlash (unutmaslik)"),
         ("exam", "🎓 Amaliy imtihon — hintsiz, qattiq nazorat, real tekshiruv"),
-        ("flag", "Topilgan flag (DEVOPS{...}) ni topshirish — XP olasan"),
-        ("ai", "🤖 AI yordam — loglarni o'qib, hozirgi ishingга maslahat"),
-        ("ask", "🤖 AI ustozdan istalgan savol so'rash: ask \"...\""),
-        ("explain", "🤖 AI tushuncha chuqur tushuntiradi: explain <mavzu>"),
-        ("cheatsheet", "🤖 AI shpargalka yaratadi: cheatsheet <mavzu>"),
+        ("ai", "🤖 AI: ai \"savol/mavzu\" (tushuntir·shpargalka·javob) yoki bo'sh = loglardan"),
         ("interview", "🤖 AI mock-intervyu — savol beradi, javobingni baholaydi"),
         ("rank", "🎖️ Daraja, XP, progress va yutuqlar"),
-        ("doctor", "🩺 Tizim salomatligini tekshirish (self-check)"),
-        ("deadline", "Muhlat va bugun ishlangan vaqt"),
-        ("done", "Kunni yakunlash (keyingi kunga o'tadi)"),
         ("profile", "Men haqimda: kuchli/zaif mavzular, aniqlik, progress"),
+        ("deadline", "Muhlat va bugun ishlangan vaqt"),
+        ("doctor", "🩺 Tizim salomatligini tekshirish"),
         ("stats", "Savollar banki statistikasi"),
     ]
     for cmd, desc in rows:
         left = "devops " + cmd
         print("  " + c(left, "cyan") + " " * max(2, 20 - len(left)) + "  " + desc)
-    print(c("\n  🔁 KUNLIK OQIM:  devops next  →  (ishni bajar)  →  devops verify  →  ...  →  devops done", "green"))
+    print(c("\n  🔁 KUNLIK OQIM:  devops next  →  (ishni bajar)  →  devops verify   (kun avtomatik yakunlanadi)", "green"))
     print(c("  Quiz ichida:  a/b/c/d = javob  ·  ? = AI yordam  ·  q = chiqish\n", "dim"))
 
 
@@ -1246,17 +1151,10 @@ def main():
     pr = sub.add_parser("review"); pr.add_argument("-n", type=int, default=15)
     sub.add_parser("stats")
     sub.add_parser("today")
-    sub.add_parser("start")
-    sub.add_parser("done")
-    sub.add_parser("lab")
     sub.add_parser("deadline")
     sub.add_parser("profile")
-    sub.add_parser("ai")
-    pfl = sub.add_parser("flag"); pfl.add_argument("code")
+    pai = sub.add_parser("ai"); pai.add_argument("text", nargs="*")
     pe = sub.add_parser("exam"); pe.add_argument("name", nargs="?")
-    pas = sub.add_parser("ask"); pas.add_argument("text", nargs="*")
-    pex = sub.add_parser("explain"); pex.add_argument("text", nargs="*")
-    pcs = sub.add_parser("cheatsheet"); pcs.add_argument("text", nargs="*")
     piv = sub.add_parser("interview"); piv.add_argument("-n", type=int, default=3)
     sub.add_parser("rank")
     sub.add_parser("doctor")
@@ -1270,17 +1168,19 @@ def main():
     args = p.parse_args()
 
     db.init()                                  # sxema (idempotent)
-    _con = db.connect(); ensure_ready(_con); _con.close()  # init kerak emas — avto seed
+    _con = db.connect(); ensure_ready(_con)                 # init kerak emas — avto seed
+    try:
+        ensure_work(current_day(_con))                      # ish joyi har doim tayyor
+    except Exception:
+        pass
+    _con.close()
 
     dispatch = {
-        "quiz": cmd_quiz, "review": cmd_review,
-        "stats": cmd_stats, "today": cmd_today, "start": cmd_start,
-        "done": cmd_done, "task": cmd_task, "lab": cmd_lab,
-        "deadline": cmd_deadline, "profile": cmd_profile, "ai": cmd_ai,
-        "flag": cmd_flag, "exam": cmd_exam, "ask": cmd_ask, "explain": cmd_explain,
-        "cheatsheet": cmd_cheatsheet, "interview": cmd_interview,
-        "rank": cmd_rank, "doctor": cmd_doctor, "roadmap": cmd_roadmap, "focus": cmd_focus,
-        "next": cmd_next, "verify": cmd_verify,
+        "quiz": cmd_quiz, "review": cmd_review, "stats": cmd_stats,
+        "today": cmd_today, "task": cmd_task, "deadline": cmd_deadline,
+        "profile": cmd_profile, "ai": cmd_ai, "exam": cmd_exam,
+        "interview": cmd_interview, "rank": cmd_rank, "doctor": cmd_doctor,
+        "roadmap": cmd_roadmap, "focus": cmd_focus, "next": cmd_next, "verify": cmd_verify,
     }
     try:                                       # robustlik: xato bo'lsa ham chiroyli
         if args.cmd in dispatch:

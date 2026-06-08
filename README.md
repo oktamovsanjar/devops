@@ -6,17 +6,32 @@
 
 ---
 
-## 📂 Bu yerda nima bor?
+## 📂 Fayl iyerarxiyasi (aniq tuzilma)
 
-| Fayl / Papka | Nima uchun |
-|---|---|
-| [PLAN.md](PLAN.md) | To'liq 8 haftalik o'quv rejasi (yo'l xaritasi) |
-| [SCHEDULE.md](SCHEDULE.md) | Kunlik va haftalik kun tartibi (professional rejim) |
-| [PROGRESS.md](PROGRESS.md) | XP, daraja (rank), streak — o'sishing shu yerda yoziladi |
-| [days/](days/) | Har kunlik "mission"lar (har biri bir o'yin-dars) |
-| [projects/](projects/) | Katta amaliy loyihalar va capstone |
-| [scripts/](scripts/) | Telegram bot, avtomatlashtirish skriptlari |
-| [resources/](resources/) | Cheat-sheet'lar, qo'shimcha materiallar |
+```
+devops/
+├── CURRICULUM.md      # 📚 To'liq 56 kunlik master-reja (har kun maqsadi + natijasi)
+├── PLAN.md            # 8 haftalik qisqa ko'rinish
+├── SCHEDULE.md        # Kunlik/haftalik kun tartibi
+├── README.md          # shu fayl
+│
+├── days/              # ⭐ HAR KUN — BITTA PAPKA (hammasi shu yerda)
+│   └── day-02/
+│       ├── MISSION.md   # nazariya (faqat tushuncha)
+│       ├── tasks.json   # topshiriqlar (yagona manba, avto-tekshiriladi)
+│       ├── work/        # 🛠️ SENING ish joying (fayllaringni shu yerda yarat)
+│       ├── quest/       # 🧩 jumboq (boss puzzle)
+│       ├── fixtures/    # tayyor namuna fayllar (ba'zi kunlar)
+│       └── exam/        # imtihon ish joyi
+│
+├── engine/            # CLI yadrosi: cli.py, AI, SRS, savol banki
+├── scripts/           # Telegram bot, monitoring
+├── tracks/            # Python / English / Shell parallel treklar
+└── resources/         # cheat-sheet'lar, qo'shimcha
+```
+
+> 🎯 **Asosiy qoida:** bir kun = bir papka (`days/day-XX/`). Ishni shu kunning
+> `work/` papkasida qilasan — boshqa joyga sakrab yurmaysan.
 
 ---
 
@@ -81,7 +96,7 @@ Terminal — sening boshqaruv markazing. Har kun shu tartibda:
 devops today      # ❶ "Men kirdim — bugun nima qilaman?" — kun, vaqt, muhlat, ish
 devops start      # ❷ Kunni boshlash (vaqt hisobi + muhlat yoqiladi)
 devops task       # ❸ Bugungi topshiriqlar ro'yxati  (devops task done <N> = bajarildi)
-devops lab        # ❹ Bugungi laboratoriya (ishchi papkang: labs/day-XX/)
+devops lab        # ❹ Bugungi laboratoriya (ishchi papkang: days/day-XX/work/)
 devops quiz       # ❺ Cheksiz quiz/drill oqimi
 devops review     # ❻ SRS — eski mavzularni takror (unutmaslik uchun)
 devops deadline   # ⏳ Muhlat va bugun ishlangan vaqt
@@ -91,7 +106,7 @@ devops profile    # 🧑‍🚀 Men haqimda: kuchli/zaif mavzular, vaqt, progres
 
 > 🧪 **"Laboratoriya" nima?** — Bu **serverning O'ZI** sening laboratoriyang!
 > DevOps real tizimda o'rganiladi, alohida sandbox shart emas. Har kun uchun
-> `labs/day-XX/` ishchi papkasi tayyorlanadi — fayllaringni shu yerda yarat.
+> `days/day-XX/work/` ishchi papkasi tayyorlanadi — fayllaringni shu yerda yarat.
 
 Bularning ustiga, men (Claude/ustoz) har doim shu terminalда: mission'ni
 tushuntiraman, ishingni tekshiraman, qotsang yordam beraman. Istalgan payt:

@@ -4,9 +4,9 @@
   "tasks": [
     {"id": "ws", "type": "real", "xp": 20, "title": "Ish maydonini tayyorla",
      "why": "Har real loyiha tartibli papka tuzilmasidan boshlanadi — keyin chalkashmaysan.",
-     "steps": ["Ishchi papkangga o't:  cd ~/devops/labs/day-01  (yo'q bo'lsa: devops lab)",
+     "steps": ["Ishchi papkangga o't:  cd ~/devops/days/day-01/work  (yo'q bo'lsa: devops lab)",
                "Bitta buyruqda 'project' va uning ichida src, logs, config papkalarini yarat (mkdir -p)"],
-     "expect": "labs/day-01/project/{src,logs,config} mavjud",
+     "expect": "days/day-01/work/project/{src,logs,config} mavjud",
      "check": "[ -d $LAB/project/src ] && [ -d $LAB/project/logs ] && [ -d $LAB/project/config ]"},
 
     {"id": "host", "type": "real", "xp": 25, "title": "Serverni hujjatlashtir (inventory)",
@@ -19,8 +19,9 @@
 
     {"id": "logs", "type": "real", "xp": 25, "title": "Loglardan xatolarni ajrat (triage)",
      "why": "Tunda servis yiqildi — minglab logdan faqat ERROR'larni ajratib olish kunlik ish.",
-     "steps": ["Namuna logni ko'r:  cat ~/devops/days/day-01/fixtures/app.log",
-               "Undagi faqat ERROR qatorlarini ajratib, project/logs/errors.txt ga yoz (grep + > )"],
+     "steps": ["Avval ish joyingga o't:  cd ~/devops/days/day-01/work",
+               "Namuna logni ko'r:  cat ~/devops/days/day-01/fixtures/app.log",
+               "ERROR qatorlarini ajratib yoz:  grep ERROR ~/devops/days/day-01/fixtures/app.log > project/logs/errors.txt"],
      "expect": "errors.txt — fixturedagi ERROR qatorlari (boshqa hech narsa)",
      "check": "diff -q <(grep ERROR \"$DAY/fixtures/app.log\") \"$LAB/project/logs/errors.txt\""},
 
