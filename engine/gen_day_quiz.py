@@ -43,7 +43,7 @@ def day_scope(day):
     return mission, titles
 
 
-def gen(day, target=30):
+def gen(day, target=30, batch=12):
     key = load_key()
     if not key:
         print("❌ API key yo'q"); return
@@ -51,36 +51,38 @@ def gen(day, target=30):
     qf = os.path.join(base, "quiz.json")
     existing = json.load(open(qf, encoding="utf-8")) if os.path.exists(qf) else []
     have = {q["q"].strip().lower() for q in existing}
-    need = target - len(existing)
-    if need <= 0:
+    if len(existing) >= target:
         print(f"  day {day}: allaqachon {len(existing)} (>= {target})"); return
     mission, titles = day_scope(day)
-    prompt = (
-        f"Day {day} lesson. Generate {need + 6} NEW multiple-choice questions STRICTLY within "
-        f"the concepts of THIS lesson only (nothing outside it). Spread difficulty 1-3.\n\n"
-        f"TASK TITLES: {titles}\n\nLESSON (MISSION.md):\n{mission}\n\n"
-        'Each item: {"q":"..","options":["","","",""],"correct":0,"difficulty":1,"explanation":".."}'
-    )
-    try:
-        items = extract_json(call_api(key, MODEL, prompt, system=SYS, max_tokens=4096))
-    except Exception as e:
-        print(f"  day {day}: xato {e}"); return
-    added = 0
-    for it in items:
-        if len(existing) >= target:
-            break
-        if not valid(it):
-            continue
-        q = it["q"].strip()
-        if q.lower() in have:
-            continue
-        existing.append({"q": q, "options": it["options"], "correct": it["correct"],
-                         "difficulty": int(it.get("difficulty", 1)),
-                         "explanation": it.get("explanation", "")})
-        have.add(q.lower())
-        added += 1
+    start = len(existing)
+    attempts = 0
+    while len(existing) < target and attempts < 8:        # bo'lib-bo'lib (token limitiga sig'sin)
+        attempts += 1
+        ask = min(batch, target - len(existing)) + 3
+        prompt = (
+            f"Day {day} lesson. Generate {ask} NEW multiple-choice questions STRICTLY within the "
+            f"concepts of THIS lesson only (nothing outside it). Vary subtopics; spread difficulty 1-3.\n\n"
+            f"TASK TITLES: {titles}\n\nLESSON (MISSION.md):\n{mission}\n\n"
+            'JSON array. Each item: {"q":"..","options":["","","",""],"correct":0,"difficulty":1,"explanation":".."}'
+        )
+        try:
+            items = extract_json(call_api(key, MODEL, prompt, system=SYS, max_tokens=4096))
+        except Exception:
+            continue                                       # bu urinish JSON bermadi — keyingisi
+        for it in items:
+            if len(existing) >= target:
+                break
+            if not valid(it):
+                continue
+            q = it["q"].strip()
+            if q.lower() in have:
+                continue
+            existing.append({"q": q, "options": it["options"], "correct": it["correct"],
+                             "difficulty": int(it.get("difficulty", 1)),
+                             "explanation": it.get("explanation", "")})
+            have.add(q.lower())
     json.dump(existing, open(qf, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
-    print(f"  day {day}: +{added} -> {len(existing)} savol")
+    print(f"  day {day}: +{len(existing) - start} -> {len(existing)} savol")
 
 
 def main():
