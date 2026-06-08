@@ -1181,39 +1181,58 @@ def _current_task_ctx(con):
             f"Qadamlar: {t.get('steps','')} Kutilgan: {t.get('expect','')}")
 
 
+AI_CHAT_SYSTEM = (
+    "You are 'Ustoz', a DevOps mentor sitting next to the learner in a CONTINUING chat. "
+    "You CAN SEE their knowledge profile, recent terminal commands and current task — USE them. "
+    "If they ask why something isn't working, find the real cause IN their recent commands "
+    "(wrong path/flag). Do NOT ask for info you can already see. Keep continuity with the prior "
+    "messages. Answer in Uzbek (English terms/commands), concrete and short, with a fixed command "
+    "example when relevant.")
+
+
 def cmd_ai(args):
-    """🤖 AI: loglar + joriy topshiriq + savolni BIRGA ko'rib javob beradi."""
+    """🤖 Ustoz-AI suhbat sessiyasi — 'q' bosguncha ochiq turadi (loglar+topshiriq+profilni ko'radi)."""
     if not load_key():
         print(c("\n  ⚠️  AI uchun API key kerak (engine/config.json).\n", "yellow")); return
-    q = " ".join(args.text).strip() if getattr(args, "text", None) else ""
     con = db.connect()
-    ctx = learner_context(con)
-    task_ctx = _current_task_ctx(con)
-    con.close()
-    cmds = _recent_cmds()
-    cmds_txt = ("\nOxirgi terminal buyruqlari:\n" + "\n".join(f"- {x}" for x in cmds)) if cmds else ""
+    pending = " ".join(args.text).strip() if getattr(args, "text", None) else ""
+    print(c("\n  🧑‍🏫 USTOZ-AI suhbat", "bold")
+          + c("   (savol yoz · 'q'/Ctrl+C = chiqish · bo'sh Enter = loglardan yordam)", "dim"))
+    history = []
+    while True:
+        if pending is not None and (pending or history):     # args'dan kelgan birinchi savol
+            q = pending; pending = None
+            if q:
+                print(c(f"\n  🙋 Sen: {q}", "yellow"))
+        else:
+            pending = None
+            try:
+                q = input(c("\n  🙋 Sen: ", "yellow")).strip()
+            except (EOFError, KeyboardInterrupt):
+                print(c("\n  👋 Sessiya yopildi.\n", "dim")); break
+        if q.lower() in ("q", "quit", "exit", "chiqish"):
+            print(c("  👋 Sessiya yopildi.\n", "dim")); break
 
-    if q:                                    # savol berildi -> loglar+topshiriq bilan javob
-        sysp = ("You are 'Ustoz', a DevOps mentor sitting next to the learner. You CAN SEE their "
-                "recent terminal commands and current task — USE them. If they ask why something "
-                "isn't working, find the real cause IN their recent commands (e.g. wrong path, "
-                "wrong flag). Do NOT ask for info you can already see. Answer in Uzbek (English "
-                "terms/commands), concrete and short, with a fixed command example when relevant.")
-        print(c("\n  🤔 Ustoz loglar + savolingni o'qiyapti...", "dim"))
-        ans = ai_ask(sysp, f"{ctx}\n{task_ctx}{cmds_txt}\n\nSavol: {q}", max_tokens=900)
+        ctx = learner_context(con)
+        task_ctx = _current_task_ctx(con)
+        cmds = _recent_cmds()
+        cmds_txt = ("\nOxirgi terminal buyruqlari:\n" + "\n".join(f"- {x}" for x in cmds)) if cmds else ""
+        hist_txt = ""
+        if history:
+            hist_txt = "\n\nOldingi suhbat:\n" + "\n".join(f"Sen: {a}\nUstoz: {b}" for a, b in history[-3:])
+        if not q:                                            # bo'sh -> loglardan yordam
+            user = f"{ctx}\n{task_ctx}{cmds_txt}{hist_txt}\n\nNima qilyapman? Qisqa yordam/maslahat ber."
+        else:
+            user = f"{ctx}\n{task_ctx}{cmds_txt}{hist_txt}\n\nSavol: {q}"
+        print(c("  🤔 ...", "dim"))
+        ans = ai_ask(AI_CHAT_SYSTEM, user, max_tokens=900)
         if ans:
-            print(c("\n  🧑‍🏫 USTOZ:", "bold"))
-            print("  " + ans.replace("\n", "\n  ") + "\n")
-        return
-
-    if not cmds:                             # savol yo'q, log ham yo'q
-        print(c("\n  💡 Foydalanish:  devops ai \"savol\"   (yoki ishlab tur, keyin devops ai)\n", "yellow")); return
-    print(c("\n  🤔 Ustoz loglaringni o'qiyapti...", "dim"))
-    txt = ai_ask(AI_HELP_SYSTEM, f"{ctx}\n{task_ctx}{cmds_txt}\n\nNima qilyapti? Qisqa yordam ber.",
-                 max_tokens=400)
-    if txt:
-        print(c("\n  🤖 USTOZ-AI:", "bold"))
-        print("  " + txt.replace("\n", "\n  ") + "\n")
+            print(c("  🧑‍🏫 Ustoz:", "bold"))
+            print("  " + ans.replace("\n", "\n  "))
+            history.append((q or "(loglardan yordam so'radi)", ans))
+        else:
+            print(c("  ⚠️ Javob kelmadi (internet/API). Qayta urin.", "red"))
+    con.close()
 
 
 def ensure_ready(con):
@@ -1225,30 +1244,42 @@ def ensure_ready(con):
 
 
 def print_help_uz():
-    print(c("\n  🐧 devops — DevOps Bootcamp boshqaruv markazi\n", "bold"))
-    rows = [
-        ("roadmap", "🗺️ Butun 56 kunlik yo'l — qayerdasan, oldinda nima bor"),
-        ("today", "Bugun nima qilaman? (kun, vaqt, muhlat, ish)  ⭐ shu yerdan boshla"),
-        ("next", "👉 Keyingi ishni aniq ko'rsatadi  ⭐ kunlik oqim"),
-        ("verify", "🧠 Topshirig'ingni tekshiradi (AI/flag) → keyingisiga o'tasan"),
-        ("task", "Barcha topshiriqlar ro'yxati  ·  task <N> = batafsil"),
-        ("focus", "🧠 AI zaif mavzuingga moslangan shaxsiy topshiriq beradi"),
-        ("quiz", "Cheksiz quiz  ·  quiz today = bugungi mavzu  ·  quiz docker = mavzu"),
-        ("review", "SRS takror — eski mavzularni mustahkamlash (unutmaslik)"),
-        ("exam", "🎓 Amaliy imtihon — hintsiz, qattiq nazorat, real tekshiruv"),
-        ("ai", "🤖 AI: ai \"savol/mavzu\" (tushuntir·shpargalka·javob) yoki bo'sh = loglardan"),
-        ("interview", "🤖 AI mock-intervyu — savol beradi, javobingni baholaydi"),
-        ("rank", "🎖️ Daraja, XP, progress va yutuqlar"),
-        ("profile", "Men haqimda: kuchli/zaif mavzular, aniqlik, progress"),
-        ("deadline", "Muhlat va bugun ishlangan vaqt"),
-        ("doctor", "🩺 Tizim salomatligini tekshirish"),
-        ("stats", "Savollar banki statistikasi"),
+    print(c("\n  🐧 devops", "bold") + c("  ·  DevOps Bootcamp", "dim"))
+    print(c("  ─────────────────────────────────────────────", "dim"))
+    groups = [
+        ("⌨️  KUNLIK OQIM", [
+            ("today", "Bugungi holat — kun, vaqt, muhlat, ish"),
+            ("next", "👉 Keyingi ishni aniq ko'rsatadi"),
+            ("verify", "Topshiriqni tekshiradi → keyingisiga o'tadi"),
+            ("task", "Barcha topshiriqlar ro'yxati  (task N = batafsil)"),
+        ]),
+        ("📚 O'RGANISH & MASHQ", [
+            ("quiz", "Mashq quiz  (quiz today = bugungi mavzu)"),
+            ("review", "SRS takror — eski mavzularni unutmaslik"),
+            ("focus", "AI zaif mavzuingga shaxsiy topshiriq beradi"),
+        ]),
+        ("🎯 BAHOLASH", [
+            ("checkpoint", "Mastery-gate — mavzuni 95% ga topshir (hintsiz)"),
+            ("exam", "🎓 Amaliy imtihon — hintsiz, real tekshiruv"),
+            ("interview", "AI mock-intervyu — savol beradi, baholaydi"),
+        ]),
+        ("🤖 AI & PROGRESS", [
+            ("ai", "Ustoz-AI suhbat — savol ber, 'q' = chiqish"),
+            ("profile", "Bilim profiling — mastery, zaif/kuchli mavzular"),
+            ("rank", "Daraja, XP, yutuqlar"),
+            ("roadmap", "56 kunlik yo'l xaritasi"),
+        ]),
+        ("🩺 TIZIM", [
+            ("deadline", "Muhlat va bugun ishlangan vaqt"),
+            ("doctor", "Tizim salomatligini tekshirish"),
+            ("stats", "Savollar banki statistikasi"),
+        ]),
     ]
-    for cmd, desc in rows:
-        left = "devops " + cmd
-        print("  " + c(left, "cyan") + " " * max(2, 20 - len(left)) + "  " + desc)
-    print(c("\n  🔁 KUNLIK OQIM:  devops next  →  (ishni bajar)  →  devops verify   (kun avtomatik yakunlanadi)", "green"))
-    print(c("  Quiz ichida:  a/b/c/d = javob  ·  ? = AI yordam  ·  q = chiqish\n", "dim"))
+    for title, rows in groups:
+        print(c(f"\n  {title}", "bold"))
+        for cmd, desc in rows:
+            print("   " + c(f"devops {cmd}".ljust(18), "cyan") + " " + c(desc, "dim"))
+    print(c("\n  🔁 Oqim:  devops next  →  (ishni bajar)  →  devops verify\n", "green"))
 
 
 def main():
