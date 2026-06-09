@@ -36,6 +36,8 @@ HELP = (
     "▸ /quiz — bugungi mavzu quizini boshlash\n"
     "   Javob ber → keyingisi avtomatik keladi 🔁\n"
     "   To'g'ri → daraja 📈  ·  xato → 📉\n\n"
+    "▸ /progress — kun, streak, bugungi natija, o'rganilgan mavzular\n"
+    "▸ /today — bugungi kun mavzusi\n"
     "▸ /topic &lt;mavzu&gt; — boshqa mavzuni tanlash\n"
     "▸ /daily — bugungi mavzuga qaytish\n"
     "▸ /stop — to'xtatish  ·  /reset — daraja 1 ga\n"
@@ -76,8 +78,9 @@ def kb(rows):
 
 
 MENU = [[("▶️ Quiz", "quiz"), ("⏸️ To'xta", "stop")],
-        [("📊 Daraja", "stats"), ("📚 Mavzu", "topic")],
-        [("🔄 Reset", "reset"), ("❓ Yordam", "help")]]
+        [("📈 Progress", "progress"), ("📚 Mavzu", "topic")],
+        [("📊 Daraja", "stats"), ("🔄 Reset", "reset")],
+        [("❓ Yordam", "help")]]
 
 
 def menu_kb():
@@ -291,6 +294,38 @@ def do_stop(con, token, chat_id):
     send_msg(token, chat_id, "⏸️ Quiz to'xtatildi.", menu_kb())
 
 
+def do_progress(con, token, chat_id):
+    """O'quvchi holati: kun, streak, bugungi natija, o'rganilgan mavzular."""
+    p = profile.build(con)
+    r = con.execute("SELECT COUNT(*) n, SUM(correct) ok FROM attempts "
+                    "WHERE date(ts)=date('now')").fetchone()
+    n, ok = r["n"] or 0, r["ok"] or 0
+    learned = ", ".join(p["learned"]) or "—"
+    msg = ("📈 <b>Progress</b>\n"
+           f"📅 Day {p['day']}/56  ·  ✅ tugatilgan: {p['done_days']} kun\n"
+           f"🔥 Streak: <b>{p['streak']}</b> kun\n"
+           f"🎲 Bugun quiz: {ok}/{n} to'g'ri\n"
+           f"🧠 SRS takror kutyapti: {p['due']} ta\n"
+           f"📚 O'rganilgan: {learned}")
+    send_msg(token, chat_id, msg, menu_kb())
+
+
+def do_today_info(con, token, chat_id):
+    """Bugungi kun mavzusi."""
+    day = int(db.get_meta(con, "current_day", "1"))
+    theme = ""
+    tj = os.path.join(db.DEVOPS_HOME, f"days/day-{day:02d}/tasks.json")
+    if os.path.exists(tj):
+        try:
+            theme = json.load(open(tj, encoding="utf-8")).get("theme", "")
+        except Exception:
+            pass
+    send_msg(token, chat_id,
+             f"📅 <b>Bugun — Day {day}/56</b>\n{theme}\n\n"
+             "Terminalда:  <code>devops next</code>\nBu yerда:  /quiz bilan mashq qil.",
+             menu_kb())
+
+
 def do_reset(con, token, chat_id):
     lv = available_levels(con)
     db.set_meta(con, "tg_level", lv[0] if lv else 1)
@@ -364,6 +399,10 @@ def handle_admin(con, token, chat_id, key, m):
         do_set_topic(con, token, chat_id, key, parts[1]) if len(parts) >= 2 else do_topic_menu(con, token, chat_id)
     elif text == "/stop":
         do_stop(con, token, chat_id)
+    elif text in ("/progress", "/holat"):
+        do_progress(con, token, chat_id)
+    elif text in ("/today", "/kun"):
+        do_today_info(con, token, chat_id)
     elif text == "/reset":
         do_reset(con, token, chat_id)
     elif text.startswith("/reply"):
@@ -442,6 +481,8 @@ def process(con, token, chat_id, key, u):
             do_stop(con, token, chat_id)
         elif data == "stats":
             send_msg(token, chat_id, stats_msg(con), menu_kb())
+        elif data == "progress":
+            do_progress(con, token, chat_id)
         elif data == "reset":
             do_reset(con, token, chat_id)
         elif data == "help":
