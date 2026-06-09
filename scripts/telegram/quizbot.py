@@ -12,6 +12,7 @@ systemd servis sifatida ishlaydi (server o'chmaydi). Long-polling, webhook emas.
 import json
 import os
 import random
+import re
 import sys
 import time
 import urllib.parse
@@ -38,7 +39,12 @@ HELP = (
     "▸ /topic &lt;mavzu&gt; — boshqa mavzuni tanlash\n"
     "▸ /daily — bugungi mavzuga qaytish\n"
     "▸ /stop — to'xtatish  ·  /reset — daraja 1 ga\n"
-    "▸ /help — yordam"
+    "▸ /help — yordam\n\n"
+    "<b>Murojaatlar (admin):</b>\n"
+    "▸ /reply &lt;id&gt; &lt;matn&gt; — foydalanuvchiga javob\n"
+    "   (yoki forward'ga reply qilib yoz)\n"
+    "▸ /users — murojaatchilar ro'yxati\n"
+    "▸ /broadcast &lt;matn&gt; — hammaga xabar"
 )
 
 
@@ -306,6 +312,110 @@ def do_set_topic(con, token, chat_id, key, name):
         do_topic_menu(con, token, chat_id)
 
 
+OWNER = "Sanjar"          # bot egasi (murojaatlarга javob beruvchi)
+
+
+def save_contact(con, uid, name, username):
+    con.execute(
+        "INSERT INTO tg_contacts(uid,name,username,msgs,last_ts) "
+        "VALUES(?,?,?,1,datetime('now')) ON CONFLICT(uid) DO UPDATE SET "
+        "name=excluded.name, username=excluded.username, msgs=msgs+1, last_ts=datetime('now')",
+        (str(uid), name, username))
+    con.commit()
+
+
+def contacts(con):
+    return con.execute("SELECT uid,name,username,msgs,last_ts FROM tg_contacts "
+                       "ORDER BY last_ts DESC").fetchall()
+
+
+def relay_to_user(token, uid, text):
+    """Admin javobini foydalanuvchiga yuboradi."""
+    try:
+        api(token, "sendMessage", {"chat_id": uid, "text": f"💬 <b>{OWNER}</b>: {text}",
+                                   "parse_mode": "HTML"})
+        return True
+    except Exception as e:
+        log(f"relay fail uid={uid}: {e}")
+        return False
+
+
+def handle_admin(con, token, chat_id, key, m):
+    """Admin (bot egasi) xabarlari — quiz buyruqlari + murojaat boshqaruvi."""
+    text_raw = (m.get("text") or "").strip()
+    text = text_raw.lower()
+    # 1) Forward qilingan murojaatga REPLY qilib javob (tabiiy usul)
+    rt = m.get("reply_to_message") or {}
+    if text_raw and not text_raw.startswith("/"):
+        mm = re.search(r"🆔\s*(\d+)", rt.get("text", "") or "")
+        if mm:
+            uid = mm.group(1)
+            ok = relay_to_user(token, uid, text_raw)
+            send_msg(token, chat_id, f"{'✅' if ok else '❌'} {uid} ga javob "
+                                     f"{'yuborildi' if ok else 'yuborilmadi'}.")
+            return
+    # 2) Buyruqlar
+    if text in ("/start", "/quiz", "/next"):
+        do_quiz(con, token, chat_id, key)
+    elif text == "/daily":
+        do_daily(con, token, chat_id, key)
+    elif text.startswith("/topic"):
+        parts = text.split()
+        do_set_topic(con, token, chat_id, key, parts[1]) if len(parts) >= 2 else do_topic_menu(con, token, chat_id)
+    elif text == "/stop":
+        do_stop(con, token, chat_id)
+    elif text == "/reset":
+        do_reset(con, token, chat_id)
+    elif text.startswith("/reply"):
+        parts = text_raw.split(maxsplit=2)
+        if len(parts) >= 3:
+            ok = relay_to_user(token, parts[1], parts[2])
+            send_msg(token, chat_id, f"{'✅' if ok else '❌'} {parts[1]} ga javob yuborildi.")
+        else:
+            send_msg(token, chat_id, "Format:  /reply &lt;id&gt; &lt;matn&gt;")
+    elif text == "/users":
+        rows = contacts(con)
+        if not rows:
+            send_msg(token, chat_id, "Hali murojaat yo'q.")
+        else:
+            body = "\n".join(f"🆔 <code>{r['uid']}</code> — {r['name']} "
+                             f"(@{r['username'] or '-'}) · {r['msgs']} xabar" for r in rows[:30])
+            send_msg(token, chat_id, "👥 <b>Murojaatchilar</b>\n" + body)
+    elif text.startswith("/broadcast"):
+        parts = text_raw.split(maxsplit=1)
+        if len(parts) >= 2:
+            sent = 0
+            for r in contacts(con):
+                if relay_to_user(token, r["uid"], parts[1]):
+                    sent += 1
+            send_msg(token, chat_id, f"📢 {sent} ta foydalanuvchiga yuborildi.")
+        else:
+            send_msg(token, chat_id, "Format:  /broadcast &lt;matn&gt;")
+    else:
+        send_msg(token, chat_id, HELP, menu_kb())
+
+
+def handle_stranger(con, token, admin_id, m):
+    """Begona foydalanuvchi — murojaatini adminга forward qiladi."""
+    frm = m.get("from", {})
+    uid = str(m.get("chat", {}).get("id"))
+    name = ((frm.get("first_name", "") + " " + frm.get("last_name", "")).strip()) or "Anonim"
+    uname = frm.get("username", "")
+    text_raw = (m.get("text") or "").strip()
+    save_contact(con, uid, name, uname)
+    if text_raw.lower() in ("/start", "/help", ""):
+        send_msg(token, uid, f"👋 Assalomu alaykum! Bu — <b>{OWNER}</b>ning shaxsiy boti.\n"
+                             "Savol yoki murojaatingizni shu yerga yozing — egasiga yetkaziladi, "
+                             "tez orada javob oladi. 📩")
+        if text_raw.lower() in ("/start", "/help"):
+            return
+    unm = f" (@{uname})" if uname else ""
+    send_msg(token, admin_id, f"📨 <b>Yangi murojaat</b>\n👤 {name}{unm}\n🆔 <code>{uid}</code>\n"
+                              f"💬 {text_raw}\n\nJavob: <code>/reply {uid} matn</code>  "
+                              "yoki shu xabarga reply qiling.")
+    send_msg(token, uid, "✅ Xabaringiz yetkazildi. Tez orada javob beramiz. 🙏")
+
+
 def process(con, token, chat_id, key, u):
     if "poll_answer" in u:
         pa = u["poll_answer"]
@@ -344,25 +454,10 @@ def process(con, token, chat_id, key, u):
             do_set_topic(con, token, chat_id, key, data.split(":", 1)[1])
     elif "message" in u:
         m = u["message"]
-        if str(m.get("chat", {}).get("id")) != str(chat_id):
-            return
-        text = (m.get("text") or "").strip().lower()
-        if text in ("/start", "/quiz", "/next"):
-            do_quiz(con, token, chat_id, key)
-        elif text == "/daily":
-            do_daily(con, token, chat_id, key)
-        elif text.startswith("/topic"):
-            parts = text.split()
-            if len(parts) >= 2:
-                do_set_topic(con, token, chat_id, key, parts[1])
-            else:
-                do_topic_menu(con, token, chat_id)
-        elif text == "/stop":
-            do_stop(con, token, chat_id)
-        elif text == "/reset":
-            do_reset(con, token, chat_id)
-        else:                                    # /help, /menu yoki boshqa
-            send_msg(token, chat_id, HELP, menu_kb())
+        if str(m.get("chat", {}).get("id")) == str(chat_id):
+            handle_admin(con, token, chat_id, key, m)        # bot egasi
+        else:
+            handle_stranger(con, token, chat_id, m)          # begona — murojaatni forward qil
 
 
 def main():

@@ -97,6 +97,13 @@ CREATE TABLE IF NOT EXISTS checkpoints (
   pct INTEGER,
   passed INTEGER
 );
+CREATE TABLE IF NOT EXISTS tg_contacts (
+  uid TEXT PRIMARY KEY,
+  name TEXT,
+  username TEXT,
+  msgs INTEGER DEFAULT 0,
+  last_ts TEXT DEFAULT (datetime('now'))
+);
 CREATE INDEX IF NOT EXISTS idx_plan_date ON quiz_plan(date, consumed);
 CREATE INDEX IF NOT EXISTS idx_q_topic ON questions(topic);
 CREATE INDEX IF NOT EXISTS idx_srs_due ON srs(due);
