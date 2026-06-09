@@ -1,186 +1,6 @@
 [
  {
-  "q": "Cron'da vaqt maydonlari qanday tartibda yoziladi?",
-  "options": [
-   "daqiqa, soat, oyning kuni, oy, hafta kuni",
-   "soat, daqiqa, oy, oyning kuni, hafta kuni",
-   "hafta kuni, oy, oyning kuni, soat, daqiqa",
-   "oyning kuni, oy, hafta kuni, soat, daqiqa"
-  ],
-  "correct": 0,
-  "difficulty": 1,
-  "explanation": "Cron 5 maydoni aniq tartibda: daqiqa → soat → oyning kuni → oy → hafta kuni."
- },
- {
-  "q": "`crontab -l` buyrug'i nima qiladi?",
-  "options": [
-   "Joriy foydalanuvchining cron ishlarini ko'rsatadi",
-   "Yangi cron yozuvi qo'shadi",
-   "Barcha cron ishlarini o'chiradi",
-   "Cron xizmatini qayta ishga tushiradi"
-  ],
-  "correct": 0,
-  "difficulty": 1,
-  "explanation": "`crontab -l` joriy foydalanuvchining crontab'ini ekranga chiqaradi (ko'rish uchun)."
- },
- {
-  "q": "Quyidagi cron yozuvi qanday ma'noni anglatadi: `* * * * *`?",
-  "options": [
-   "Har daqiqa",
-   "Har soat",
-   "Har kuni",
-   "Har hafta"
-  ],
-  "correct": 0,
-  "difficulty": 1,
-  "explanation": "Barcha maydonlar `*` bo'lsa, buyruq har daqiqada bajariladi."
- },
- {
-  "q": "Har kuni soat 03:00 da ishlaydigan cron yozuvi qaysi?",
-  "options": [
-   "`0 3 * * *`",
-   "`3 0 * * *`",
-   "`* 3 * * *`",
-   "`0 * 3 * *`"
-  ],
-  "correct": 0,
-  "difficulty": 1,
-  "explanation": "Birinchi maydon daqiqa (0), ikkinchi maydon soat (3) bo'lishi kerak: `0 3 * * *`."
- },
- {
-  "q": "Har dushanba soat 09:00 da ishlaydigan cron yozuvi qaysi?",
-  "options": [
-   "`0 9 * * 1`",
-   "`9 0 * * 1`",
-   "`0 9 1 * *`",
-   "`0 9 * * 0`"
-  ],
-  "correct": 0,
-  "difficulty": 2,
-  "explanation": "Hafta kuni maydoni: 1 = dushanba, soat 9, daqiqa 0: `0 9 * * 1`."
- },
- {
-  "q": "Cron'da hafta kuni maydonida `0` va `7` qaysi kunni bildiradi?",
-  "options": [
-   "Yakshanba",
-   "Dushanba",
-   "Shanba",
-   "Juma"
-  ],
-  "correct": 0,
-  "difficulty": 1,
-  "explanation": "Cron hujjatlariga ko'ra hafta kuni 0 va 7 ikkalasi ham yakshanbani anglatadi."
- },
- {
-  "q": "Backup nomini sana bilan yaratish uchun qaysi buyruq to'g'ri?",
-  "options": [
-   "`dest=\"backup-$(date +%F)\"`",
-   "`dest=\"backup-$(date +%T)\"`",
-   "`dest=\"backup-$(date +%d)\"`",
-   "`dest=\"backup-$(date +%H)\"`"
-  ],
-  "correct": 0,
-  "difficulty": 2,
-  "explanation": "`date +%F` ISO formatida to'liq sanani (YYYY-MM-DD) qaytaradi, masalan `2026-06-09`."
- },
- {
-  "q": "`date +%F` qanday natija beradi?",
-  "options": [
-   "2026-06-09 (YYYY-MM-DD format)",
-   "09:30:00 (HH:MM:SS format)",
-   "06/09/2026 (MM/DD/YYYY format)",
-   "09-Jun-2026 format"
-  ],
-  "correct": 0,
-  "difficulty": 1,
-  "explanation": "`date +%F` standarti ISO 8601 formatida YYYY-MM-DD ko'rinishida sana beradi."
- },
- {
-  "q": "Quyidagi buyruq nima qiladi: `mkdir -p \"$dest\" && cp -r src/* \"$dest\"/`?",
-  "options": [
-   "Papka yaratib, src ichidagilarni unga ko'chiradi (backup qiladi)",
-   "Papkani o'chirib, src ga ko'chiradi",
-   "Faqat papka yaratadi, nusxa ko'chirmaydi",
-   "src papkasini o'chiradi"
-  ],
-  "correct": 0,
-  "difficulty": 2,
-  "explanation": "`mkdir -p` papka yaratadi, `&&` muvaffaqiyatli bo'lsa `cp -r` bilan src ni backup papkasiga ko'chiradi."
- },
- {
-  "q": "Eski log fayllarni tozalash buyrug'i: `find /var/log -name \"*.log\" -mtime +7 -delete` — bu nima qiladi?",
-  "options": [
-   "/var/log ichida 7 kundan eski .log fayllarini o'chiradi",
-   "/var/log ichida barcha .log fayllarini o'chiradi",
-   "7 ta .log fayl yaratadi",
-   "Log fayllarini 7 kun arxivlaydi"
-  ],
-  "correct": 0,
-  "difficulty": 2,
-  "explanation": "`-mtime +7` 7 kundan ko'proq vaqt o'tgan fayllarni tanlaydi va `-delete` ularni o'chiradi."
- },
- {
-  "q": "Maintenance log yozish uchun qaysi buyruq to'g'ri?",
-  "options": [
-   "`echo \"$(date) backup bajarildi\" >> /var/log/backup.log`",
-   "`echo \"$(date) backup bajarildi\" > /var/log/backup.log`",
-   "`cat \"$(date) backup bajarildi\" >> /var/log/backup.log`",
-   "`write \"$(date) backup bajarildi\" /var/log/backup.log`"
-  ],
-  "correct": 0,
-  "difficulty": 2,
-  "explanation": "`>>` operatori log faylini qayta yozmay, oxiriga sana va xabar qo'shib boradi."
- },
- {
-  "q": "Crontab'ni tahrirlash uchun qaysi buyruq ishlatiladi?",
-  "options": [
-   "`crontab -e`",
-   "`crontab -l`",
-   "`crontab -r`",
-   "`crontab -v`"
-  ],
-  "correct": 0,
-  "difficulty": 1,
-  "explanation": "`crontab -e` foydalanuvchining crontab faylini tahrirlash uchun muharrir ochadi."
- },
- {
-  "q": "Bu darsda cron yozuvlari qayerga saqlanishi tavsiya etilgan?",
-  "options": [
-   "Alohida faylga (jonli crontab'ga tegmaslik uchun)",
-   "To'g'ridan-to'g'ri crontab'ga",
-   "/etc/cron.d/ papkasiga",
-   "/var/log/ papkasiga"
-  ],
-  "correct": 0,
-  "difficulty": 1,
-  "explanation": "Darsda xavfsizlik sababi bilan cron yozuvlarini faylga yozish tavsiya etilgan, jonli crontab'ga tegmaslik uchun."
- },
- {
-  "q": "`*/5 * * * *` cron yozuvi qanday ishlaydi?",
-  "options": [
-   "Har 5 daqiqada",
-   "Har 5 soatda",
-   "Har 5 kunda",
-   "Faqat 5-daqiqada (soatning)"
-  ],
-  "correct": 0,
-  "difficulty": 2,
-  "explanation": "`*/5` daqiqa maydonida 'har 5 daqiqada' degan ma'noni bildiradi (0, 5, 10, 15...)."
- },
- {
-  "q": "Backup skriptida `cp -r src/* \"$dest\"/` buyrug'ida `-r` flagi nima uchun kerak?",
-  "options": [
-   "Papkalarni ichidagi fayllar bilan birga rekursiv nusxalash uchun",
-   "Faqat .log fayllarini nusxalash uchun",
-   "Fayllarni o'chirish uchun",
-   "Nusxalashni tez bajarish uchun"
-  ],
-  "correct": 0,
-  "difficulty": 3,
-  "explanation": "`cp -r` (recursive) papka va uning barcha ichidagi fayllarini to'liq nusxalaydi."
- },
- {
-  "q": "Cron'ning 5 ta vaqt maydonlari qaysi tartibda keladi?",
+  "q": "Cron formatida maydonlar qaysi tartibda joylashadi?",
   "options": [
    "daqiqa, soat, oyning kuni, oy, hafta kuni",
    "soat, daqiqa, oy, oyning kuni, hafta kuni",
@@ -189,10 +9,22 @@
   ],
   "correct": 0,
   "difficulty": 1,
-  "explanation": "Cron sintaksisida maydonlar aniq tartibda: daqiqa → soat → oyning kuni → oy → hafta kuni."
+  "explanation": "Cron 5 ta maydon: daqiqa (0-59), soat (0-23), oyning kuni (1-31), oy (1-12), hafta kuni (0-7) tartibida yoziladi."
  },
  {
-  "q": "`* * * * *` cron yozuvi qanday ma'noni bildiradi?",
+  "q": "`crontab -l` buyrug'i nima qiladi?",
+  "options": [
+   "Joriy cron ishlarini ko'rsatadi",
+   "Crontabni tahrirlaydi",
+   "Crontabni o'chiradi",
+   "Yangi cron yozuvi qo'shadi"
+  ],
+  "correct": 0,
+  "difficulty": 1,
+  "explanation": "`crontab -l` buyrug'i mavjud cron yozuvlarini ekranga chiqarib ko'rsatadi."
+ },
+ {
+  "q": "Quyidagi cron yozuvi qachon ishlaydi? `* * * * *`",
   "options": [
    "Har daqiqa",
    "Har soat",
@@ -201,58 +33,130 @@
   ],
   "correct": 0,
   "difficulty": 1,
-  "explanation": "Barcha maydonlar `*` bo'lsa, buyruq har daqiqada bajariladi."
+  "explanation": "Barcha maydonlar `*` bo'lsa, cron har daqiqada ishga tushadi."
  },
  {
-  "q": "Sana bilan nomlangan backup papkasini yaratish uchun qaysi buyruq to'g'ri?",
+  "q": "`0 3 * * *` cron yozuvi qachon ishga tushadi?",
   "options": [
-   "`dest=\"backup-$(date +%F)\"`",
-   "`dest=\"backup-$(date +%T)\"`",
-   "`dest=\"backup-$(date +%H)\"`",
-   "`dest=\"backup-$(date +%m)\"`"
+   "Har kuni 03:00 da",
+   "Har kuni 00:03 da",
+   "Har dushanba 03:00 da",
+   "Har soatning 3-daqiqasida"
+  ],
+  "correct": 0,
+  "difficulty": 1,
+  "explanation": "`0 3 * * *` — daqiqa=0, soat=3, qolganlar=* ya'ni har kuni 03:00 da ishlaydi."
+ },
+ {
+  "q": "`0 9 * * 1` cron yozuvi qachon ishga tushadi?",
+  "options": [
+   "Har dushanba soat 09:00 da",
+   "Har yakshanba soat 09:00 da",
+   "Har kuni soat 09:01 da",
+   "Har shanba soat 09:00 da"
   ],
   "correct": 0,
   "difficulty": 2,
-  "explanation": "`date +%F` natijasi `YYYY-MM-DD` formatida to'liq sana beradi, masalan `backup-2026-06-09`."
+  "explanation": "Hafta kuni maydonida `1` dushanba ni bildiradi (0/7=yakshanba), shuning uchun har dushanba 09:00 da ishlaydi."
  },
  {
-  "q": "`mkdir -p \"$dest\" && cp -r src/* \"$dest\"/` buyrug'ida `-p` flagi nima uchun ishlatiladi?",
+  "q": "`*/5 * * * *` cron yozuvi qanday ma'noni anglatadi?",
   "options": [
-   "Papka mavjud bo'lsa xato bermaydi va kerak bo'lsa oraliq papkalar yaratadi",
-   "Faqat bo'sh papka yaratadi",
-   "Papkani o'chiradi",
-   "Fayllarni paketlaydi"
+   "Har 5 daqiqada",
+   "Har 5 soatda",
+   "Har 5 kunda",
+   "Oyning 5-sanasida"
   ],
   "correct": 0,
   "difficulty": 2,
-  "explanation": "`mkdir -p` papka allaqachon mavjud bo'lsa xato chiqarmaydi va zarur bo'lgan barcha ota-papkalarni yaratadi."
+  "explanation": "`*/5` daqiqa maydonida 'har 5 daqiqada bir marta' degan ma'noni bildiradi."
  },
  {
-  "q": "7 kundan eski `.log` fayllarni `/var/log` dan o'chirish uchun qaysi buyruq to'g'ri?",
+  "q": "Backup nomini sana bilan yaratish uchun qaysi buyruq to'g'ri?",
   "options": [
-   "`find /var/log -name \"*.log\" -mtime +7 -delete`",
-   "`find /var/log -name \"*.log\" -mtime 7 -delete`",
-   "`find /var/log -name \"*.log\" -mtime -7 -delete`",
-   "`rm /var/log/*.log -mtime +7`"
+   "dest=\"backup-$(date +%F)\"",
+   "dest=\"backup-$(date +%T)\"",
+   "dest=\"backup-$(time +%F)\"",
+   "dest=\"backup-$(cal +%F)\""
+  ],
+  "correct": 0,
+  "difficulty": 1,
+  "explanation": "`date +%F` formatni YYYY-MM-DD ko'rinishida beradi, shuning uchun backup-2026-06-09 kabi nom hosil bo'ladi."
+ },
+ {
+  "q": "`date +%F` buyrug'i qanday natija beradi?",
+  "options": [
+   "2026-06-09 (YYYY-MM-DD formatida)",
+   "09/06/2026 (DD/MM/YYYY formatida)",
+   "06-09-2026 (MM-DD-YYYY formatida)",
+   "09:00:00 (vaqt formatida)"
+  ],
+  "correct": 0,
+  "difficulty": 1,
+  "explanation": "`date +%F` standarт ISO formatida YYYY-MM-DD ko'rinishida sanani chiqaradi."
+ },
+ {
+  "q": "Backup skriptida `mkdir -p \"$dest\"` qatoridagi `-p` flagi nima uchun kerak?",
+  "options": [
+   "Katalog allaqachon mavjud bo'lsa xato bermay yaratish uchun",
+   "Katalogni o'chirish uchun",
+   "Katalog ruxsatlarini o'zgartirish uchun",
+   "Katalog ichidagi fayllarni sanash uchun"
   ],
   "correct": 0,
   "difficulty": 2,
-  "explanation": "`-mtime +7` 7 kundan ko'proq vaqt o'tgan fayllarni tanlaydi, `-delete` esa ularni o'chiradi."
+  "explanation": "`mkdir -p` yo'l bo'ylab barcha papkalarni yaratadi va mavjud papka uchun xato bermaydi."
  },
  {
-  "q": "Maintenance log yozish uchun qaysi buyruq ishlatiladi?",
+  "q": "Eski log fayllarni tozalash uchun qaysi buyruq to'g'ri ishlatilgan?",
   "options": [
-   "`echo \"$(date) backup bajarildi\" >> /var/log/backup.log`",
-   "`echo \"$(date) backup bajarildi\" > /var/log/backup.log`",
-   "`cat \"$(date) backup bajarildi\" >> /var/log/backup.log`",
-   "`write \"$(date) backup bajarildi\" /var/log/backup.log`"
+   "find /var/log -name \"*.log\" -mtime +7 -delete",
+   "rm /var/log/*.log -mtime 7",
+   "delete /var/log -name \"*.log\" -days 7",
+   "find /var/log -name \"*.log\" -atime 7 -remove"
   ],
   "correct": 0,
   "difficulty": 2,
-  "explanation": "`>>` operatori faylga qo'shib yozadi (ustiga yozmaydi), shuning uchun log to'planib boradi."
+  "explanation": "`find` buyrug'i `-mtime +7` bilan 7 kundan eski fayllarni topib `-delete` bilan o'chiradi."
  },
  {
-  "q": "Cron hafta kuni maydonida `0` va `7` qaysi kunni bildiradi?",
+  "q": "`find /var/log -name \"*.log\" -mtime +7 -delete` buyrug'ida `+7` nima ma'noni anglatadi?",
+  "options": [
+   "7 kundan ko'proq vaqt oldin o'zgartirilgan fayllar",
+   "Hajmi 7 MB dan katta fayllar",
+   "Oxirgi 7 soatda yaratilgan fayllar",
+   "Aynan 7 kun oldin o'zgartirilgan fayllar"
+  ],
+  "correct": 0,
+  "difficulty": 2,
+  "explanation": "`-mtime +7` — modifikatsiya vaqti 7 kundan oshgan (ya'ni 7 kundan eskiroq) fayllarni tanlaydi."
+ },
+ {
+  "q": "Maintenance log yozish uchun qaysi buyruq to'g'ri?",
+  "options": [
+   "echo \"$(date) backup bajarildi\" >> /var/log/backup.log",
+   "echo \"$(date) backup bajarildi\" > /var/log/backup.log",
+   "log \"$(date) backup bajarildi\" >> /var/log/backup.log",
+   "write \"$(date) backup bajarildi\" /var/log/backup.log"
+  ],
+  "correct": 0,
+  "difficulty": 1,
+  "explanation": "`>>` operatori faylga qo'shib yozadi (qayta yozib yubormasdan), bu log yozish uchun to'g'ri usul."
+ },
+ {
+  "q": "Crontab'ni tahrirlash uchun qaysi buyruq ishlatiladi?",
+  "options": [
+   "crontab -e",
+   "crontab -l",
+   "crontab -r",
+   "crontab -v"
+  ],
+  "correct": 0,
+  "difficulty": 1,
+  "explanation": "`crontab -e` buyrug'i crontabni muharrir orqali tahrirlash imkonini beradi."
+ },
+ {
+  "q": "Cron formatida hafta kuni maydonida `0` va `7` qaysi kunni bildiradi?",
   "options": [
    "Yakshanba",
    "Dushanba",
@@ -261,102 +165,198 @@
   ],
   "correct": 0,
   "difficulty": 2,
-  "explanation": "Cron sintaksisida hafta kuni maydonida 0 va 7 ikkalasi ham yakshandani bildiradi."
+  "explanation": "Cron spesifikatsiyasida hafta kuni maydonida 0 va 7 ikkalasi ham yakshanbani bildiradi."
  },
  {
-  "q": "Backup skriptida `dest` o'zgaruvchisiga `backup-2026-06-09` qiymati berildi. Keyingi qadamda nima qilinadi?",
+  "q": "Bu darsda cron yozuvlari nima sababdan jonli crontab'ga emas, faylga yoziladi?",
   "options": [
-   "`mkdir -p \"$dest\" && cp -r src/* \"$dest\"/`",
-   "`rm -rf \"$dest\"`",
-   "`find \"$dest\" -delete`",
-   "`echo \"$dest\" >> cron`"
-  ],
-  "correct": 0,
-  "difficulty": 2,
-  "explanation": "Sana bilan papka yaratib, so'ng manba fayllarini unga nusxalash backup skriptining asosiy qadamidir."
- },
- {
-  "q": "Bu kun cron yozuvlari nima sababli jonli crontab'ga emas, faylga yoziladi?",
-  "options": [
-   "Jonli crontab'da prayer/quiz ishlari bor, ularga tegmaslik uchun",
-   "Crontab fayli o'qish uchun yopiq bo'lgani uchun",
-   "Cron faqat fayldan o'qiy oladi",
-   "Faylga yozish tezroq ishlaydi"
-  ],
-  "correct": 0,
-  "difficulty": 1,
-  "explanation": "Xavfsizlik sababi: jonli crontab'da allaqachon muhim ishlar bor, ularga zarar yetkazmaslik uchun faylga yoziladi."
- },
- {
-  "q": "`find /var/log -name \"*.log\" -mtime +7 -delete` buyrug'ida `-mtime +7` nima ma'noni anglatadi?",
-  "options": [
-   "Oxirgi o'zgartirilganiga 7 kundan ko'proq vaqt o'tgan fayllar",
-   "Oxirgi 7 kunda o'zgartirilgan fayllar",
-   "Hajmi 7 MB dan katta fayllar",
-   "Nomi 7 belgidan iborat fayllar"
+   "Jonli crontab'da prayer/quiz ishlari borligini buzib yubormaslik uchun",
+   "Crontab faylga yozishni qo'llab-quvvatlamaydi",
+   "Faylga yozish tezroq ishlaydi",
+   "Cron faqat fayldan o'qiy oladi"
   ],
   "correct": 0,
   "difficulty": 3,
-  "explanation": "`-mtime +7` parametri faylning oxirgi o'zgartirilgan vaqti 7 kundan oshganini tekshiradi."
+  "explanation": "Darsda ko'rsatilganidek, jonli crontab'da boshqa muhim ishlar (prayer/quiz) mavjud bo'lgani uchun ularga tegmaslik maqsadida faylga yoziladi."
  },
  {
-  "q": "Cron'da '* * * * *' yozuvi nimani anglatadi?",
+  "q": "Cron'da 5 ta vaqt maydoni qaysi tartibda joylashgan?",
+  "options": [
+   "daqiqa, soat, oyning kuni, oy, hafta kuni",
+   "soat, daqiqa, oy, oyning kuni, hafta kuni",
+   "hafta kuni, oy, oyning kuni, soat, daqiqa",
+   "daqiqa, soat, oy, oyning kuni, hafta kuni"
+  ],
+  "correct": 0,
+  "difficulty": 1,
+  "explanation": "Cron maydonlari chapdan o'ngga: daqiqa, soat, oyning kuni, oy, hafta kuni tartibida joylashadi."
+ },
+ {
+  "q": "Cron yozuvi `* * * * *` qanday ma'noni anglatadi?",
   "options": [
    "Har daqiqa",
    "Har soat",
    "Har kuni",
-   "Har hafta"
+   "Har haftada bir marta"
   ],
   "correct": 0,
   "difficulty": 1,
-  "explanation": "Barcha 5 maydon '*' bo'lsa, buyruq har daqiqada bajariladi."
+  "explanation": "Barcha maydonlar `*` bo'lsa, buyruq har daqiqada bajariladi."
  },
  {
-  "q": "Sana bilan backup nomini hosil qiluvchi to'g'ri buyruq qaysi?",
+  "q": "Har kuni soat 03:00 da ishga tushadigan cron yozuvi qaysi?",
   "options": [
-   "dest=\"backup-$(date +%F)\"",
-   "dest=\"backup-$(date +%T)\"",
-   "dest=\"backup-$(date +%d)\"",
-   "dest=\"backup-$(date +%Y)\""
+   "`0 3 * * *`",
+   "`3 0 * * *`",
+   "`* 3 * * *`",
+   "`0 0 3 * *`"
+  ],
+  "correct": 0,
+  "difficulty": 1,
+  "explanation": "Birinchi maydon daqiqa (0), ikkinchi maydon soat (3) bo'lganda buyruq 03:00 da bajariladi."
+ },
+ {
+  "q": "Har dushanba soat 09:00 da ishlaydigan cron yozuvi qaysi?",
+  "options": [
+   "`0 9 * * 1`",
+   "`9 0 * * 1`",
+   "`0 9 * * 0`",
+   "`0 9 1 * *`"
   ],
   "correct": 0,
   "difficulty": 2,
-  "explanation": "`date +%F` formatini `YYYY-MM-DD` ko'rinishida beradi, bu backup nomida sanani to'liq ifodalaydi."
+  "explanation": "Cron'da hafta kuni maydoni: 1 = dushanba, shuning uchun `0 9 * * 1` to'g'ri yozuv."
  },
  {
-  "q": "7 kundan eski `.log` fayllarni o'chiruvchi to'g'ri buyruq qaysi?",
+  "q": "Cron'da hafta kuni maydonida `0` va `7` qaysi kunni bildiradi?",
   "options": [
-   "find /var/log -name \"*.log\" -mtime +7 -delete",
-   "find /var/log -name \"*.log\" -mtime 7 -remove",
-   "rm /var/log/*.log -older 7",
-   "find /var/log -name \"*.log\" -age +7 -delete"
+   "Yakshanbani",
+   "Dushanbani",
+   "Shanbani",
+   "Jumagani"
   ],
   "correct": 0,
   "difficulty": 2,
-  "explanation": "`find` bilan `-mtime +7 -delete` 7 kundan eski fayllarni topib o'chiradi."
+  "explanation": "Cron spetsifikatsiyasiga ko'ra hafta kuni maydoni: 0 va 7 ikkisi ham yakshanba hisoblanadi."
  },
  {
-  "q": "Cron sintaksisida `*/5 * * * *` yozuvi nimani anglatadi?",
+  "q": "`date +%F` buyrug'i qanday format qaytaradi?",
   "options": [
-   "Har 5 daqiqada",
-   "Har 5 soatda",
-   "Har 5 kunda",
-   "Faqat 5-daqiqada bir marta"
+   "`2026-06-09` (YYYY-MM-DD)",
+   "`09/06/2026` (DD/MM/YYYY)",
+   "`09-Jun-2026`",
+   "`20260609` (YYYYMMDD)"
+  ],
+  "correct": 0,
+  "difficulty": 1,
+  "explanation": "`date +%F` ISO 8601 standartidagi `YYYY-MM-DD` formatida sana chiqaradi."
+ },
+ {
+  "q": "`mkdir -p \"$dest\" && cp -r src/* \"$dest\"/` buyrug'ida `&&` nima vazifa bajaradi?",
+  "options": [
+   "Birinchi buyruq muvaffaqiyatli bo'lsagina ikkinchisini ishlatadi",
+   "Ikkala buyruqni parallel ishlatadi",
+   "Birinchi buyruq xato bersa ikkinchisini ishlatadi",
+   "Buyruqlarni ketma-ket farqsiz ishlatadi"
+  ],
+  "correct": 0,
+  "difficulty": 2,
+  "explanation": "`&&` operatori chap tomondagi buyruq 0 (muvaffaqiyat) qaytarganda o'ng tomonini bajaradi."
+ },
+ {
+  "q": "7 kundan eski `.log` fayllarini o'chirish uchun qaysi buyruq ishlatiladi?",
+  "options": [
+   "`find /var/log -name \"*.log\" -mtime +7 -delete`",
+   "`rm /var/log/*.log -mtime +7`",
+   "`find /var/log -name \"*.log\" -atime +7 -delete`",
+   "`ls /var/log -mtime +7 | rm`"
+  ],
+  "correct": 0,
+  "difficulty": 2,
+  "explanation": "`find` buyrug'idagi `-mtime +7` 7 kundan ko'proq vaqt oldin o'zgartirilgan fayllarni topadi va `-delete` ularni o'chiradi."
+ },
+ {
+  "q": "Cron jadvalini tahrirlash uchun qaysi buyruq ishlatiladi?",
+  "options": [
+   "`crontab -e`",
+   "`crontab -l`",
+   "`crontab -r`",
+   "`cron -edit`"
+  ],
+  "correct": 0,
+  "difficulty": 1,
+  "explanation": "`crontab -e` joriy foydalanuvchining cron jadvalini muharrir orqali tahrirlash uchun ishlatiladi."
+ },
+ {
+  "q": "Dars bo'yicha cron yozuvlarini qayerga yozish tavsiya etilgan?",
+  "options": [
+   "Faylga (jonli crontab'ga emas)",
+   "To'g'ridan-to'g'ri crontab'ga `crontab -e` orqali",
+   "Xotiraga yozmasdan faqat terminalda ishlatish",
+   "/etc/cron.d/ katalogiga"
+  ],
+  "correct": 0,
+  "difficulty": 2,
+  "explanation": "Dars bo'yicha xavfsizlik maqsadida cron yozuvlari faylga yoziladi — jonli crontab'dagi boshqa ishlarni buzmaslik uchun."
+ },
+ {
+  "q": "Backup skriptida `mkdir -p \"$dest\"` buyrug'idagi `-p` flagi nima uchun kerak?",
+  "options": [
+   "Katalog mavjud bo'lsa xato bermasdan, kerak bo'lsa ota-kataloglarni ham yaratadi",
+   "Faqat bo'sh katalog yaratadi",
+   "Katalogni o'chiradi va qayta yaratadi",
+   "Faqat ruxsat tekshiradi, katalog yaratmaydi"
   ],
   "correct": 0,
   "difficulty": 3,
-  "explanation": "`*/5` daqiqa maydonida 'har 5 daqiqa' ma'nosini beradi — 0, 5, 10, 15 ... daqiqalarda ishlaydi."
+  "explanation": "`mkdir -p` katalog allaqachon mavjud bo'lsa xato chiqarmaydi va kerak bo'lsa oraliq kataloglarni ham yaratadi."
  },
  {
-  "q": "Backup faylini sana bilan nomlash uchun qaysi buyruq to'g'ri?",
+  "q": "Cron yozuvida `* * * * *` nima ma'noni anglatadi?",
   "options": [
-   "dest=\"backup-$(date +%F)\"",
-   "dest=\"backup-$(date +%T)\"",
-   "dest=\"backup-$(date +%d)\"",
-   "dest=\"backup-$(date +%m)\""
+   "Har daqiqa",
+   "Har soat",
+   "Har kuni yarim tunda",
+   "Har dushanba"
+  ],
+  "correct": 0,
+  "difficulty": 1,
+  "explanation": "Barcha 5 maydon `*` bo'lsa, buyruq har daqiqada bajariladi."
+ },
+ {
+  "q": "Har kuni soat 03:00 da ishga tushadigan to'g'ri cron yozuvi qaysi?",
+  "options": [
+   "`0 3 * * *`",
+   "`3 0 * * *`",
+   "`* 3 * * *`",
+   "`0 0 3 * *`"
   ],
   "correct": 0,
   "difficulty": 2,
-  "explanation": "`date +%F` to'liq sanani `YYYY-MM-DD` formatida qaytaradi, bu backup nomiga mos keladi."
+  "explanation": "Cron formatida birinchi maydon daqiqa (0), ikkinchisi soat (3) bo'ladi."
+ },
+ {
+  "q": "Backup skriptida `dest=\"backup-$(date +%F)\"` ifodasi nima uchun ishlatiladi?",
+  "options": [
+   "Har kuni yangi, sana bilan nomlangan backup katalogi yaratish uchun",
+   "Backup faylini siqish uchun",
+   "Eski backup'larni o'chirish uchun",
+   "Backup hajmini tekshirish uchun"
+  ],
+  "correct": 0,
+  "difficulty": 2,
+  "explanation": "`date +%F` joriy sanani qo'shib, har kuni noyob nomdagi backup papkasi hosil qiladi."
+ },
+ {
+  "q": "`find /var/log -name \"*.log\" -mtime +7 -delete` buyrug'i nima qiladi?",
+  "options": [
+   "/var/log ichida 7 kundan ko'proq vaqt oldin o'zgartirilgan `.log` fayllarni o'chiradi",
+   "/var/log ichida oxirgi 7 kunda yaratilgan `.log` fayllarni o'chiradi",
+   "Barcha `.log` fayllarni arxivlaydi",
+   "`.log` fayllarni /var/log/old/ papkasiga ko'chiradi"
+  ],
+  "correct": 0,
+  "difficulty": 3,
+  "explanation": "`-mtime +7` modifikatsiya vaqti 7 kundan oshgan fayllarni tanlaydi va `-delete` ularni o'chiradi."
  }
 ]
