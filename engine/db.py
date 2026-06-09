@@ -111,9 +111,10 @@ CREATE INDEX IF NOT EXISTS idx_srs_due ON srs(due);
 
 
 def connect():
-    con = sqlite3.connect(DB_PATH)
+    con = sqlite3.connect(DB_PATH, timeout=10)
     con.row_factory = sqlite3.Row
     con.execute("PRAGMA foreign_keys = ON")
+    con.execute("PRAGMA busy_timeout = 5000")   # ikki ip (bot + scheduler) uchun qulf kutsin
     return con
 
 
