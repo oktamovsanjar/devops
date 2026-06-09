@@ -1,0 +1,23 @@
+{
+  "title": "Day-19: Optimizatsiya & registry",
+  "workspace": "days/day-19/exam",
+  "pass_score": 70,
+  "time_limit_min": 25,
+  "tasks": [
+    {"id": "t1", "points": 20,
+     "prompt": "Multi-stage Dockerfile yoz (2 ta FROM, ikkinchisi yengil asos) va 'examopt' nomli image qur.",
+     "check": "[ \"$(grep -c '^FROM' $EXAM/Dockerfile 2>/dev/null)\" -ge 2 ] && docker image inspect examopt >/dev/null 2>&1"},
+    {"id": "t2", "points": 20,
+     "prompt": "'.dockerignore' yarat va unга kamida bitta naqsh qo'sh (masalan *.log yoki node_modules).",
+     "check": "[ -s $EXAM/.dockerignore ]"},
+    {"id": "t3", "points": 20,
+     "prompt": "Lokal registry ishga tushir:  docker run -d -p 5001:5000 --name examreg registry:2",
+     "check": "docker ps --format '{{.Names}}' | grep -qx examreg"},
+    {"id": "t4", "points": 20,
+     "prompt": "examopt ni localhost:5001 ga tagla va push qil (docker tag + docker push).",
+     "check": "curl -s localhost:5001/v2/_catalog | grep -q examopt"},
+    {"id": "t5", "points": 20,
+     "prompt": "examopt image tarixini (qatlamlarini) 'history.txt' ga yoz (docker history).",
+     "check": "[ -s $EXAM/history.txt ]"}
+  ]
+}
