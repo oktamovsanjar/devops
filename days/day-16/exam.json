@@ -1,0 +1,23 @@
+{
+  "title": "Day-16: Dockerfile",
+  "workspace": "days/day-16/exam",
+  "pass_score": 70,
+  "time_limit_min": 25,
+  "tasks": [
+    {"id": "t1", "points": 20,
+     "prompt": "Ish papkangда Dockerfile yarat: FROM alpine va CMD bilan 'imtihon16' chiqarsin.",
+     "check": "grep -qi '^FROM' $EXAM/Dockerfile && grep -qi '^CMD' $EXAM/Dockerfile"},
+    {"id": "t2", "points": 20,
+     "prompt": "O'sha Dockerfile'dan image qur:  docker build -t examimg .",
+     "check": "docker image inspect examimg >/dev/null 2>&1"},
+    {"id": "t3", "points": 20,
+     "prompt": "examimg ni ishga tushirib chiqishini 'out.txt' ga yoz — 'imtihon16' bo'lsin (docker run --rm examimg).",
+     "check": "grep -q imtihon16 $EXAM/out.txt"},
+    {"id": "t4", "points": 20,
+     "prompt": "examimg ni versiya bilan tagla:  docker build -t examimg:1.0 .",
+     "check": "docker image inspect examimg:1.0 >/dev/null 2>&1"},
+    {"id": "t5", "points": 20,
+     "prompt": "'web.Dockerfile' yarat: FROM, WORKDIR, COPY va EXPOSE direktivalari bo'lsin.",
+     "check": "grep -qi '^WORKDIR' $EXAM/web.Dockerfile && grep -qi '^COPY' $EXAM/web.Dockerfile && grep -qi '^EXPOSE' $EXAM/web.Dockerfile"}
+  ]
+}
