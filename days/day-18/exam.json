@@ -1,0 +1,23 @@
+{
+  "title": "Day-18: Docker Compose",
+  "workspace": "days/day-18/exam",
+  "pass_score": 70,
+  "time_limit_min": 25,
+  "tasks": [
+    {"id": "t1", "points": 20,
+     "prompt": "'docker-compose.yml' yarat: 'web' servisi (image: nginx:alpine, ports: 8090:80) bo'lsin.",
+     "check": "grep -q 'services:' $EXAM/docker-compose.yml && grep -q nginx $EXAM/docker-compose.yml"},
+    {"id": "t2", "points": 20,
+     "prompt": "Stackни ko'tar:  docker compose -p examc up -d  (shu papkadan).",
+     "check": "docker ps --format '{{.Names}}' | grep -q examc"},
+    {"id": "t3", "points": 20,
+     "prompt": "'two.yml' yarat: ikkita servis (web va db) ta'riflangan bo'lsin.",
+     "check": "grep -q 'services:' $EXAM/two.yml && grep -q 'db:' $EXAM/two.yml && grep -q 'web:' $EXAM/two.yml"},
+    {"id": "t4", "points": 20,
+     "prompt": "'vol.yml' yarat: servisда volumes: va depends_on: bo'limlari bo'lsin.",
+     "check": "grep -q 'volumes:' $EXAM/vol.yml && grep -q 'depends_on:' $EXAM/vol.yml"},
+    {"id": "t5", "points": 20,
+     "prompt": "examc stackни to'xtatib o'chir:  docker compose -p examc down.",
+     "check": "! docker ps --format '{{.Names}}' | grep -q examc"}
+  ]
+}
