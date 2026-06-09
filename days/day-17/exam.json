@@ -1,0 +1,23 @@
+{
+  "title": "Day-17: Volume & Network",
+  "workspace": "days/day-17/exam",
+  "pass_score": 70,
+  "time_limit_min": 25,
+  "tasks": [
+    {"id": "t1", "points": 20,
+     "prompt": "'examvol' nomli volume yarat va unга konteyner orqali 'examvol-data' yozib, qayta o'qib 'out.txt' ga saqla.",
+     "check": "grep -q examvol-data $EXAM/out.txt"},
+    {"id": "t2", "points": 20,
+     "prompt": "Bind mount: 'd' papka yaratib, konteyner orqali unга 'bind-ok' yozdir (-v $PWD/d:/d).",
+     "check": "grep -q bind-ok $EXAM/d/*.txt 2>/dev/null"},
+    {"id": "t3", "points": 20,
+     "prompt": "'examnet' tarmoq yaratib, unда 'examc' nomli konteyner ishga tushir (--network examnet).",
+     "check": "docker inspect examc 2>/dev/null | grep -q examnet"},
+    {"id": "t4", "points": 20,
+     "prompt": "'examc' konteyneri IP manzilini olib 'ip.txt' ga yoz (docker inspect | grep IPAddress).",
+     "check": "grep -qE '[0-9]+\\.[0-9]+\\.[0-9]+' $EXAM/ip.txt"},
+    {"id": "t5", "points": 20,
+     "prompt": "nginx:alpine ni 8098 portда ishga tushir (-p 8098:80, --name examweb) va 'docker port examweb' chiqishini 'port.txt' ga yoz.",
+     "check": "grep -q 8098 $EXAM/port.txt"}
+  ]
+}
