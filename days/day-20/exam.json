@@ -1,0 +1,23 @@
+{
+  "title": "Day-20: Ilovani konteynerlash",
+  "workspace": "days/day-20/exam",
+  "pass_score": 70,
+  "time_limit_min": 25,
+  "tasks": [
+    {"id": "t1", "points": 20,
+     "prompt": "Dockerfile yoz: FROM python:3-alpine, EXPOSE 8000, CMD [\"python\",\"-m\",\"http.server\",\"8000\"] — va 'examapp' qur.",
+     "check": "grep -qi '^FROM python' $EXAM/Dockerfile && docker image inspect examapp >/dev/null 2>&1"},
+    {"id": "t2", "points": 20,
+     "prompt": "examapp ni 8086 portда ishga tushir (-d --name examweb -p 8086:8000) va curl bilan javobini 'out.txt' ga yoz.",
+     "check": "[ -s $EXAM/out.txt ]"},
+    {"id": "t3", "points": 20,
+     "prompt": "'.dockerignore' yarat (kamida bitta naqsh, masalan *.log).",
+     "check": "[ -s $EXAM/.dockerignore ]"},
+    {"id": "t4", "points": 20,
+     "prompt": "'docker-compose.yml' yoz: web servisi build: . va ports: 8087:8000 bo'lsin.",
+     "check": "grep -q 'services:' $EXAM/docker-compose.yml && grep -q 'build:' $EXAM/docker-compose.yml && grep -q 'ports:' $EXAM/docker-compose.yml"},
+    {"id": "t5", "points": 20,
+     "prompt": "examweb konteynerini to'xtatib o'chir (docker rm -f examweb).",
+     "check": "! docker ps --format '{{.Names}}' | grep -qx examweb"}
+  ]
+}

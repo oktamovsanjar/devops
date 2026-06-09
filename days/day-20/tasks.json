@@ -1,0 +1,101 @@
+{
+  "day": 20,
+  "topic": "docker",
+  "theme": "Real ilovani konteynerlash — kod→build→run→compose→registry (to'liq kun)",
+  "tasks": [
+    {"id": "app_code", "type": "real", "xp": 15, "block": "1️⃣ Nazariy+amaliy (qadamli)", "title": "Ilova kodi (app.py)",
+     "why": "Avval konteynerlanadigan ilova kerak — kichik Python web-server.",
+     "steps": ["cd ~/devops/days/day-20/work && mkdir -p app && cd app",
+               "app.py yarat (MISSION'дagi kod): GET so'rovga 'Salom konteynerdan!' javob bersin",
+               "1-qator:  print('App ishga tushdi', flush=True)  — keyin HTTPServer 8080-portда"],
+     "expect": "app/app.py — javobда 'Salom konteynerdan!' bor",
+     "check": "grep -q 'Salom konteynerdan' $LAB/app/app.py"},
+
+    {"id": "dockerfile", "type": "real", "xp": 15, "block": "1️⃣ Nazariy+amaliy (qadamli)", "title": "Dockerfile yoz",
+     "why": "Ilovani image qilish uchun Dockerfile (Day-16).",
+     "steps": ["app papkасида Dockerfile yoz:",
+               "FROM python:3-alpine / WORKDIR /app / COPY app.py . / EXPOSE 8080 / CMD [\"python\",\"app.py\"]"],
+     "expect": "app/Dockerfile — FROM python + CMD",
+     "check": "grep -qi '^FROM python' $LAB/app/Dockerfile && grep -qi '^CMD' $LAB/app/Dockerfile"},
+
+    {"id": "d_build", "type": "real", "xp": 15, "block": "2️⃣ Drill — tezlik", "title": "Image qur",
+     "why": "Day-16: ilovadan image yasash.",
+     "steps": ["app papkасида:  docker build -t d20app ."],
+     "expect": "d20app image qurildi",
+     "check": "docker image inspect d20app >/dev/null 2>&1"},
+
+    {"id": "d_run", "type": "real", "xp": 20, "block": "2️⃣ Drill — tezlik", "title": "Ishga tushir va tekshir",
+     "why": "Day-15,17: ilovani -p bilan ochib, javobini ko'rish.",
+     "steps": ["docker run -d --name d20app -p 8090:8080 d20app   (host 8090 -> konteyner 8080)",
+               "Tekshir:  curl -s localhost:8090 > resp.txt   (Salom konteynerdan!)"],
+     "expect": "resp.txt = Salom konteynerdan!",
+     "check": "grep -q 'Salom konteynerdan' $LAB/resp.txt"},
+
+    {"id": "d_logs", "type": "real", "xp": 10, "block": "2️⃣ Drill — tezlik", "title": "Loglarni ko'r",
+     "why": "Day-15,17: ilova nima deyayotganini ko'rish (debug).",
+     "steps": ["docker logs d20app > logs.txt"],
+     "expect": "logs.txt ичида 'App ishga tushdi'",
+     "check": "grep -q 'App ishga tushdi' $LAB/logs.txt"},
+
+    {"id": "d_stop", "type": "real", "xp": 10, "block": "2️⃣ Drill — tezlik", "title": "To'xtat (port bo'shasin)",
+     "why": "Compose'дан oldin 8080-portni bo'shatamiz.",
+     "steps": ["docker rm -f d20app"],
+     "expect": "d20app to'xtatildi",
+     "check": "! docker ps --format '{{.Names}}' | grep -qx d20app"},
+
+    {"id": "dockerignore", "type": "real", "xp": 15, "block": "3️⃣ Asosiy (qadamli)", "title": ".dockerignore",
+     "why": "Day-19: keraksiz fayllarni image'ga yubormaslik.",
+     "steps": ["app papkасида .dockerignore yarat:  ичida  *.log  va  __pycache__"],
+     "expect": "app/.dockerignore mavjud",
+     "check": "[ -s $LAB/app/.dockerignore ]"},
+
+    {"id": "compose_file", "type": "real", "xp": 20, "block": "3️⃣ Asosiy (qadamli)", "title": "Compose yoz",
+     "why": "Day-18: ilovani compose bilan (build + ports).",
+     "steps": ["app papkасида docker-compose.yml yoz:",
+               "services: / web: / build: . / ports: - \"8090:8080\""],
+     "expect": "docker-compose.yml — services + build + ports",
+     "check": "grep -q 'services:' $LAB/app/docker-compose.yml && grep -q 'build:' $LAB/app/docker-compose.yml"},
+
+    {"id": "compose_up", "type": "real", "xp": 30, "block": "3️⃣ Asosiy (qadamli)", "title": "Compose bilan ko'tar",
+     "why": "Day-18: bitta buyruq bilan ilovani ishga tushirish.",
+     "steps": ["app papkасида:  docker compose -p d20stack up -d --build",
+               "Tekshir:  curl -s localhost:8090 > compose-resp.txt"],
+     "expect": "compose-resp.txt = Salom konteynerdan! (compose orqali)",
+     "check": "grep -q 'Salom konteynerdan' $LAB/compose-resp.txt"},
+
+    {"id": "compose_down", "type": "real", "xp": 15, "block": "3️⃣ Asosiy (qadamli)", "title": "Compose'ни o'chir",
+     "why": "Day-18: stackни tozalash.",
+     "steps": ["app papkасида:  docker compose -p d20stack down"],
+     "expect": "d20stack to'xtatildi",
+     "check": "! docker ps --format '{{.Names}}' | grep -q d20stack"},
+
+    {"id": "m_build", "type": "real", "xp": 30, "block": "4️⃣ 🎯 Mustaqil (qadamsiz)", "title": "O'zing: ilovani image qil",
+     "why": "Qadam YO'Q — bilimingni o'zing qo'lla. work/solo/ да ilova + Dockerfile yozib, qur.",
+     "expect": "work/solo/ ичida app.py + Dockerfile yozib, 'd20solo' nomli image qur (HTTP javob beradigan ilova).",
+     "check": "[ -f $LAB/solo/Dockerfile ] && docker image inspect d20solo >/dev/null 2>&1"},
+
+    {"id": "m_run", "type": "real", "xp": 25, "block": "4️⃣ 🎯 Mustaqil (qadamsiz)", "title": "O'zing: ishga tushir va javob ol",
+     "why": "Qadam YO'Q — image'ni o'zing ishga tushirib, javobini ol.",
+     "expect": "'d20solo' ni boshqa portда (masalan 8082) ishga tushir va javobini work/solo-resp.txt ga saqla (curl).",
+     "check": "[ -s $LAB/solo-resp.txt ]"},
+
+    {"id": "proj_push", "type": "real", "xp": 30, "block": "5️⃣ Mini-loyiha: Deploy-ready", "title": "Registry'ga joyla",
+     "why": "Day-19: ilovani registry'ga push (deploy uchun tayyor).",
+     "steps": ["Lokal registry:  docker run -d -p 5000:5000 --name d20reg registry:2",
+               "Tagla+push:  docker tag d20app localhost:5000/d20app && docker push localhost:5000/d20app"],
+     "expect": "d20app registry katalogида",
+     "check": "curl -s localhost:5000/v2/_catalog | grep -q d20app"},
+
+    {"id": "proj_pull", "type": "real", "xp": 20, "block": "5️⃣ Mini-loyiha: Deploy-ready", "title": "Registry'дan qaytar",
+     "why": "Boshqa server ilovani registry'дan oladi (deploy mantig'i).",
+     "steps": ["Lokal nusxani o'chir:  docker rmi localhost:5000/d20app",
+               "Registry'дан ol:  docker pull localhost:5000/d20app"],
+     "expect": "ilova image registry'дан olindi",
+     "check": "docker image inspect localhost:5000/d20app >/dev/null 2>&1"},
+
+    {"id": "explain", "type": "deep", "xp": 20, "block": "6️⃣ Yakuniy sinov", "title": "Kun xulosasi",
+     "why": "Tushuntira olish — tushunganingning isboti.",
+     "steps": ["Bir ilovani 'kod → image → konteyner → registry' bosqichlarini o'z so'zlaring bilan ustozга ayt"],
+     "expect": "O'z so'zlaring bilan qisqa tushuntirish"}
+  ]
+}
