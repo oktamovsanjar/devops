@@ -24,7 +24,9 @@ import db  # noqa: E402
 
 CONFIG = os.path.join(db.ENGINE_DIR, "config.json")
 API_URL = "https://api.anthropic.com/v1/messages"
+DEEPSEEK_URL = "https://api.deepseek.com/chat/completions"   # OpenAI-mos
 DEFAULT_MODEL = "claude-sonnet-4-6"   # sifat uchun; --model claude-haiku-4-5 = arzonroq
+DEEPSEEK_MODEL = "deepseek-chat"      # arzon, sifatli (DeepSeek-V3)
 
 SYSTEM = (
     "You are an expert DevOps instructor creating high-quality multiple-choice quiz "
@@ -57,43 +59,76 @@ TOPICS = {
 }
 
 
+def _config():
+    if os.path.exists(CONFIG):
+        try:
+            with open(CONFIG) as f:
+                return json.load(f)
+        except Exception:
+            return {}
+    return {}
+
+
+def ai_provider():
+    """Faol AI provayderi: 'deepseek' yoki 'anthropic'.
+    config.json 'ai_provider' bilan majburlash mumkin; aks holda kalit bor-yo'qligiga qarab."""
+    cfg = _config()
+    p = (os.environ.get("AI_PROVIDER") or cfg.get("ai_provider") or "").lower()
+    if p in ("deepseek", "anthropic"):
+        return p
+    if os.environ.get("DEEPSEEK_API_KEY") or cfg.get("deepseek_api_key"):
+        return "deepseek"
+    return "anthropic"
+
+
 def load_key():
-    key = os.environ.get("ANTHROPIC_API_KEY")
-    if not key and os.path.exists(CONFIG):
-        with open(CONFIG) as f:
-            key = json.load(f).get("anthropic_api_key")
-    return key
+    """Faol provayderning API kaliti."""
+    cfg = _config()
+    if ai_provider() == "deepseek":
+        return os.environ.get("DEEPSEEK_API_KEY") or cfg.get("deepseek_api_key")
+    return os.environ.get("ANTHROPIC_API_KEY") or cfg.get("anthropic_api_key")
 
 
-def call_api(key, model, prompt, system=SYSTEM, max_tokens=4096, retries=2):
-    """Anthropic Messages API. Vaqtinchalik xatolarda qayta urinadi (robust)."""
-    body = {
-        "model": model,
-        "max_tokens": max_tokens,
-        "system": [{
-            "type": "text", "text": system,
-            "cache_control": {"type": "ephemeral"},   # static qism keshlanadi -> arzon
-        }],
-        "messages": [{"role": "user", "content": prompt}],
-    }
+def _http(url, headers, body, retries):
     data = json.dumps(body).encode()
-    headers = {
-        "x-api-key": key,
-        "anthropic-version": "2023-06-01",
-        "content-type": "application/json",
-    }
     last = None
     for attempt in range(retries + 1):
         try:
-            req = urllib.request.Request(API_URL, data=data, headers=headers)
+            req = urllib.request.Request(url, data=data, headers=headers)
             with urllib.request.urlopen(req, timeout=120) as r:
-                resp = json.load(r)
-            return "".join(b.get("text", "") for b in resp.get("content", []))
+                return json.load(r)
         except Exception as e:
             last = e
             if attempt < retries:
-                time.sleep(1.5 * (attempt + 1))   # backoff, keyin qayta urinish
+                time.sleep(1.5 * (attempt + 1))   # backoff
     raise last
+
+
+def call_api(key, model, prompt, system=SYSTEM, max_tokens=4096, retries=2):
+    """Provayderga qarab AI chaqiruvi (Anthropic yoki DeepSeek). Matn qaytaradi."""
+    if ai_provider() == "deepseek":
+        body = {
+            "model": _config().get("deepseek_model", DEEPSEEK_MODEL),
+            "messages": [{"role": "system", "content": system},
+                         {"role": "user", "content": prompt}],
+            "max_tokens": max_tokens,
+            "stream": False,
+        }
+        headers = {"Authorization": f"Bearer {key}", "Content-Type": "application/json"}
+        resp = _http(DEEPSEEK_URL, headers, body, retries)
+        return resp["choices"][0]["message"]["content"]
+    # ── Anthropic (default) ──
+    body = {
+        "model": model,
+        "max_tokens": max_tokens,
+        "system": [{"type": "text", "text": system,
+                    "cache_control": {"type": "ephemeral"}}],
+        "messages": [{"role": "user", "content": prompt}],
+    }
+    headers = {"x-api-key": key, "anthropic-version": "2023-06-01",
+               "content-type": "application/json"}
+    resp = _http(API_URL, headers, body, retries)
+    return "".join(b.get("text", "") for b in resp.get("content", []))
 
 
 def extract_json(text):
