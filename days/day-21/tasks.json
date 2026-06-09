@@ -1,0 +1,101 @@
+{
+  "day": 21,
+  "topic": "docker",
+  "theme": "3-hafta BOSS — multi-servis compose stack (web + cache + volume + registry)",
+  "tasks": [
+    {"id": "ws", "type": "real", "xp": 10, "block": "1️⃣ Yo'naltirish", "title": "Stack papkasi",
+     "why": "Capstone: ko'p-servisli stack. Avval tartibli papka.",
+     "steps": ["Ishchi papkangga o't:  cd ~/devops/days/day-21/work",
+               "mkdir -p stack && cd stack"],
+     "expect": "stack/ mavjud",
+     "check": "[ -d $LAB/stack ]"},
+
+    {"id": "app_code", "type": "real", "xp": 15, "block": "1️⃣ Yo'naltirish", "title": "Ilova kodi (app.py)",
+     "why": "web servis uchun ilova (Day-20).",
+     "steps": ["stack/app.py yarat: GET so'rovga 'Salom konteynerdan!' javob bersin (8080-port)",
+               "1-qator print('App ishga tushdi', flush=True) bo'lsin"],
+     "expect": "stack/app.py — 'Salom konteynerdan!' javobi",
+     "check": "grep -q 'Salom konteynerdan' $LAB/stack/app.py"},
+
+    {"id": "dockerfile", "type": "real", "xp": 15, "block": "1️⃣ Yo'naltirish", "title": "Dockerfile",
+     "why": "web servisni qurish uchun (Day-16).",
+     "steps": ["stack/Dockerfile:  FROM python:3-alpine / WORKDIR /app / COPY app.py . / EXPOSE 8080 / CMD [\"python\",\"app.py\"]"],
+     "expect": "stack/Dockerfile — FROM python + CMD",
+     "check": "grep -qi '^FROM python' $LAB/stack/Dockerfile && grep -qi '^CMD' $LAB/stack/Dockerfile"},
+
+    {"id": "r_build", "type": "real", "xp": 15, "block": "2️⃣ Hafta takrori", "title": "Day-16: image qur",
+     "why": "web image'ни qurish.",
+     "steps": ["stack papkасида:  docker build -t d21web ."],
+     "expect": "d21web image qurildi",
+     "check": "docker image inspect d21web >/dev/null 2>&1"},
+
+    {"id": "r_run", "type": "real", "xp": 15, "block": "2️⃣ Hafta takrori", "title": "Day-15/17: ishga tushir",
+     "why": "image yakka holда ishlashini tekshirish.",
+     "steps": ["docker run -d --name d21web -p 8091:8080 d21web",
+               "curl -s localhost:8091 > run.txt  →  keyin:  docker rm -f d21web  (port bo'shasin)"],
+     "expect": "run.txt = Salom konteynerdan!",
+     "check": "grep -q 'Salom konteynerdan' $LAB/stack/run.txt"},
+
+    {"id": "r_registry", "type": "real", "xp": 15, "block": "2️⃣ Hafta takrori", "title": "Day-19: registry uchun tag",
+     "why": "image'ни registry manzili bilan nomlash.",
+     "steps": ["docker tag d21web localhost:5000/d21web"],
+     "expect": "localhost:5000/d21web tagi mavjud",
+     "check": "docker image inspect localhost:5000/d21web >/dev/null 2>&1"},
+
+    {"id": "compose_file", "type": "real", "xp": 25, "block": "3️⃣ BOSS stack (compose)", "title": "Multi-servis compose",
+     "why": "web (build) + cache (redis) + volume — bitta YAML (Day-18).",
+     "steps": ["stack/docker-compose.yml yoz (MISSION'dagidek):",
+               "web (build: ., ports 8091:8080, depends_on cache) + cache (image: redis:alpine, volume) + volumes:"],
+     "expect": "compose — web, cache, volumes bor",
+     "check": "grep -q 'services:' $LAB/stack/docker-compose.yml && grep -q 'redis' $LAB/stack/docker-compose.yml && grep -q 'volumes:' $LAB/stack/docker-compose.yml"},
+
+    {"id": "up", "type": "real", "xp": 30, "block": "3️⃣ BOSS stack (compose)", "title": "Stackни ko'tar",
+     "why": "Bitta buyruq — butun stack (web + cache).",
+     "steps": ["stack papkасида:  docker compose -p d21boss up -d --build",
+               "Tekshir:  docker compose -p d21boss ps  (2 servis: web, cache)"],
+     "expect": "d21boss'да 2 konteyner ishlayapti",
+     "check": "[ \"$(docker ps --format '{{.Names}}' | grep -c d21boss)\" -ge 2 ]"},
+
+    {"id": "web_check", "type": "real", "xp": 20, "block": "3️⃣ BOSS stack (compose)", "title": "Web javob beryaptimi",
+     "why": "Stack ko'tarilgach web ilova ishlashini tekshirish.",
+     "steps": ["curl -s localhost:8091 > stack/web.txt"],
+     "expect": "web.txt = Salom konteynerdan!",
+     "check": "grep -q 'Salom konteynerdan' $LAB/stack/web.txt"},
+
+    {"id": "net_check", "type": "real", "xp": 25, "block": "3️⃣ BOSS stack (compose)", "title": "Web → cache (nom bilan)",
+     "why": "Day-18: web servisi 'cache' ni NOM bilan topadi (compose tarmog'i).",
+     "steps": ["web ичidan cache'ni hal qil (DNS):",
+               "docker compose -p d21boss exec -T web python -c \"import socket;print(socket.gethostbyname('cache'))\" > stack/net.txt"],
+     "expect": "net.txt — cache'ning IP manzili (web uni nom bilan topdi)",
+     "check": "grep -qE '[0-9]+\\.[0-9]+\\.[0-9]+' $LAB/stack/net.txt"},
+
+    {"id": "cache_check", "type": "real", "xp": 20, "block": "3️⃣ BOSS stack (compose)", "title": "Cache (redis) ishlayaptimi",
+     "why": "redis servisi ma'lumot saqlay olishini tekshirish.",
+     "steps": ["docker compose -p d21boss exec -T cache redis-cli set boss ok",
+               "docker compose -p d21boss exec -T cache redis-cli get boss > stack/cache.txt"],
+     "expect": "cache.txt = ok (redis saqladi)",
+     "check": "grep -q ok $LAB/stack/cache.txt"},
+
+    {"id": "m_compose", "type": "real", "xp": 35, "block": "4️⃣ 🎯 Mustaqil (qadamsiz)", "title": "O'zing: stack qur va ko'tar",
+     "why": "Qadam YO'Q — butun ko'nikmangni o'zing qo'lla.",
+     "expect": "work/solo/ да o'z ilovang (app.py+Dockerfile) + 2-servisli docker-compose.yml (web + redis) yozib, 'd21solo' loyiha nomi bilan ko'tar (up -d --build). web 8093-portда.",
+     "check": "[ \"$(docker ps --format '{{.Names}}' | grep -c d21solo)\" -ge 2 ]"},
+
+    {"id": "m_curl", "type": "real", "xp": 20, "block": "4️⃣ 🎯 Mustaqil (qadamsiz)", "title": "O'zing: stackни tekshir",
+     "why": "Qadam YO'Q — o'z stack'ing javobini ol.",
+     "expect": "O'z stack'ingdagi web javobini work/solo-web.txt ga saqla (curl localhost:8093).",
+     "check": "[ -s $LAB/solo-web.txt ]"},
+
+    {"id": "push", "type": "real", "xp": 25, "block": "5️⃣ Deploy", "title": "Registry'ga joyla",
+     "why": "Day-19: web image'ни registry'ga push (deploy uchun tayyor).",
+     "steps": ["Lokal registry:  docker run -d -p 5000:5000 --name d21reg registry:2",
+               "Push:  docker push localhost:5000/d21web"],
+     "expect": "d21web registry katalogида",
+     "check": "curl -s localhost:5000/v2/_catalog | grep -q d21web"},
+
+    {"id": "explain", "type": "deep", "xp": 25, "block": "6️⃣ Yakuniy sinov", "title": "3-hafta xulosasi",
+     "why": "Haftani umumlashtirish — bilimni mustahkamlaydi.",
+     "steps": ["Docker'да o'rgangan 3 ta eng muhim narsani + multi-servis stack qanday ishlashini ustozга ayt"],
+     "expect": "O'z so'zlaring bilan haftaning xulosasi"}
+  ]
+}

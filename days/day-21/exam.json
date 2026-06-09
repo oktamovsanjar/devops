@@ -1,0 +1,23 @@
+{
+  "title": "Day-21: 3-hafta BOSS (multi-servis)",
+  "workspace": "days/day-21/exam",
+  "pass_score": 70,
+  "time_limit_min": 30,
+  "tasks": [
+    {"id": "t1", "points": 20,
+     "prompt": "Dockerfile yoz (FROM python:3-alpine, CMD python -m http.server 8000) va 'exambossweb' qur.",
+     "check": "grep -qi '^FROM python' $EXAM/Dockerfile && docker image inspect exambossweb >/dev/null 2>&1"},
+    {"id": "t2", "points": 20,
+     "prompt": "Multi-servis 'docker-compose.yml' yoz: web (build: ., ports 8092:8000) va cache (image: redis:alpine).",
+     "check": "grep -q 'services:' $EXAM/docker-compose.yml && grep -q 'redis' $EXAM/docker-compose.yml && grep -q 'build:' $EXAM/docker-compose.yml"},
+    {"id": "t3", "points": 20,
+     "prompt": "Stackни ko'tar:  docker compose -p exboss up -d --build  (web + cache).",
+     "check": "[ \"$(docker ps --format '{{.Names}}' | grep -c exboss)\" -ge 2 ]"},
+    {"id": "t4", "points": 20,
+     "prompt": "web javobini 'out.txt' ga yoz (curl localhost:8092).",
+     "check": "[ -s $EXAM/out.txt ]"},
+    {"id": "t5", "points": 20,
+     "prompt": "Stackни to'liq o'chir:  docker compose -p exboss down.",
+     "check": "! docker ps --format '{{.Names}}' | grep -q exboss"}
+  ]
+}
