@@ -1,0 +1,23 @@
+{
+  "title": "Day-15: Konteyner asoslari",
+  "workspace": "days/day-15/exam",
+  "pass_score": 70,
+  "time_limit_min": 20,
+  "tasks": [
+    {"id": "t1", "points": 20,
+     "prompt": "alpine image'idan konteyner ishga tushirib 'imtihon-ok' so'zini chiqar va 'run.txt' ga yoz (docker run ... echo).",
+     "check": "grep -q imtihon-ok $EXAM/run.txt"},
+    {"id": "t2", "points": 20,
+     "prompt": "Fonda nomli konteyner ishga tushir:  docker run -d --name examc alpine sleep 300.",
+     "check": "docker ps --format '{{.Names}}' | grep -qx examc"},
+    {"id": "t3", "points": 20,
+     "prompt": "'examc' konteyneri ichида ls / bajarib natijani 'exec.txt' ga yoz (docker exec).",
+     "check": "grep -q bin $EXAM/exec.txt"},
+    {"id": "t4", "points": 20,
+     "prompt": "'examc' konteynerini to'xtatib o'chir (docker rm -f examc).",
+     "check": "! docker ps -a --format '{{.Names}}' | grep -qx examc"},
+    {"id": "t5", "points": 20,
+     "prompt": "'app.yml' yarat: kamida bitta 'kalit: qiymat' va bitta ro'yxat elementi (- ) bo'lsin (YAML).",
+     "check": "grep -qE '^[a-z_]+:' $EXAM/app.yml && grep -qE '^[[:space:]]*-[[:space:]]' $EXAM/app.yml"}
+  ]
+}
