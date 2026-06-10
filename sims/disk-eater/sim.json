@@ -1,0 +1,28 @@
+{
+  "id": "disk-eater",
+  "topic": "linux",
+  "min_day": 4,
+  "difficulty": 2,
+  "xp": 30,
+  "title": "Disk to'lib ketyapti!",
+  "story": [
+    "Monitoring signal berdi: log bo'limi to'lib ketyapti.",
+    "var/log papkasida (sim ichida) NIMADIR joyni yutyapti — top va tozala.",
+    "DIQQAT: .conf fayllar servisga kerak, ularga TEGMA."
+  ],
+  "symptom": "du -sh ~/devops/sims/.lab/disk-eater/var/log   →   40M+ (normal: <1M)",
+  "goal": "var/log hajmini 1MB dan kichik qil, app.conf esa joyida qolsin.",
+  "setup": [
+    "mkdir -p \"$SIM/var/log\"",
+    "echo \"log_level=info\" > \"$SIM/var/log/app.conf\"",
+    "for f in auth.log syslog kern.log; do head -c 20000 /dev/urandom > \"$SIM/var/log/$f\"; done",
+    "dd if=/dev/zero of=\"$SIM/var/log/app.log.1\" bs=1M count=40 2>/dev/null"
+  ],
+  "check": "[ \"$(du -sb \"$SIM/var/log\" | cut -f1)\" -lt 1000000 ] && [ -s \"$SIM/var/log/app.conf\" ]",
+  "hints": [
+    "Qaysi fayl katta? Papka ichida:  du -sh * | sort -h   yoki   ls -lhS",
+    "Eng katta faylni topding — bu eski (rotatsiya qilingan) log, kerak emas.",
+    "rm app.log.1   (yoki bo'shat:  > app.log.1)  — .conf ga tegma!"
+  ],
+  "solution": "du -sh * | sort -h (yoki ls -lhS) eng katta faylni ko'rsatadi: app.log.1 (40MB, eski rotatsiya). rm yoki '>' bilan bo'shatiladi. Real ishda 'disk full' — top-3 insidentdan biri; du/ncdu bilan aybdorni topish — kundalik ko'nikma."
+}

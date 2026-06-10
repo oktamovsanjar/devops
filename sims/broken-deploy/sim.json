@@ -1,0 +1,37 @@
+{
+  "id": "broken-deploy",
+  "topic": "bash",
+  "min_day": 8,
+  "difficulty": 2,
+  "xp": 30,
+  "title": "Build skripti ikki joydan singan",
+  "story": [
+    "build.sh — modullarni bitta 'release notes.txt' faylga yig'ishi kerak.",
+    "Lekin skript yiqilyapti. Diqqat: bu yerda IKKITA xato bor —",
+    "birinchisini tuzatsang, ikkinchisi chiqadi."
+  ],
+  "symptom": "cd ~/devops/sims/.lab/broken-deploy && ./build.sh   →   'notes.txt: command not found'",
+  "goal": "./build.sh xatosiz ishlasin, 'release notes.txt' ichida ikkala modul bo'lsin (ortiqcha 'release' fayl ham qolmasin).",
+  "setup": [
+    "mkdir -p \"$SIM/src\"",
+    "echo \"modul-1 tayyor\" > \"$SIM/src/m1.txt\"",
+    "echo \"modul-2 tayyor\" > \"$SIM/src/m2.txt\"",
+    "cat > \"$SIM/build.sh\" <<'EOF'",
+    "#!/bin/bash",
+    "set -e",
+    "cd \"$(dirname \"$0\")\"",
+    "OUT=release notes.txt",
+    "echo \"BUILD boshlandi\" > $OUT",
+    "cat src/*.txt >> $OUT",
+    "echo \"BUILD tugadi: $OUT\"",
+    "EOF",
+    "chmod +x \"$SIM/build.sh\""
+  ],
+  "check": "cd \"$SIM\" && rm -f release && ./build.sh >/dev/null 2>&1 && grep -q 'modul-2 tayyor' \"release notes.txt\" && grep -q 'BUILD boshlandi' \"release notes.txt\"",
+  "hints": [
+    "1-xato: OUT=release notes.txt — bash bo'shliqdan keyingisini BUYRUQ deb o'ylaydi. Qiymatni qo'shtirnoqla.",
+    "Tuzatdingmi? Endi 'ambiguous redirect' chiqadi: > $OUT dagi $OUT bo'shliqda ikkiga bo'linyapti.",
+    "Har ishlatilgan joyda qo'shtirnoq:  > \"$OUT\"  va  >> \"$OUT\""
+  ],
+  "solution": "Bo'shliqli qiymat har doim qo'shtirnoqda: OUT=\"release notes.txt\" va > \"$OUT\". Qo'shtirnoqsiz bash so'zlarga bo'lib yuboradi: avval 'command not found', keyin 'ambiguous redirect'. Bash xatolarining ~yarmi shu quoting'dan (Day-8)."
+}

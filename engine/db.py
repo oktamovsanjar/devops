@@ -97,6 +97,13 @@ CREATE TABLE IF NOT EXISTS checkpoints (
   pct INTEGER,
   passed INTEGER
 );
+CREATE TABLE IF NOT EXISTS sim_progress (
+  sim_id TEXT PRIMARY KEY,
+  status TEXT DEFAULT 'active',    -- active | solved | given_up
+  hints_used INTEGER DEFAULT 0,
+  xp INTEGER DEFAULT 0,
+  solved_at TEXT
+);
 CREATE TABLE IF NOT EXISTS tg_contacts (
   uid TEXT PRIMARY KEY,
   name TEXT,

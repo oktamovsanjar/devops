@@ -1,0 +1,36 @@
+{
+  "id": "docker-port-unmapped",
+  "topic": "docker",
+  "min_day": 15,
+  "difficulty": 1,
+  "xp": 30,
+  "title": "Konteyner tirik, lekin curl ishlamayapti",
+  "story": [
+    "simfix-web konteyneri ishlayapti — docker ps 'Up' deydi, loglar toza.",
+    "Ilova 8098-portda ochilishi kerak edi, lekin:",
+    "curl localhost:8098 → 'connection refused'. Konteyner sog', port jim. Nega?"
+  ],
+  "symptom": "docker ps → simfix-web Up ✓, lekin curl localhost:8098 → refused",
+  "goal": "curl localhost:8098 → 'SALOM YANGI APP' qaytsin (konteyner ichida app 8000-portda).",
+  "setup": [
+    "mkdir -p \"$SIM/web\"",
+    "echo \"SALOM YANGI APP\" > \"$SIM/web/index.html\"",
+    "cat > \"$SIM/web/Dockerfile\" <<'EOF'",
+    "FROM python:3-alpine",
+    "WORKDIR /srv",
+    "COPY index.html .",
+    "CMD [\"python\", \"-m\", \"http.server\", \"8000\"]",
+    "EOF",
+    "docker rm -f simfix-web >/dev/null 2>&1 || true",
+    "docker build -q -t simfix-web \"$SIM/web\" >/dev/null",
+    "docker run -d --name simfix-web simfix-web >/dev/null"
+  ],
+  "check": "curl -s --max-time 3 localhost:8098 | grep -q 'SALOM YANGI APP'",
+  "cleanup": "docker rm -f simfix-web >/dev/null 2>&1; docker rmi -f simfix-web >/dev/null 2>&1 || true",
+  "hints": [
+    "docker ps chiqishida PORTS ustuniga qara — u yerda nima yozilgan (yoki nima YO'Q)?",
+    "Konteyner porti hostga o'zi ochilmaydi — buning uchun run'da -p kerak edi (Day-15).",
+    "docker rm -f simfix-web  →  docker run -d --name simfix-web -p 8098:8000 simfix-web"
+  ],
+  "solution": "Konteyner izolyatsiyada: ichidagi 8000-port hostga -p 8098:8000 bilan ochilmaguncha ko'rinmaydi. docker ps'da PORTS bo'sh — belgi shu. Fix: konteynerni -p bilan qayta run qilish. 'Konteyner Up, lekin servis ochilmayapti' = 90% hollarda port mapping (Day-15/17)."
+}

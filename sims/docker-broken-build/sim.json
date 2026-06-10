@@ -1,0 +1,34 @@
+{
+  "id": "docker-broken-build",
+  "topic": "docker",
+  "min_day": 16,
+  "difficulty": 1,
+  "xp": 25,
+  "title": "Image qurilmayapti",
+  "story": [
+    "CI quvuri qizarib turibdi: image build bo'lmayapti.",
+    "Kod joyida, Dockerfile ham bor ko'rinishda. Build xatosini",
+    "O'QIB, qaysi qator aybdorligini top."
+  ],
+  "symptom": "cd ~/devops/sims/.lab/docker-broken-build/app && docker build -t simfix-build .   →   'failed to compute cache key / not found'",
+  "goal": "Build muvaffaqiyatli o'tsin va konteyner 'BUILD-OK' chiqarsin (check buni o'zi tekshiradi).",
+  "setup": [
+    "mkdir -p \"$SIM/app\"",
+    "echo 'print(\"BUILD-OK: app ishlayapti\")' > \"$SIM/app/app.py\"",
+    "cat > \"$SIM/app/Dockerfile\" <<'EOF'",
+    "FROM python:3-alpine",
+    "WORKDIR /app",
+    "COPY app,py .",
+    "CMD [\"python\", \"app.py\"]",
+    "EOF",
+    "docker rmi -f simfix-build >/dev/null 2>&1 || true"
+  ],
+  "check": "cd \"$SIM/app\" && docker build -q -t simfix-build . >/dev/null 2>&1 && docker run --rm simfix-build | grep -q 'BUILD-OK'",
+  "cleanup": "docker rmi -f simfix-build >/dev/null 2>&1 || true",
+  "hints": [
+    "Build xatosi QAYSI qadamda (step) yiqilganini ko'rsatadi — o'sha COPY qatorini diqqat bilan o'qi.",
+    "COPY app,py .  — 'app,py' degan fayl bormi papkada? ls bilan solishtir.",
+    "Vergulni nuqtaga tuzat (app.py), keyin yana:  docker build -t simfix-build ."
+  ],
+  "solution": "Dockerfile'da COPY app,py — vergul-typo: bunday fayl yo'q, build 'not found' bilan yiqiladi. Docker xatosi har doim qaysi STEP'da singanini aytadi — o'sha qatorni fayl tizimi bilan solishtirish kifoya. CI'dagi build-fail'larning kattagina qismi shunaqa 1-belgilik typo bo'ladi (Day-16)."
+}

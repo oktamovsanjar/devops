@@ -9,6 +9,7 @@ scripts/telegram/config.json
 engine/bootcamp.db
 
 # ═══ Runtime / shaxsiy / generatsiya (repo'ga kerak emas) ═══
+sims/.lab/
 days/*/work/
 days/*/exam/
 days/*/quest/

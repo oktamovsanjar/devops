@@ -1,0 +1,36 @@
+{
+  "id": "merge-conflict",
+  "topic": "git",
+  "min_day": 11,
+  "difficulty": 2,
+  "xp": 35,
+  "title": "Merge yarim yo'lda qotib qoldi",
+  "story": [
+    "Ikkita jamoa bir vaqtda servers.txt ga server qo'shgan:",
+    "main'da web-01, feature'da web-02. Merge boshlangan — va CONFLICT!",
+    "Repo hozir 'merging' holatida muzlab turibdi. IKKALA server ham kerak."
+  ],
+  "symptom": "cd ~/devops/sims/.lab/merge-conflict/repo && git status   →   'You have unmerged paths'",
+  "goal": "Konfliktni hal qil: servers.txt da web-00, web-01 VA web-02 bo'lsin, merge yakunlansin.",
+  "setup": [
+    "rm -rf \"$SIM/repo\" && mkdir -p \"$SIM/repo\" && cd \"$SIM/repo\"",
+    "git init -q -b main",
+    "git config user.email sim@local && git config user.name Sim",
+    "printf 'web-00.example.uz\\n' > servers.txt",
+    "git add . && git commit -qm 'asos: server royxati'",
+    "git checkout -qb feature",
+    "printf 'web-00.example.uz\\nweb-02.example.uz\\n' > servers.txt",
+    "git commit -qam 'feature: web-02 qoshildi'",
+    "git checkout -q main",
+    "printf 'web-00.example.uz\\nweb-01.example.uz\\n' > servers.txt",
+    "git commit -qam 'main: web-01 qoshildi'",
+    "git merge feature >/dev/null 2>&1 || true"
+  ],
+  "check": "cd \"$SIM/repo\" && [ -z \"$(git status --porcelain)\" ] && ! grep -q '<<<<' servers.txt && grep -q 'web-01' servers.txt && grep -q 'web-02' servers.txt && [ -n \"$(git log --merges --oneline -1)\" ]",
+  "hints": [
+    "git status — qaysi fayl 'both modified'? O'sha faylni och.",
+    "<<<<<<< / ======= / >>>>>>> belgilari orasida ikki versiya turibdi. Belgilarni O'CHIRIB, ikkala serverni ham qoldir.",
+    "Keyin:  git add servers.txt && git commit   (xabar avtomatik taklif qilinadi)"
+  ],
+  "solution": "Konflikt = git ikki o'zgarishni o'zi birlashtira olmadi, qarorni SENGA qoldirdi. Faylni ochib <<<</====/>>>>  belgilarini olib tashlab, kerakli yakuniy holat yoziladi (bu yerda: uchchala server), so'ng git add + git commit merge'ni yakunlaydi. Jamoaviy ishda haftalik hodisa (Day-11)."
+}

@@ -35,6 +35,7 @@ import db  # noqa: E402
 import srs  # noqa: E402
 import worklog  # noqa: E402
 import profile as learner  # noqa: E402  (bilim profili — learner model)
+import sim  # noqa: E402  (diagnostika stsenariylari — devops sim)
 from generate import load_key, call_api  # noqa: E402
 
 TOTAL_DAYS = 56
@@ -509,6 +510,12 @@ def show_dashboard(con, day):
     print(f"   🧪 Ish papkang:   days/day-{day:02d}/work")
     print(f"   🧠 SRS takror:    devops review ({c(due, 'yellow')} ta kutyapti)")
     print(f"   📲 Quiz/drill:    devops quiz   ({t} savol bankda)")
+    try:
+        ns = sim.new_count(con)
+        if ns:
+            print(f"   🚑 Diagnostika:   devops sim    ({c(str(ns) + ' ta yangi insident', 'red')})")
+    except Exception:
+        pass
 
     print()
     if status in ("pending", "active"):
@@ -549,6 +556,112 @@ def cmd_today(args):
     day = current_day(con)
     _auto_start(con, day)
     show_dashboard(con, day)
+    con.close()
+
+
+# ───────────────── 🚑 devops sim — diagnostika (buzilganni tuzat) ─────────────────
+
+def _sim_show(s, resumed=False):
+    stars = "⭐" * int(s.get("difficulty", 1))
+    print(c("\n  ╔═ 🚑 INSIDENT " + "═" * 30, "red"))
+    print(c(f"  ║ {s['title']}", "bold") + c(f"   ({s['topic']} {stars} · +{s.get('xp', 25)} XP)", "dim"))
+    print(c("  ╚" + "═" * 44, "red"))
+    if resumed:
+        print(c("  (boshlangan sim davom etmoqda)", "dim"))
+    for line in s.get("story", []):
+        print(f"  {line}")
+    print(c(f"\n  🔥 Alomat:  {s.get('symptom', '')}", "yellow"))
+    print(c(f"  🎯 Maqsad:  {s.get('goal', '')}", "green"))
+    print(c(f"  📂 Lab:     sims/.lab/{s['id']}", "cyan"))
+    print(c("\n  Tuzatdim desang:  devops sim check", "bold"))
+    print(c("  Qiynalsang:  devops sim hint (−5 XP) · sim giveup · sim reset\n", "dim"))
+
+
+def cmd_sim(args):
+    con = db.connect()
+    action = (args.action or "").lower()
+    act = sim.active(con)
+
+    if action == "list":
+        st = sim.states(con)
+        av = sim.available(con)
+        n, xp = sim.totals(con)
+        print(c(f"\n  🚑 Diagnostika simlari — yechilgan: {n}, jami {xp} XP", "bold"))
+        if not av:
+            print(c("  Hozircha ochiq sim yo'q (mavzu o'tilgach ochiladi).\n", "dim"))
+            con.close(); return
+        for s in av:
+            r = st.get(s["id"])
+            mark = {"solved": "✅", "given_up": "🔁", "active": "🟡"}.get(
+                r["status"] if r else "", "⬜")
+            stars = "⭐" * int(s.get("difficulty", 1))
+            print(f"   {mark} {s['id']:<22} {s['topic']:<11} {stars:<4} +{s.get('xp', 25)} XP  {s['title']}")
+        print(c("\n  ⬜ yangi · 🟡 boshlangan · 🔁 tashlab ketilgan (retry) · ✅ yechilgan", "dim"))
+        print(c("  Boshlash:  devops sim   (yoki: devops sim start <id>)\n", "dim"))
+
+    elif action == "check":
+        if not act:
+            print(c("\n  Aktiv sim yo'q.  devops sim  bilan boshla.\n", "yellow"))
+        elif sim.run_check(act):
+            xp = sim.solve(con, act)
+            n, total = sim.totals(con)
+            print(c(f"\n  🎉 TUZATDING!  +{xp} XP  (jami: {n} sim, {total} XP)", "green"))
+            print(c(f"\n  🧠 Nima edi: {act.get('solution', '')}", "cyan"))
+            print(c("\n  Keyingisi:  devops sim\n", "dim"))
+        else:
+            print(c("\n  ❌ Hali tuzalmagan — alomat hamon bor:", "red"))
+            print(c(f"  🔥 {act.get('symptom', '')}", "yellow"))
+            print(c("  Yo'l ko'rsatay desa:  devops sim hint\n", "dim"))
+
+    elif action == "hint":
+        if not act:
+            print(c("\n  Aktiv sim yo'q.  devops sim  bilan boshla.\n", "yellow"))
+        else:
+            h, used = sim.use_hint(con, act)
+            if h is None:
+                print(c(f"\n  Hint qolmadi ({used} ta ishlatilgan). Yechim: devops sim giveup\n", "yellow"))
+            else:
+                print(c(f"\n  💡 Hint {used}/{len(act.get('hints', []))}:  {h}", "cyan"))
+                print(c(f"  (har hint −5 XP; hozirgi mukofot: {max(sim.MIN_XP, act.get('xp', 25) - 5 * used)} XP)\n", "dim"))
+
+    elif action in ("giveup", "skip"):
+        if not act:
+            print(c("\n  Aktiv sim yo'q.\n", "yellow"))
+        else:
+            sim.giveup(con, act)
+            print(c("\n  🏳️ Mayli — bu safar yechim bilan tanish:", "yellow"))
+            print(c(f"  🧠 {act.get('solution', '')}", "cyan"))
+            print(c("  Sim 🔁 ro'yxatda qoladi — keyinroq O'ZING yechishga qaytasan.\n", "dim"))
+
+    elif action == "reset":
+        if not act:
+            print(c("\n  Aktiv sim yo'q.\n", "yellow"))
+        else:
+            print(c("\n  ⏳ Muhit qayta buzilmoqda...", "dim"))
+            sim.start(con, act)
+            print(c("  🔄 Sim boshidan tayyor. Alomat qaytdi — ishga!\n", "yellow"))
+
+    else:  # default/start — aktivni ko'rsat yoki yangisini boshla
+        target = None
+        if args.id:
+            target = sim.get(args.id)
+            if not target or target not in sim.available(con):
+                print(c(f"\n  '{args.id}' topilmadi yoki hali ochilmagan. Ro'yxat: devops sim list\n", "yellow"))
+                con.close(); return
+        if act and (target is None or target["id"] == act["id"]):
+            _sim_show(act, resumed=True)
+        else:
+            s = target or sim.pick_next(con)
+            if not s:
+                n, xp = sim.totals(con)
+                print(c(f"\n  🎉 Ochiq simlarning hammasi yechilgan! ({n} sim, {xp} XP)", "green"))
+                print(c("  Yangi mavzu o'tilgach yangi insidentlar ochiladi.\n", "dim"))
+            else:
+                print(c("\n  ⏳ Buzuq muhit tayyorlanmoqda...", "dim"))
+                if sim.start(con, s):
+                    _sim_show(s)
+                else:
+                    print(c("  ⚠️ Muhit qurilmadi (setup xato). devops doctor bilan tekshir.\n", "red"))
     con.close()
 
 
@@ -1327,6 +1440,7 @@ def print_help_uz():
         ]),
         ("📚 O'RGANISH & MASHQ", [
             ("quiz", "Mashq quiz — default kunlik  (quiz <mavzu> · quiz all)"),
+            ("sim", "🚑 Buzilgan tizimni TUZAT — diagnostika mashqi (sim list)"),
             ("review", "SRS takror — eski mavzularni unutmaslik"),
             ("focus", "AI zaif mavzuingga shaxsiy topshiriq beradi"),
         ]),
@@ -1376,6 +1490,9 @@ def main():
     sub.add_parser("roadmap")
     sub.add_parser("focus")
     sub.add_parser("next")
+    ps = sub.add_parser("sim")
+    ps.add_argument("action", nargs="?", help="check|hint|list|giveup|reset|start")
+    ps.add_argument("id", nargs="?")
     pvf = sub.add_parser("verify"); pvf.add_argument("n", nargs="?")
     pt = sub.add_parser("task")
     pt.add_argument("a", nargs="?")
@@ -1397,6 +1514,7 @@ def main():
         "profile": cmd_profile, "ai": cmd_ai, "exam": cmd_exam,
         "interview": cmd_interview, "rank": cmd_rank, "doctor": cmd_doctor,
         "roadmap": cmd_roadmap, "focus": cmd_focus, "next": cmd_next, "verify": cmd_verify,
+        "sim": cmd_sim,
     }
     try:                                       # robustlik: xato bo'lsa ham chiroyli
         if args.cmd in dispatch:

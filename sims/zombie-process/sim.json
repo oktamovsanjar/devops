@@ -1,0 +1,32 @@
+{
+  "id": "zombie-process",
+  "topic": "linux",
+  "min_day": 3,
+  "difficulty": 2,
+  "xp": 30,
+  "title": "Osilib qolgan jarayon",
+  "story": [
+    "Tungi sinxronizatsiya skripti (sim-data-sync.sh) tugashi kerak edi,",
+    "lekin u hali ham ishlayapti va resursni band qilib turibdi.",
+    "Uni topib, to'xtatish kerak."
+  ],
+  "symptom": "Jarayon fonda yashirin ishlayapti — uni o'zing top (ps/pgrep).",
+  "goal": "sim-data-sync.sh jarayonini top va to'xtat (kill).",
+  "setup": [
+    "cat > \"$SIM/sim-data-sync.sh\" <<'EOF'",
+    "#!/bin/bash",
+    "while true; do sleep 5; done",
+    "EOF",
+    "chmod +x \"$SIM/sim-data-sync.sh\"",
+    "nohup \"$SIM/sim-data-sync.sh\" >/dev/null 2>&1 &",
+    "echo $! > \"$SIM/.pid\""
+  ],
+  "check": "! kill -0 \"$(cat \"$SIM/.pid\")\" 2>/dev/null",
+  "cleanup": "pkill -f '[s]im-data-sync.sh' 2>/dev/null || true",
+  "hints": [
+    "Ishlayotgan jarayonlarni izla:  ps aux | grep data-sync   (yoki pgrep -af data-sync)",
+    "Topilgan qatordagi 2-ustun — PID (jarayon raqami).",
+    "kill <PID>  — keyin pgrep bilan o'lganini tasdiqla."
+  ],
+  "solution": "ps aux | grep data-sync (yoki pgrep -af) bilan PID topiladi, kill <PID> bilan to'xtatiladi. O'jar jarayonga kill -9. Real ishda: osilib qolgan worker/cron — har kuni uchraydigan hodisa (Day-3)."
+}

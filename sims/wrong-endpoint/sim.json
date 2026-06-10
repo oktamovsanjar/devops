@@ -1,0 +1,35 @@
+{
+  "id": "wrong-endpoint",
+  "topic": "networking",
+  "min_day": 12,
+  "difficulty": 1,
+  "xp": 25,
+  "title": "Healthcheck 'connection refused' deyapti",
+  "story": [
+    "To'lov servisi ishlayapti — bu aniq. Lekin healthcheck.sh",
+    "hech narsa qaytarmayapti va monitoring qizarib turibdi.",
+    "Servis aybdormi yoki tekshiruv skriptimi — aniqlash kerak."
+  ],
+  "symptom": "cd ~/devops/sims/.lab/wrong-endpoint && ./healthcheck.sh   →   bo'sh (curl: connection refused)",
+  "goal": "./healthcheck.sh {\"status\": \"ok\"} ni qaytarsin.",
+  "setup": [
+    "mkdir -p \"$SIM/health\"",
+    "echo '{\"status\": \"ok\"}' > \"$SIM/health/health.json\"",
+    "nohup python3 -m http.server 8096 -d \"$SIM/health\" >/dev/null 2>&1 &",
+    "sleep 0.5",
+    "cat > \"$SIM/healthcheck.sh\" <<'EOF'",
+    "#!/bin/bash",
+    "# To'lov servisi health tekshiruvi (monitoring har daqiqa chaqiradi)",
+    "curl -s --max-time 3 http://localhost:9096/health.json",
+    "EOF",
+    "chmod +x \"$SIM/healthcheck.sh\""
+  ],
+  "check": "\"$SIM/healthcheck.sh\" | grep -q '\"status\": \"ok\"'",
+  "cleanup": "pkill -f '[h]ttp.server 8096' 2>/dev/null || true",
+  "hints": [
+    "'Connection refused' = O'SHA portda hech kim tinglamayapti. Skript qaysi portga uryapti — ichini o'qi.",
+    "Servis ASLIDA qaysi portda? Tinglayotganlarni ko'r:  ss -ltn | grep -E '80|90'",
+    "Skriptdagi portni servisning REAL portiga tuzat (9096 → 8096)."
+  ],
+  "solution": "Servis sog' edi — healthcheck noto'g'ri portga (9096) urardi. Diagnostika tartibi: (1) xatoni o'qi: refused = port jim; (2) ss -ltn bilan real portni top (8096); (3) skriptni tuzat. Avval o'zing tekshir, keyin servisni ayblash — troubleshooting'ning oltin qoidasi."
+}

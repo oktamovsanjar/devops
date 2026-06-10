@@ -1,0 +1,25 @@
+{
+  "id": "bad-interpreter",
+  "topic": "bash",
+  "min_day": 8,
+  "difficulty": 1,
+  "xp": 25,
+  "title": "bad interpreter — skript g'alati yiqilyapti",
+  "story": [
+    "Hamkasbing Windows'da skript yozib, serverga yuklagan.",
+    "Skript to'g'ri ko'rinadi (cat ham chiroyli ko'rsatadi), lekin ishlamayapti."
+  ],
+  "symptom": "cd ~/devops/sims/.lab/bad-interpreter && ./status.sh   →   '/bin/bash^M: bad interpreter'",
+  "goal": "./status.sh 'STATUS OK' chiqarsin.",
+  "setup": [
+    "printf '#!/bin/bash\\r\\necho \"STATUS OK\"\\r\\n' > \"$SIM/status.sh\"",
+    "chmod +x \"$SIM/status.sh\""
+  ],
+  "check": "\"$SIM/status.sh\" 2>/dev/null | grep -q 'STATUS OK'",
+  "hints": [
+    "Xatodagi ^M belgisiga e'tibor ber — bu ko'rinmas belgi. Faylni 'rentgen' qil:  cat -A status.sh",
+    "Har qator oxiridagi ^M — Windows qator-tugashi (CRLF). Linux faqat \\n kutadi.",
+    "Tozalash:  sed -i 's/\\r$//' status.sh   (yoki dos2unix status.sh)"
+  ],
+  "solution": "Fayl Windows'da yozilgan — har qator CRLF (\\r\\n) bilan tugaydi. Shebang '/bin/bash\\r' bo'lib qoladi — bunday interpreter yo'q. cat -A bilan ^M ko'rinadi. Fix: sed -i 's/\\r$//' status.sh. Juda keng tarqalgan real muammo (git autocrlf, Windows muharrirlari)."
+}

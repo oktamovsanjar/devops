@@ -1,0 +1,42 @@
+{
+  "id": "docker-crashloop",
+  "topic": "docker",
+  "min_day": 15,
+  "difficulty": 2,
+  "xp": 35,
+  "title": "Konteyner ishga tushishi bilan o'lyapti",
+  "story": [
+    "simfix-crash konteynerini ishga tushirdik — u darhol o'chib qoldi.",
+    "Qayta tushir — yana o'chadi. Image qurilgan, xato build'da emas.",
+    "Nega o'layotganini KONTEYNERNING O'ZIDAN so'rash kerak."
+  ],
+  "symptom": "docker ps -a | grep simfix-crash   →   'Exited (2)'  — bir soniya ham yashamayapti",
+  "goal": "Sababni top (docker logs!), Dockerfile'ni tuzat (~/devops/sims/.lab/docker-crashloop/app), qayta qur va konteyner BARQAROR ishlasin.",
+  "setup": [
+    "mkdir -p \"$SIM/app\"",
+    "cat > \"$SIM/app/server.py\" <<'EOF'",
+    "import http.server, socketserver",
+    "print(\"Server tayyor\", flush=True)",
+    "socketserver.TCPServer.allow_reuse_address = True",
+    "with socketserver.TCPServer((\"\", 8000), http.server.SimpleHTTPRequestHandler) as h:",
+    "    h.serve_forever()",
+    "EOF",
+    "cat > \"$SIM/app/Dockerfile\" <<'EOF'",
+    "FROM python:3-alpine",
+    "WORKDIR /app",
+    "COPY server.py .",
+    "CMD [\"python\", \"serverr.py\"]",
+    "EOF",
+    "docker rm -f simfix-crash >/dev/null 2>&1 || true",
+    "docker build -q -t simfix-crash \"$SIM/app\" >/dev/null",
+    "docker run -d --name simfix-crash simfix-crash >/dev/null"
+  ],
+  "check": "docker ps --format '{{.Names}}' | grep -qx simfix-crash && docker logs simfix-crash 2>&1 | grep -q 'Server tayyor'",
+  "cleanup": "docker rm -f simfix-crash >/dev/null 2>&1; docker rmi -f simfix-crash >/dev/null 2>&1 || true",
+  "hints": [
+    "O'lgan konteyner ham log qoldiradi:  docker logs simfix-crash",
+    "python: can't open file '/app/serverr.py' — fayl nomiga diqqat bilan qara. Dockerfile'dagi CMD'ni tekshir.",
+    "Tuzatgach:  docker build -t simfix-crash app/  →  docker rm -f simfix-crash  →  docker run -d --name simfix-crash simfix-crash"
+  ],
+  "solution": "docker logs darhol sababni aytdi: CMD'da 'serverr.py' (typo) — bunday fayl yo'q, python xato bilan chiqadi, konteyner o'ladi. Fix: CMD [\"python\", \"server.py\"], rebuild, qayta run. Qoida: konteyner o'lsa — BIRINCHI buyruq har doim docker logs (Day-15)."
+}

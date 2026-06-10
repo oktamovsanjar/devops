@@ -1,0 +1,31 @@
+{
+  "id": "perm-locked",
+  "topic": "linux",
+  "min_day": 2,
+  "difficulty": 1,
+  "xp": 25,
+  "title": "Deploy skripti ishlamayapti",
+  "story": [
+    "Hamkasbing deploy skriptini serverga yuklab qo'ydi va ta'tilga ketdi.",
+    "Endi deploy qilish kerak, lekin skript ishga tushmayapti."
+  ],
+  "symptom": "cd ~/devops/sims/.lab/perm-locked && ./deploy.sh   →   'Permission denied'",
+  "goal": "./deploy.sh ishlasin va deployed.txt yaratilsin.",
+  "setup": [
+    "cat > \"$SIM/deploy.sh\" <<'EOF'",
+    "#!/bin/bash",
+    "echo \"App build qilinmoqda...\"",
+    "echo \"DEPLOY OK $(date +%H:%M)\" > \"$(dirname \"$0\")/deployed.txt\"",
+    "echo \"Deploy tugadi ✓\"",
+    "EOF",
+    "chmod 644 \"$SIM/deploy.sh\"",
+    "rm -f \"$SIM/deployed.txt\""
+  ],
+  "check": "[ -x \"$SIM/deploy.sh\" ] && \"$SIM/deploy.sh\" >/dev/null 2>&1 && grep -q 'DEPLOY OK' \"$SIM/deployed.txt\"",
+  "hints": [
+    "Fayl haqida hamma narsani ko'r:  ls -l deploy.sh  — ruxsatlar ustuniga qara.",
+    "rw-r--r-- ichida nima YO'Q? Skript ishlashi uchun qaysi huquq kerak edi (Day-2)?",
+    "chmod +x deploy.sh  — keyin yana ./deploy.sh"
+  ],
+  "solution": "Skriptda bajarish (x) huquqi yo'q edi: ls -l → -rw-r--r--. Fix: chmod +x deploy.sh. Real ishda bu eng ko'p uchraydigan 'Permission denied' sababi."
+}

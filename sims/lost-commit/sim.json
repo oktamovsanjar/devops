@@ -1,0 +1,32 @@
+{
+  "id": "lost-commit",
+  "topic": "git",
+  "min_day": 11,
+  "difficulty": 3,
+  "xp": 40,
+  "title": "Commit yo'qoldi! (reset --hard falokati)",
+  "story": [
+    "Hamkasbing 'tozalayman' deb git reset --hard yuborgan —",
+    "va monitoring konfiguratsiyasi solingan OXIRGI commit g'oyib bo'ldi.",
+    "git log'da ham ko'rinmaydi. Lekin git hech narsani darrov unutmaydi..."
+  ],
+  "symptom": "cd ~/devops/sims/.lab/lost-commit/repo && git log --oneline   →   faqat 'app asosi' (monitoring commit YO'Q), monitor.conf ham yo'q",
+  "goal": "Yo'qolgan 'monitoring config qoshildi' commitini qaytar — monitor.conf HEAD'da bo'lsin.",
+  "setup": [
+    "rm -rf \"$SIM/repo\" && mkdir -p \"$SIM/repo\" && cd \"$SIM/repo\"",
+    "git init -q -b main",
+    "git config user.email sim@local && git config user.name Sim",
+    "echo \"asosiy app\" > app.txt",
+    "git add . && git commit -qm 'app asosi'",
+    "printf 'alert_email=ops@example.uz\\ncheck_interval=30\\n' > monitor.conf",
+    "git add . && git commit -qm 'monitoring config qoshildi'",
+    "git reset -q --hard HEAD~1"
+  ],
+  "check": "cd \"$SIM/repo\" && [ -f monitor.conf ] && git log --oneline -1 | grep -qi monitoring && [ -z \"$(git status --porcelain)\" ]",
+  "hints": [
+    "git log faqat HOZIRGI tarixni ko'rsatadi. Git'ning 'qora qutisi' bor:  git reflog",
+    "reflog'da HEAD qayerlarda bo'lganini ko'rasan — reset'dan OLDINGI qator kerak (monitoring commit hash'i).",
+    "Qaytarish:  git reset --hard HEAD@{1}   (yoki  git reset --hard <hash>)"
+  ],
+  "solution": "reset --hard commitni 'o'chirmaydi' — faqat HEAD'ni orqaga suradi. git reflog HAMMA harakatni saqlaydi (~90 kun): u yerdan yo'qolgan hash topilib, git reset --hard HEAD@{1} bilan qaytariladi. Bu bilim bir kun kimningdir bir haftalik mehnatini saqlab qoladi — jiddiy aytaman."
+}

@@ -1,0 +1,39 @@
+{
+  "id": "port-thief",
+  "topic": "networking",
+  "min_day": 12,
+  "difficulty": 2,
+  "xp": 35,
+  "title": "Portni kimdir egallab olgan",
+  "story": [
+    "Yangi versiyani (2.0) chiqarish kerak. start-app.sh tayyor.",
+    "Lekin ishga tushirsang — 'Address already in use'.",
+    "8095-portda allaqachon KIMDIR o'tiribdi: eski, unutilgan versiya."
+  ],
+  "symptom": "curl -s localhost:8095   →   'ESKI VERSIYA 1.0'  (yangi chiqishi kerak edi!)",
+  "goal": "Eski jarayonni top va to'xtat, keyin start-app.sh bilan yangisini ko'tar: curl localhost:8095 → 'YANGI VERSIYA 2.0'.",
+  "setup": [
+    "mkdir -p \"$SIM/old\" \"$SIM/new\"",
+    "echo \"ESKI VERSIYA 1.0\" > \"$SIM/old/index.html\"",
+    "echo \"YANGI VERSIYA 2.0\" > \"$SIM/new/index.html\"",
+    "nohup python3 -m http.server 8095 -d \"$SIM/old\" >/dev/null 2>&1 &",
+    "sleep 0.5",
+    "cat > \"$SIM/start-app.sh\" <<'EOF'",
+    "#!/bin/bash",
+    "cd \"$(dirname \"$0\")/new\"",
+    "echo \"2.0 versiyani 8095-portda ko'taryapman...\"",
+    "nohup python3 -m http.server 8095 >../app.log 2>&1 &",
+    "sleep 1",
+    "tail -n 3 ../app.log",
+    "EOF",
+    "chmod +x \"$SIM/start-app.sh\""
+  ],
+  "check": "curl -s --max-time 3 localhost:8095 | grep -q 'YANGI VERSIYA'",
+  "cleanup": "pkill -f '[h]ttp.server 8095' 2>/dev/null || true",
+  "hints": [
+    "Portda kim o'tiribdi?  ss -ltnp | grep 8095   (p = process ham ko'rsat)",
+    "Chiqqan qatorda pid=XXXX bor — o'sha eski jarayon. kill <PID>",
+    "Port bo'shadi — endi:  ./start-app.sh  va  curl localhost:8095 bilan tasdiqla."
+  ],
+  "solution": "Bitta portda bitta jarayon o'tiradi. ss -ltnp | grep 8095 egasini (PID) ko'rsatadi, kill bilan bo'shatiladi, keyin yangi versiya ko'tariladi. 'Address already in use' — deploy kunining klassikasi (Day-12); esingdami, bizning serverda ham 8080 band edi."
+}

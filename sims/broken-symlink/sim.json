@@ -1,0 +1,32 @@
+{
+  "id": "broken-symlink",
+  "topic": "linux",
+  "min_day": 4,
+  "difficulty": 1,
+  "xp": 25,
+  "title": "App config'ni o'qiy olmayapti",
+  "story": [
+    "App o'z konfiguratsiyasini current.conf orqali o'qiydi.",
+    "Kecha kimdir konfiguratsiya fayllarini qayta nomlagan — va app yiqildi."
+  ],
+  "symptom": "cd ~/devops/sims/.lab/broken-symlink && ./reader.sh   →   'No such file or directory'",
+  "goal": "./reader.sh 'mode=production' ni chiqarsin. MUHIM: current.conf symlink bo'lib QOLSIN (nusxa qilma!).",
+  "setup": [
+    "mkdir -p \"$SIM/configs\"",
+    "echo \"mode=production\" > \"$SIM/configs/app.conf\"",
+    "ln -sfn \"$SIM/configs/old.conf\" \"$SIM/current.conf\"",
+    "cat > \"$SIM/reader.sh\" <<'EOF'",
+    "#!/bin/bash",
+    "cd \"$(dirname \"$0\")\"",
+    "cat current.conf",
+    "EOF",
+    "chmod +x \"$SIM/reader.sh\""
+  ],
+  "check": "[ -L \"$SIM/current.conf\" ] && \"$SIM/reader.sh\" 2>/dev/null | grep -q 'mode=production'",
+  "hints": [
+    "ls -l current.conf  — bu oddiy fayl emas. '->' nimaga ishora qilyapti?",
+    "U ko'rsatayotgan fayl mavjudmi? configs/ ichida NIMA bor — ls configs/",
+    "Symlinkni yangi manzilga qayta ula:  ln -sfn configs/app.conf current.conf"
+  ],
+  "solution": "current.conf — singan symlink edi: u o'chirilgan configs/old.conf ga ishora qilardi. ls -l bilan ko'rinadi (qizil rangda). Fix: ln -sfn configs/app.conf current.conf. Real serverlarda 'current' → 'release-N' symlink — deploy'ning klassik usuli."
+}
